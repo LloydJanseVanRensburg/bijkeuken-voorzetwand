@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brackets · Bijkeuken voorzetwand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+/* Same workshop look as the cut sheet: one column, tap-to-tick, phases open one at a time */
+:root {
+  --paper: #eef1f4; --sheet: #ffffff; --ink: #1b2430; --ink-soft: #566273; --line: #cfd6de;
+  --marker: #1f56c9; --timber: #e3c48e; --timber-edge: #a9874d; --brick: #b98a78; --hatch: #f2d9a8;
+  --fix: #c2410c; --done: #2f8a4c;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+    --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+    --fix: #fb923c; --done: #5cc27e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+  --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+  --fix: #fb923c; --done: #5cc27e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 700; }
+h2 { font-size: 1.75rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--marker); }
+.eyebrow { font: 600 .75rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--marker); }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+section, header { display: grid; gap: 16px; }
+main > *, section > *, header > *, .phases > *, .ph-body > *, figure > * { min-width: 0; }
+.lede { color: var(--ink-soft); }
+.back { font: 500 .9rem var(--f-mono); text-decoration: none; justify-self: start; }
+.note { border-left: 3px solid var(--fix); padding: 10px 14px; background: var(--sheet); border-radius: 0 6px 6px 0; display: grid; gap: 6px; }
+
+/* Overall progress */
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--paper); padding-block: 10px; display: grid; gap: 6px; }
+.progress .row { display: flex; justify-content: space-between; font: 600 .8rem/1 var(--f-mono); color: var(--ink-soft); }
+.meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--done); transition: width .25s; }
+
+/* Phases */
+.phases { display: grid; gap: 10px; }
+.phase { background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; }
+.phase summary { list-style: none; display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+.phase summary::-webkit-details-marker { display: none; }
+.phase summary:focus-visible { outline: 2px solid var(--marker); outline-offset: -2px; border-radius: 6px; }
+.step-no { font: 700 2.2rem/0.9 var(--f-display); color: var(--marker); font-variant-numeric: tabular-nums; text-align: center; }
+.ph-title { display: grid; gap: 2px; }
+.ph-title small { color: var(--ink-soft); font-size: .88rem; }
+.count { font: 600 .85rem/1 var(--f-mono); color: var(--ink-soft); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; }
+.phase.done { border-color: var(--done); }
+.phase.done .step-no { color: var(--done); }
+.phase.done .count { background: var(--done); border-color: var(--done); color: var(--sheet); }
+.phase[open] summary { border-bottom: 1px solid var(--line); }
+.ph-body { padding: 4px 16px 16px; display: grid; gap: 12px; }
+.maplink { font: 600 .9rem var(--f-mono); justify-self: start; }
+
+/* Checklists */
+.checks { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.check label { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check:last-child label { border-bottom: 0; }
+.check input { position: absolute; opacity: 0; pointer-events: none; }
+.check .box { width: 22px; height: 22px; border: 2px solid var(--ink-soft); border-radius: 4px; display: grid; place-content: center; margin-top: 1px; }
+.check input:focus-visible + .box { outline: 2px solid var(--marker); outline-offset: 2px; }
+.check input:checked + .box { background: var(--done); border-color: var(--done); }
+.check input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid var(--sheet); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.check input:checked ~ .txt { color: var(--ink-soft); }
+.check input:checked ~ .txt small { display: none; }
+.txt small { display: block; color: var(--ink-soft); font-size: .88rem; margin-top: 2px; }
+.flag { display: inline-block; font: 600 .66rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--sheet); background: var(--fix); padding: 4px 6px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.check input:checked ~ .txt .flag { background: var(--done); }
+.reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+.reset.armed { color: var(--fix); border-color: var(--fix); }
+
+/* Drill map */
+figure { margin: 0; display: grid; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
+figcaption { display: grid; gap: 4px; font-size: .92rem; }
+figcaption b { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
+figcaption span { color: var(--ink-soft); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll svg { display: block; min-width: 560px; width: 100%; height: auto; }
+figure > svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fix); }
+.dot.open { background: transparent; border: 2px solid var(--fix); }
+.dash { width: 18px; border-top: 3px dashed var(--fix); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
+.s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
+.s-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 3; }
+.s-open { fill: var(--hatch); opacity: .55; stroke: var(--ink-soft); stroke-width: 5; stroke-dasharray: 24 16; }
+.s-ghost { fill: var(--timber); fill-opacity: .25; stroke: var(--timber-edge); stroke-width: 3; stroke-dasharray: 14 10; }
+.s-pack { fill: var(--timber); fill-opacity: .5; stroke: var(--timber-edge); stroke-width: 4; }
+.s-fix { fill: var(--fix); }
+.s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 9; }
+.s-arrow { stroke: var(--fix); stroke-width: 10; }
+.s-maybe { stroke: var(--fix); stroke-width: 12; stroke-dasharray: 34 28; }
+.s-dim { stroke: var(--ink-soft); stroke-width: 3; }
+.s-txt-s { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 40px; }
+.s-code { fill: var(--marker); font-family: var(--f-mono); font-size: 44px; font-weight: 600; }
+.s-lbl { fill: var(--ink); font-family: var(--f-mono); font-size: 46px; font-weight: 600; }
+.s-timber-d { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 1.5; }
+.d-gips { fill: var(--line); stroke: var(--ink-soft); stroke-width: 1; }
+.d-plugline { stroke: var(--fix); stroke-width: 6; stroke-linecap: round; }
+.d-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.d-ghostline { stroke: var(--marker); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.d-lbl { fill: var(--ink); font: 13px var(--f-mono); }
+.d-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
+@media print { .progress, .reset, .back { display: none; } .phase { break-inside: avoid; } }
+
+/* Brackets page */
+:root { --steel: #8fa3b8; --steel-top: #c3d0dc; --steel-side: #6f849a; --t-top: #efd9ae; --t-front: #e3c48e; --t-side: #c9a66a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --steel: #7b8ea3; --steel-top: #a9b8c7; --steel-side: #5d6f82; --t-top: #a88a58; --t-front: #8a6c3f; --t-side: #6e5530; } }
+:root[data-theme="dark"] { --steel: #7b8ea3; --steel-top: #a9b8c7; --steel-side: #5d6f82; --t-top: #a88a58; --t-front: #8a6c3f; --t-side: #6e5530; }
+.note.good { border-left-color: var(--done); }
+.duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; align-items: start; }
+.trio { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; }
+.rules { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: r; }
+.rules li { counter-increment: r; display: grid; grid-template-columns: 2.2rem 1fr; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+.rules li::before { content: counter(r); font: 700 1.9rem/1 var(--f-display); color: var(--marker); }
+.rules b { display: block; font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
+.rules span { color: var(--ink-soft); font-size: .92rem; }
+ol.how { margin: 0; padding-left: 1.6rem; display: grid; gap: 8px; max-width: 65ch; }
+ol.how li::marker { font: 600 .9rem var(--f-mono); color: var(--marker); }
+ul.plain { margin: 0; padding-left: 1.2rem; display: grid; gap: 6px; max-width: 65ch; }
+.stage { font: 600 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--marker); }
+.legend i.l { width: 18px; height: 12px; border-left: 4px solid; border-bottom: 4px solid; }
+.t-top { fill: var(--t-top); stroke: var(--timber-edge); stroke-width: 1; }
+.t-front { fill: var(--t-front); stroke: var(--timber-edge); stroke-width: 1; }
+.t-side { fill: var(--t-side); stroke: var(--timber-edge); stroke-width: 1; }
+.n-top, .n-front, .n-side { fill: var(--marker); fill-opacity: .28; stroke: var(--marker); stroke-width: 1.5; }
+.b-top { fill: var(--steel-top); stroke: var(--steel-side); stroke-width: .8; }
+.b-front { fill: var(--steel); stroke: var(--steel-side); stroke-width: .8; }
+.b-side { fill: var(--steel); stroke: var(--steel-side); stroke-width: .8; }
+.i-screw { fill: var(--fix); }
+.i-lbl { fill: var(--ink); font: 600 15px var(--f-mono); }
+.i-lbl-s { fill: var(--ink-soft); font: 13px var(--f-mono); }
+.i-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.i-arrow { stroke: var(--marker); stroke-width: 3; }
+.i-arrow-s { stroke: var(--fix); stroke-width: 2.5; }
+.i-ah { fill: var(--marker); }
+.x-wall { fill: var(--line); }
+.x-osb { fill: #d7b77c; opacity: .7; }
+.x-timber { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 1.5; }
+.x-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 1.5; }
+.x-steel { fill: var(--steel-side); }
+.x-steel-l { fill: var(--steel); opacity: .55; }
+.x-screw { stroke: var(--fix); stroke-width: 2.5; }
+.x-plug { stroke: var(--fix); stroke-width: 7; stroke-linecap: round; }
+.x-dim { stroke: var(--ink-soft); stroke-width: 1; }
+.x-lbl { fill: var(--ink); font: 600 13px var(--f-mono); }
+.x-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
+.x-code { fill: var(--marker); font: 600 16px var(--f-mono); }
+.s-timber { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 3; }
+.s-lbl { fill: var(--ink); font: 600 44px var(--f-mono); }
+.s-br { fill: none; stroke: var(--marker); stroke-width: 16; }
+.s-br-nog { fill: none; stroke: var(--done); stroke-width: 16; }
+.s-br-bay { fill: none; stroke: var(--fix); stroke-width: 16; }
+figure > svg { max-height: 460px; }
+.trio .i-lbl { font-size: 22px; } .trio .i-lbl-s { font-size: 19px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a class="back" href="./">← Cut sheet &amp; build journey</a>
+    <span class="eyebrow">Brackets</span>
+    <h1>How the brackets hold the frame</h1>
+    <p class="lede">Every timber-to-timber joint uses the same 90° angle bracket (hoekanker 70×70×55, 2.5 mm, galvanised) with 5×35 anchor screws (ankerschroeven), 4 per leg. This page shows where every bracket goes and how to fit each type of joint.</p>
+  </header>
+
+  <section>
+    <span class="eyebrow">Three rules</span>
+    <h2>Before the first bracket</h2>
+    <ol class="rules">
+      <li><div><b>Side faces only</b><span>Brackets go on the 94 mm faces that point along the wall, at the sides of a stud. Never on the front, where the OSB goes, or the back.</span></div></li>
+      <li><div><b>Left 10 mm back, right 10 mm forward</b><span>A stud often has a bracket on both sides at the same height. The 35 mm screws from each side would meet in the middle of the 44 mm stud. So shift every bracket on a stud's left face 10 mm toward the wall, and every bracket on its right face 10 mm toward the room. The screws then pass each other.</span></div></li>
+      <li><div><b>Tight in the corner</b><span>Push the bend of the bracket hard into the corner between the two pieces before screwing. Use the round holes, 4 per leg. Drive the screws until the head touches the steel, no further.</span></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <span class="eyebrow">Bracket map · 1 drawing unit = 1 mm</span>
+    <h2>Where all 49 brackets go</h2>
+    <figure>
+      <div class="scroll"><svg viewBox="-200 -150 3000 2700" role="img" aria-label="Every bracket on the frame">
+<polygon points="0,2473 2605,2473 2605,0 0,23" class="s-wall"/>
+<rect x="1905" y="1293" width="700" height="1180" class="s-open"/>
+<rect x="830" y="738" width="220" height="1735" class="s-brick"/>
+<rect x="0" y="2429" width="826" height="44" class="s-timber"/>
+<rect x="1050" y="2429" width="853" height="44" class="s-timber"/>
+<rect x="0" y="26" width="1069" height="44" class="s-timber"/>
+<rect x="1072" y="26" width="811" height="44" class="s-timber"/>
+<rect x="1886" y="26" width="719" height="44" class="s-timber"/>
+<rect x="0" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="393" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="786" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="1050" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="1455" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="1861" y="70" width="44" height="2359" class="s-timber"/>
+<rect x="2211" y="70" width="44" height="1179" class="s-timber"/>
+<rect x="2561" y="70" width="44" height="1179" class="s-timber"/>
+<rect x="1905" y="1249" width="697" height="44" class="s-timber"/>
+<rect x="44" y="1249" width="349" height="44" class="s-timber"/>
+<rect x="437" y="1249" width="349" height="44" class="s-timber"/>
+<rect x="1094" y="1249" width="361" height="44" class="s-timber"/>
+<rect x="1499" y="1249" width="362" height="44" class="s-timber"/>
+<rect x="44" y="618" width="349" height="44" class="s-timber"/>
+<rect x="437" y="618" width="349" height="44" class="s-timber"/>
+<rect x="830" y="618" width="220" height="44" class="s-timber"/>
+<rect x="1094" y="618" width="361" height="44" class="s-timber"/>
+<rect x="1499" y="618" width="362" height="44" class="s-timber"/>
+<rect x="1905" y="618" width="306" height="44" class="s-timber"/>
+<rect x="2255" y="618" width="306" height="44" class="s-timber"/>
+<path d="M44,2359 L44,2429 L114,2429" class="s-br"/>
+<path d="M44,140 L44,70 L114,70" class="s-br"/>
+<path d="M393,2359 L393,2429 L323,2429" class="s-br"/>
+<path d="M437,2359 L437,2429 L507,2429" class="s-br"/>
+<path d="M393,140 L393,70 L323,70" class="s-br"/>
+<path d="M437,140 L437,70 L507,70" class="s-br"/>
+<path d="M786,2359 L786,2429 L716,2429" class="s-br"/>
+<path d="M786,140 L786,70 L716,70" class="s-br"/>
+<path d="M830,140 L830,70 L900,70" class="s-br"/>
+<path d="M1094,2359 L1094,2429 L1164,2429" class="s-br"/>
+<path d="M1050,140 L1050,70 L980,70" class="s-br"/>
+<path d="M1094,140 L1094,70 L1164,70" class="s-br"/>
+<path d="M1455,2359 L1455,2429 L1385,2429" class="s-br"/>
+<path d="M1499,2359 L1499,2429 L1569,2429" class="s-br"/>
+<path d="M1455,140 L1455,70 L1385,70" class="s-br"/>
+<path d="M1499,140 L1499,70 L1569,70" class="s-br"/>
+<path d="M1861,2359 L1861,2429 L1791,2429" class="s-br"/>
+<path d="M1861,140 L1861,70 L1791,70" class="s-br"/>
+<path d="M1905,140 L1905,70 L1975,70" class="s-br"/>
+<path d="M2211,1179 L2211,1249 L2141,1249" class="s-br-bay"/>
+<path d="M2211,140 L2211,70 L2141,70" class="s-br-bay"/>
+<path d="M2255,1179 L2255,1249 L2325,1249" class="s-br-bay"/>
+<path d="M2255,140 L2255,70 L2325,70" class="s-br-bay"/>
+<path d="M2561,1179 L2561,1249 L2491,1249" class="s-br-bay"/>
+<path d="M2561,140 L2561,70 L2491,70" class="s-br-bay"/>
+<path d="M1905,1363 L1905,1293 L1975,1293" class="s-br-bay"/>
+<path d="M2605,1363 L2605,1293 L2535,1293" class="s-br-bay"/>
+<path d="M44,1363 L44,1293 L114,1293" class="s-br-nog"/>
+<path d="M393,1363 L393,1293 L323,1293" class="s-br-nog"/>
+<path d="M437,1363 L437,1293 L507,1293" class="s-br-nog"/>
+<path d="M786,1363 L786,1293 L716,1293" class="s-br-nog"/>
+<path d="M1094,1363 L1094,1293 L1164,1293" class="s-br-nog"/>
+<path d="M1455,1363 L1455,1293 L1385,1293" class="s-br-nog"/>
+<path d="M1499,1363 L1499,1293 L1569,1293" class="s-br-nog"/>
+<path d="M1861,1363 L1861,1293 L1791,1293" class="s-br-nog"/>
+<path d="M44,732 L44,662 L114,662" class="s-br-nog"/>
+<path d="M393,732 L393,662 L323,662" class="s-br-nog"/>
+<path d="M437,732 L437,662 L507,662" class="s-br-nog"/>
+<path d="M786,732 L786,662 L716,662" class="s-br-nog"/>
+<path d="M830,732 L830,662 L900,662" class="s-br-nog"/>
+<path d="M1050,732 L1050,662 L980,662" class="s-br-nog"/>
+<path d="M1094,732 L1094,662 L1164,662" class="s-br-nog"/>
+<path d="M1455,732 L1455,662 L1385,662" class="s-br-nog"/>
+<path d="M1499,732 L1499,662 L1569,662" class="s-br-nog"/>
+<path d="M1861,732 L1861,662 L1791,662" class="s-br-nog"/>
+<path d="M1905,732 L1905,662 L1975,662" class="s-br-nog"/>
+<path d="M2211,732 L2211,662 L2141,662" class="s-br-nog"/>
+<path d="M2255,732 L2255,662 L2325,662" class="s-br-nog"/>
+<path d="M2561,732 L2561,662 L2491,662" class="s-br-nog"/>
+<text x="22" y="-40" class="s-code" text-anchor="middle">V1</text>
+<text x="415" y="-40" class="s-code" text-anchor="middle">V2</text>
+<text x="808" y="-40" class="s-code" text-anchor="middle">V3</text>
+<text x="1072" y="-40" class="s-code" text-anchor="middle">V4</text>
+<text x="1477" y="-40" class="s-code" text-anchor="middle">V5</text>
+<text x="1883" y="-40" class="s-code" text-anchor="middle">V6</text>
+<text x="2233" y="-40" class="s-code" text-anchor="middle">V7</text>
+<text x="2583" y="-40" class="s-code" text-anchor="middle">V8</text>
+<text x="-30" y="1307" class="s-txt-s" text-anchor="end">1180</text>
+<text x="-30" y="676" class="s-txt-s" text-anchor="end">1811</text>
+</svg></div>
+      <div class="legend">
+        <span><i class="l" style="border-color:var(--marker)"></i>Stud ends, V1–V6: 19</span>
+        <span><i class="l" style="border-color:var(--fix)"></i>Open bay: header + V7/V8: 8</span>
+        <span><i class="l" style="border-color:var(--done)"></i>Noggins: 22</span>
+      </div>
+      <figcaption><b>Seen from inside the bijkeuken</b><span>Each L is one bracket, drawn on the face it's screwed to. Where a stud is against the wall, the pillar or the edge of a plate, it only gets a bracket on its free side: V1, the feet of V3, V4 and V6, and V8. You bought 60, which leaves 11 spare. Each bracket takes 8 screws, so about 400 of your 500.</span></figcaption>
+    </figure>
+    <div class="scroll"><table>
+      <thead><tr><th>Stud</th><th>Foot</th><th>Top</th><th>Under noggins / header</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="code">V1</td><td>1 right</td><td>1 right</td><td>right at 1180, 1811</td><td>left face is against the exterior wall</td></tr>
+        <tr><td class="code">V2</td><td>2</td><td>2</td><td>both sides at 1180, 1811</td><td></td></tr>
+        <tr><td class="code">V3</td><td>1 left</td><td>2</td><td>left at 1180, 1811 · right at 1811 (N3)</td><td>foot is against the pillar</td></tr>
+        <tr><td class="code">V4</td><td>1 right</td><td>2</td><td>right at 1180, 1811 · left at 1811 (N3)</td><td>foot is against the pillar</td></tr>
+        <tr><td class="code">V5</td><td>2</td><td>2</td><td>both sides at 1180, 1811</td><td></td></tr>
+        <tr><td class="code">V6</td><td>1 left</td><td>2</td><td>left at 1180, 1811 · right at 1180 (header) and 1811</td><td>floor plate ends at its right face</td></tr>
+        <tr><td class="code">V7</td><td>2 on header</td><td>2</td><td>both sides at 1811</td><td></td></tr>
+        <tr><td class="code">V8</td><td>1 left on header</td><td>1 left</td><td>left at 1811</td><td>right face is against the kitchen wall</td></tr>
+        <tr><td class="code">H</td><td colspan="4">1 on V6 + 1 on the kitchen-wall brick (6 mm plugs + 5×50), tops at 1180</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Joint 1 · Build journey step 4</span>
+    <h2>Stud foot</h2>
+    <div class="duo">
+      <figure><svg viewBox="-310 -380 660 500" role="img" aria-label="Stud foot: one bracket on each side face, legs on the stud and on the floor plate"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="i-ah"/></marker></defs>
+<polygon points="-147.2,-129.0 199.2,71.0 117.8,118.0 -228.6,-82.0" class="t-top"/>
+<polygon points="-228.6,-38.0 117.8,162.0 117.8,118.0 -228.6,-82.0" class="t-front"/>
+<polygon points="199.2,115.0 117.8,162.0 117.8,118.0 199.2,71.0" class="t-side"/>
+<polygon points="-10.4,-110.5 -8.2,-109.2 -55.9,-81.8 -58.0,-83.0" class="b-top"/>
+<polygon points="-58.0,-13.0 -55.9,-11.8 -55.9,-81.8 -58.0,-83.0" class="b-front"/>
+<polygon points="-8.2,-39.2 -55.9,-11.8 -55.9,-81.8 -8.2,-109.2" class="b-side"/>
+<polygon points="-68.8,-76.8 -8.2,-41.8 -55.9,-14.2 -116.5,-49.2" class="b-top"/>
+<polygon points="-116.5,-46.8 -55.9,-11.8 -55.9,-14.2 -116.5,-49.2" class="b-front"/>
+<polygon points="-8.2,-39.2 -55.9,-11.8 -55.9,-14.2 -8.2,-41.8" class="b-side"/>
+<ellipse cx="-44.6" cy="-46.8" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="-67.1" cy="-59.8" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="-64.5" cy="-35.2" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="-87.0" cy="-48.2" rx="5" ry="2.9" class="i-screw"/>
+<polygon points="0.0,-330.0 38.1,-308.0 -43.3,-261.0 -81.4,-283.0" class="t-top"/>
+<polygon points="-81.4,3.0 -43.3,25.0 -43.3,-261.0 -81.4,-283.0" class="t-front"/>
+<polygon points="38.1,-22.0 -43.3,25.0 -43.3,-261.0 38.1,-308.0" class="t-side"/>
+<polygon points="12.6,-9.8 73.2,25.2 25.5,52.8 -35.1,17.8" class="b-top"/>
+<polygon points="-35.1,20.2 25.5,55.2 25.5,52.8 -35.1,17.8" class="b-front"/>
+<polygon points="73.2,27.8 25.5,55.2 25.5,52.8 73.2,25.2" class="b-side"/>
+<polygon points="12.6,-77.2 14.7,-76.0 -32.9,-48.5 -35.1,-49.8" class="b-top"/>
+<polygon points="-35.1,20.2 -32.9,21.5 -32.9,-48.5 -35.1,-49.8" class="b-front"/>
+<polygon points="14.7,-6.0 -32.9,21.5 -32.9,-48.5 14.7,-76.0" class="b-side"/>
+<ellipse cx="0.9" cy="-20.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -20.0)" class="i-screw"/>
+<ellipse cx="0.9" cy="-48.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -48.0)" class="i-screw"/>
+<ellipse cx="21.2" cy="11.2" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="43.7" cy="24.2" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="-19.1" cy="-8.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -8.5)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-36.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -36.5)" class="i-screw"/>
+<ellipse cx="1.3" cy="22.8" rx="5" ry="2.9" class="i-screw"/>
+<ellipse cx="23.8" cy="35.8" rx="5" ry="2.9" class="i-screw"/>
+<line x1="-8.7" y1="-53.5" x2="51.3" y2="-103.5" class="i-lead"/>
+<text x="55.3" y="-99.5" class="i-lbl" text-anchor="start">4 screws in the stud leg</text>
+<line x1="21.2" y1="45.2" x2="91.2" y2="85.2" class="i-lead"/>
+<text x="95.2" y="89.2" class="i-lbl" text-anchor="start">4 screws in the plate leg</text>
+<line x1="-185.3" y1="-35.0" x2="-185.3" y2="35.0" class="i-lead"/>
+<text x="-181.3" y="39.0" class="i-lbl" text-anchor="start">floor plate</text>
+<line x1="-62.4" y1="-222.0" x2="-122.4" y2="-242.0" class="i-lead"/>
+<text x="-126.4" y="-238.0" class="i-lbl" text-anchor="end">stud</text>
+<line x1="-68.8" y1="-46.8" x2="-108.8" y2="-136.8" class="i-lead"/>
+<text x="-112.8" y="-132.8" class="i-lbl-s" text-anchor="end">same on the other side</text></svg><figcaption><b>One bracket each side</b><span>One leg on the stud, one on the floor plate.</span></figcaption></figure>
+      <div>
+        <ol class="how">
+          <li>Stand the stud on its mark on the floor plate.</li>
+          <li>Check it's plumb with the waterpas on two faces: the side and the front. Have someone hold it, or clamp it to a scrap.</li>
+          <li>Push the bracket into the corner on the right face, 10 mm toward the room. Put 1 screw in the plate leg and 1 in the stud leg.</li>
+          <li>Check plumb again. Then add the other 6 screws.</li>
+          <li>Do the left face the same way, 10 mm toward the wall.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Joint 2</span>
+    <h2>Stud top</h2>
+    <div class="duo">
+      <figure><svg viewBox="-340 -2560 700 470" role="img" aria-label="Stud top: the same bracket upside down under the top plate"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="i-ah"/></marker></defs>
+<polygon points="0.0,-2403.0 38.1,-2381.0 -43.3,-2334.0 -81.4,-2356.0" class="t-top"/>
+<polygon points="-81.4,-2076.0 -43.3,-2054.0 -43.3,-2334.0 -81.4,-2356.0" class="t-front"/>
+<polygon points="38.1,-2101.0 -43.3,-2054.0 -43.3,-2334.0 38.1,-2381.0" class="t-side"/>
+<polygon points="12.6,-2366.2 73.2,-2331.2 25.5,-2303.8 -35.1,-2338.8" class="b-top"/>
+<polygon points="-35.1,-2336.2 25.5,-2301.2 25.5,-2303.8 -35.1,-2338.8" class="b-front"/>
+<polygon points="73.2,-2328.8 25.5,-2301.2 25.5,-2303.8 73.2,-2331.2" class="b-side"/>
+<polygon points="12.6,-2366.2 14.7,-2365.0 -32.9,-2337.5 -35.1,-2338.8" class="b-top"/>
+<polygon points="-35.1,-2268.8 -32.9,-2267.5 -32.9,-2337.5 -35.1,-2338.8" class="b-front"/>
+<polygon points="14.7,-2295.0 -32.9,-2267.5 -32.9,-2337.5 14.7,-2365.0" class="b-side"/>
+<ellipse cx="0.9" cy="-2307.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -2307.0)" class="i-screw"/>
+<ellipse cx="0.9" cy="-2335.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -2335.0)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-2295.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -2295.5)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-2323.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -2323.5)" class="i-screw"/>
+<polygon points="-147.2,-2532.0 199.2,-2332.0 117.8,-2285.0 -228.6,-2485.0" class="t-top"/>
+<polygon points="-228.6,-2441.0 117.8,-2241.0 117.8,-2285.0 -228.6,-2485.0" class="t-front"/>
+<polygon points="199.2,-2288.0 117.8,-2241.0 117.8,-2285.0 199.2,-2332.0" class="t-side"/>
+<line x1="-8.7" y1="-2311.5" x2="81.3" y2="-2271.5" class="i-lead"/>
+<text x="85.3" y="-2267.5" class="i-lbl" text-anchor="start">4 screws in the stud leg</text>
+<line x1="8.2" y1="-2311.2" x2="68.2" y2="-2211.2" class="i-lead"/>
+<text x="72.2" y="-2207.2" class="i-lbl" text-anchor="start">4 screws up into the plate</text>
+<line x1="-211.3" y1="-2453.0" x2="-221.3" y2="-2503.0" class="i-lead"/>
+<text x="-225.3" y="-2499.0" class="i-lbl" text-anchor="end">top plate</text>
+<line x1="-62.4" y1="-2115.0" x2="-122.4" y2="-2115.0" class="i-lead"/>
+<text x="-126.4" y="-2111.0" class="i-lbl" text-anchor="end">stud</text></svg><figcaption><b>The same bracket, upside down</b><span>Screw up into the top plate, and into the stud.</span></figcaption></figure>
+      <div>
+        <ol class="how">
+          <li>The top plate is already fixed to the ceiling (step 3).</li>
+          <li>Set the stud on its foot mark and swing the top in under its mark on the top plate. Tap it in with a hammer and a block if it's tight.</li>
+          <li>Check plumb. Bracket in the top corner, 10 mm forward on the right face and 10 mm back on the left.</li>
+          <li>Screw up into the plate first, then into the stud.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Joint 3 · Build journey step 6</span>
+    <h2>Noggins: the bracket is a shelf</h2>
+    <p class="lede">The brackets go on first and the noggin is dropped onto them, so you never have to hold a noggin and screw at the same time.</p>
+    <div class="trio">
+      <figure><span class="stage">1 · Brackets on</span><svg viewBox="-120 -1420 560 520" role="img" aria-label="Noggin, stage 1"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="i-ah"/></marker></defs>
+<polygon points="0.0,-1340.0 38.1,-1318.0 -43.3,-1271.0 -81.4,-1293.0" class="t-top"/>
+<polygon points="-81.4,-963.0 -43.3,-941.0 -43.3,-1271.0 -81.4,-1293.0" class="t-front"/>
+<polygon points="38.1,-988.0 -43.3,-941.0 -43.3,-1271.0 38.1,-1318.0" class="t-side"/>
+<polygon points="12.6,-1143.2 73.2,-1108.2 25.5,-1080.8 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1113.2 25.5,-1078.2 25.5,-1080.8 -35.1,-1115.8" class="b-front"/>
+<polygon points="73.2,-1105.8 25.5,-1078.2 25.5,-1080.8 73.2,-1108.2" class="b-side"/>
+<polygon points="12.6,-1143.2 14.7,-1142.0 -32.9,-1114.5 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1045.8 -32.9,-1044.5 -32.9,-1114.5 -35.1,-1115.8" class="b-front"/>
+<polygon points="14.7,-1072.0 -32.9,-1044.5 -32.9,-1114.5 14.7,-1142.0" class="b-side"/>
+<ellipse cx="0.9" cy="-1084.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1084.0)" class="i-screw"/>
+<ellipse cx="0.9" cy="-1112.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1112.0)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1072.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1072.5)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1100.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1100.5)" class="i-screw"/>
+<polygon points="329.9,-980.0 332.1,-978.8 284.5,-951.2 282.3,-952.5" class="b-top"/>
+<polygon points="282.3,-882.5 284.5,-881.2 284.5,-951.2 282.3,-952.5" class="b-front"/>
+<polygon points="332.1,-908.8 284.5,-881.2 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="271.5,-1013.8 332.1,-978.8 284.5,-951.2 223.9,-986.2" class="b-top"/>
+<polygon points="223.9,-983.8 284.5,-948.8 284.5,-951.2 223.9,-986.2" class="b-front"/>
+<polygon points="332.1,-976.2 284.5,-948.8 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="340.3,-1143.5 378.4,-1121.5 297.0,-1074.5 258.9,-1096.5" class="t-top"/>
+<polygon points="258.9,-766.5 297.0,-744.5 297.0,-1074.5 258.9,-1096.5" class="t-front"/>
+<polygon points="378.4,-791.5 297.0,-744.5 297.0,-1074.5 378.4,-1121.5" class="t-side"/>
+<line x1="-32.9" y1="-1114.5" x2="47.1" y2="-1184.5" class="i-lead"/>
+<text x="51.1" y="-1180.5" class="i-lbl" text-anchor="start">top at 1180</text></svg><figcaption><span>Mark 1180 (row 1) or 1811 (row 2) on both studs, with a line checked level across. Screw a bracket to each stud with its top on the line, legs pointing into the bay.</span></figcaption></figure>
+      <figure><span class="stage">2 · Drop it in</span><svg viewBox="-120 -1420 560 520" role="img" aria-label="Noggin, stage 2"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="i-ah"/></marker></defs>
+<polygon points="0.0,-1340.0 38.1,-1318.0 -43.3,-1271.0 -81.4,-1293.0" class="t-top"/>
+<polygon points="-81.4,-963.0 -43.3,-941.0 -43.3,-1271.0 -81.4,-1293.0" class="t-front"/>
+<polygon points="38.1,-988.0 -43.3,-941.0 -43.3,-1271.0 38.1,-1318.0" class="t-side"/>
+<polygon points="12.6,-1143.2 73.2,-1108.2 25.5,-1080.8 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1113.2 25.5,-1078.2 25.5,-1080.8 -35.1,-1115.8" class="b-front"/>
+<polygon points="73.2,-1105.8 25.5,-1078.2 25.5,-1080.8 73.2,-1108.2" class="b-side"/>
+<polygon points="12.6,-1143.2 14.7,-1142.0 -32.9,-1114.5 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1045.8 -32.9,-1044.5 -32.9,-1114.5 -35.1,-1115.8" class="b-front"/>
+<polygon points="14.7,-1072.0 -32.9,-1044.5 -32.9,-1114.5 14.7,-1142.0" class="b-side"/>
+<ellipse cx="0.9" cy="-1084.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1084.0)" class="i-screw"/>
+<ellipse cx="0.9" cy="-1112.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1112.0)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1072.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1072.5)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1100.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1100.5)" class="i-screw"/>
+<polygon points="329.9,-980.0 332.1,-978.8 284.5,-951.2 282.3,-952.5" class="b-top"/>
+<polygon points="282.3,-882.5 284.5,-881.2 284.5,-951.2 282.3,-952.5" class="b-front"/>
+<polygon points="332.1,-908.8 284.5,-881.2 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="271.5,-1013.8 332.1,-978.8 284.5,-951.2 223.9,-986.2" class="b-top"/>
+<polygon points="223.9,-983.8 284.5,-948.8 284.5,-951.2 223.9,-986.2" class="b-front"/>
+<polygon points="332.1,-976.2 284.5,-948.8 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="38.1,-1352.0 340.3,-1177.5 258.9,-1130.5 -43.3,-1305.0" class="n-top"/>
+<polygon points="-43.3,-1261.0 258.9,-1086.5 258.9,-1130.5 -43.3,-1305.0" class="n-front"/>
+<polygon points="340.3,-1133.5 258.9,-1086.5 258.9,-1130.5 340.3,-1177.5" class="n-side"/>
+<line x1="148.1" y1="-1187.5" x2="148.1" y2="-1107.5" class="i-arrow" marker-end="url(#ah)"/>
+<polygon points="340.3,-1143.5 378.4,-1121.5 297.0,-1074.5 258.9,-1096.5" class="t-top"/>
+<polygon points="258.9,-766.5 297.0,-744.5 297.0,-1074.5 258.9,-1096.5" class="t-front"/>
+<polygon points="378.4,-791.5 297.0,-744.5 297.0,-1074.5 378.4,-1121.5" class="t-side"/>
+<line x1="178.4" y1="-1155.0" x2="218.4" y2="-1195.0" class="i-lead"/>
+<text x="222.4" y="-1191.0" class="i-lbl" text-anchor="start">N1 / N2</text></svg><figcaption><span>Lower the noggin onto the two brackets, its front flush with the studs' front. If it's tight, tap it down with a block.</span></figcaption></figure>
+      <figure><span class="stage">3 · Screw up</span><svg viewBox="-120 -1420 560 520" role="img" aria-label="Noggin, stage 3"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="i-ah"/></marker></defs>
+<polygon points="0.0,-1340.0 38.1,-1318.0 -43.3,-1271.0 -81.4,-1293.0" class="t-top"/>
+<polygon points="-81.4,-963.0 -43.3,-941.0 -43.3,-1271.0 -81.4,-1293.0" class="t-front"/>
+<polygon points="38.1,-988.0 -43.3,-941.0 -43.3,-1271.0 38.1,-1318.0" class="t-side"/>
+<polygon points="12.6,-1143.2 73.2,-1108.2 25.5,-1080.8 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1113.2 25.5,-1078.2 25.5,-1080.8 -35.1,-1115.8" class="b-front"/>
+<polygon points="73.2,-1105.8 25.5,-1078.2 25.5,-1080.8 73.2,-1108.2" class="b-side"/>
+<polygon points="12.6,-1143.2 14.7,-1142.0 -32.9,-1114.5 -35.1,-1115.8" class="b-top"/>
+<polygon points="-35.1,-1045.8 -32.9,-1044.5 -32.9,-1114.5 -35.1,-1115.8" class="b-front"/>
+<polygon points="14.7,-1072.0 -32.9,-1044.5 -32.9,-1114.5 14.7,-1142.0" class="b-side"/>
+<ellipse cx="0.9" cy="-1084.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1084.0)" class="i-screw"/>
+<ellipse cx="0.9" cy="-1112.0" rx="3.2" ry="4.6" transform="rotate(-30 0.9 -1112.0)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1072.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1072.5)" class="i-screw"/>
+<ellipse cx="-19.1" cy="-1100.5" rx="3.2" ry="4.6" transform="rotate(-30 -19.1 -1100.5)" class="i-screw"/>
+<polygon points="329.9,-980.0 332.1,-978.8 284.5,-951.2 282.3,-952.5" class="b-top"/>
+<polygon points="282.3,-882.5 284.5,-881.2 284.5,-951.2 282.3,-952.5" class="b-front"/>
+<polygon points="332.1,-908.8 284.5,-881.2 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="271.5,-1013.8 332.1,-978.8 284.5,-951.2 223.9,-986.2" class="b-top"/>
+<polygon points="223.9,-983.8 284.5,-948.8 284.5,-951.2 223.9,-986.2" class="b-front"/>
+<polygon points="332.1,-976.2 284.5,-948.8 284.5,-951.2 332.1,-978.8" class="b-side"/>
+<polygon points="38.1,-1202.0 340.3,-1027.5 258.9,-980.5 -43.3,-1155.0" class="t-top"/>
+<polygon points="-43.3,-1111.0 258.9,-936.5 258.9,-980.5 -43.3,-1155.0" class="t-front"/>
+<polygon points="340.3,-983.5 258.9,-936.5 258.9,-980.5 340.3,-1027.5" class="t-side"/>
+<line x1="11.7" y1="-1046.8" x2="11.7" y2="-1108.8" class="i-arrow i-arrow-s" marker-end="url(#ah)"/>
+<line x1="34.2" y1="-1033.8" x2="34.2" y2="-1095.8" class="i-arrow i-arrow-s" marker-end="url(#ah)"/>
+<polygon points="340.3,-1143.5 378.4,-1121.5 297.0,-1074.5 258.9,-1096.5" class="t-top"/>
+<polygon points="258.9,-766.5 297.0,-744.5 297.0,-1074.5 258.9,-1096.5" class="t-front"/>
+<polygon points="378.4,-791.5 297.0,-744.5 297.0,-1074.5 378.4,-1121.5" class="t-side"/>
+<line x1="23.8" y1="-1039.8" x2="63.8" y2="-969.8" class="i-lead"/>
+<text x="67.8" y="-965.8" class="i-lbl" text-anchor="start">2 screws up</text></svg><figcaption><span>Two screws up through each bracket into the noggin. Done: the noggin can't drop or slide.</span></figcaption></figure>
+    </div>
+    <ul class="plain">
+      <li>Row 1 at 1180 skips the pillar bay and the open bay. Row 2 at 1811 runs in every bay, including N3 over the pillar and N4 over the open bay.</li>
+      <li>N3's brackets hang down to 1741, just above the pillar top at 1735. Check they clear it. If one touches, file or bend the corner a little, or fit that bracket on top of the noggin instead.</li>
+    </ul>
+  </section>
+
+  <section>
+    <span class="eyebrow">Seen from above</span>
+    <h2>Where the bracket sits on the stud</h2>
+    <div class="duo">
+      <figure><svg viewBox="-140 -60 420 240" role="img" aria-label="Seen from above: bracket positions on the side faces of a stud">
+<rect x="-140" y="-30" width="420" height="30" class="x-wall"/>
+<text x="-130" y="-38" class="x-lbl-s">back wall side</text>
+<rect x="-140" y="94" width="420" height="18" class="x-osb"/>
+<text x="-130" y="135" class="x-lbl-s">OSB side (front)</text>
+<rect x="0" y="0" width="44" height="94" class="x-timber"/>
+<rect x="-2.5" y="9.5" width="2.5" height="55" class="x-steel"/>
+<rect x="-70" y="9.5" width="67.5" height="55" class="x-steel-l"/>
+<rect x="44" y="29.5" width="2.5" height="55" class="x-steel"/>
+<rect x="46.5" y="29.5" width="67.5" height="55" class="x-steel-l"/>
+<line x1="-2.5" y1="25.5" x2="32.5" y2="25.5" class="x-screw"/>
+<line x1="-2.5" y1="48.5" x2="32.5" y2="48.5" class="x-screw"/>
+<line x1="46.5" y1="45.5" x2="11.5" y2="45.5" class="x-screw"/>
+<line x1="46.5" y1="68.5" x2="11.5" y2="68.5" class="x-screw"/>
+<text x="22" y="165" class="x-lbl" text-anchor="middle">stud 44×94</text>
+<text x="-35" y="41.0" class="x-lbl-s" text-anchor="middle">left</text>
+<text x="80" y="61.0" class="x-lbl-s" text-anchor="middle">right</text>
+<line x1="160" y1="0" x2="160" y2="29.5" class="x-dim"/><text x="166" y="18.75" class="x-lbl-s">29.5</text>
+<line x1="160" y1="29.5" x2="160" y2="84.5" class="x-dim"/><text x="166" y="61.0" class="x-lbl-s">55</text>
+<line x1="160" y1="84.5" x2="160" y2="94" class="x-dim"/><text x="166" y="93.25" class="x-lbl-s">9.5</text>
+<line x1="-100" y1="0" x2="-100" y2="9.5" class="x-dim"/><text x="-106" y="8.75" class="x-lbl-s" text-anchor="end">9.5</text>
+</svg><figcaption><b>Shifted 10 mm each way</b><span>The 55 mm leg fits within the 94 mm stud either way. The screws from left and right miss each other.</span></figcaption></figure>
+      <figure><svg viewBox="640 -60 600 230" role="img" aria-label="Seen from above at the foot of V3 and V4: brackets only on the free side, plugs into the pillar">
+<rect x="640" y="-30" width="600" height="30" class="x-wall"/>
+<rect x="830" y="0" width="220" height="74" class="x-brick"/>
+<text x="940" y="44" class="x-lbl" text-anchor="middle">pillar</text>
+<rect x="786" y="0" width="44" height="94" class="x-timber"/>
+<rect x="1050" y="0" width="44" height="94" class="x-timber"/>
+<rect x="783.5" y="9.5" width="2.5" height="55" class="x-steel"/><rect x="716" y="9.5" width="67.5" height="55" class="x-steel-l"/>
+<rect x="1094" y="29.5" width="2.5" height="55" class="x-steel"/><rect x="1096.5" y="29.5" width="67.5" height="55" class="x-steel-l"/>
+<line x1="786" y1="37" x2="886" y2="37" class="x-plug"/>
+<line x1="1094" y1="37" x2="994" y2="37" class="x-plug"/>
+<text x="808" y="120" class="x-code" text-anchor="middle">V3</text><text x="1072" y="120" class="x-code" text-anchor="middle">V4</text>
+<text x="700" y="150" class="x-lbl-s">bracket on the free side</text>
+<text x="940" y="-40" class="x-lbl-s" text-anchor="middle">plugs into the brick</text>
+</svg><figcaption><b>Against the pillar</b><span>Where a stud is against brick, it gets one bracket on its free side. The plugs through the stud into the brick do the rest.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Joint 4 · Build journey step 5</span>
+    <h2>Open bay: header and short studs</h2>
+    <div class="duo">
+      <figure><svg viewBox="1780 1000 900 1500" role="img" aria-label="The open bay: header on two brackets, V7 and V8 standing on the header">
+<rect x="1905" y="1293" width="700" height="1180" class="s-open"/>
+<rect x="2605" y="0" width="60" height="2473" class="s-brick"/>
+<rect x="1861" y="70" width="44" height="1403" class="s-timber"/>
+<rect x="1905" y="1249" width="697" height="44" class="s-timber"/>
+<rect x="2211" y="70" width="44" height="1179" class="s-timber"/>
+<rect x="2561" y="70" width="44" height="1179" class="s-timber"/>
+<rect x="1780" y="26" width="825" height="44" class="s-timber"/>
+<rect x="1905" y="618" width="306" height="44" class="s-timber"/>
+<rect x="2255" y="618" width="306" height="44" class="s-timber"/>
+<path d="M1905,1363 L1905,1293 L1975,1293" class="s-br"/>
+<path d="M2605,1363 L2605,1293 L2535,1293" class="s-br"/>
+<path d="M2211,1179 L2211,1249 L2141,1249" class="s-br"/>
+<path d="M2211,140 L2211,70 L2141,70" class="s-br"/>
+<path d="M2255,1179 L2255,1249 L2325,1249" class="s-br"/>
+<path d="M2255,140 L2255,70 L2325,70" class="s-br"/>
+<path d="M2561,1179 L2561,1249 L2491,1249" class="s-br"/>
+<path d="M2561,140 L2561,70 L2491,70" class="s-br"/>
+<path d="M1905,732 L1905,662 L1975,662" class="s-br"/>
+<path d="M2211,732 L2211,662 L2141,662" class="s-br"/>
+<path d="M2255,732 L2255,662 L2325,662" class="s-br"/>
+<path d="M2561,732 L2561,662 L2491,662" class="s-br"/>
+<text x="2255" y="1373" class="s-lbl" text-anchor="middle">header H on 2 brackets</text>
+<text x="1880" y="1373" class="s-txt-s" text-anchor="end">on V6</text>
+<text x="2520" y="1413" class="s-txt-s" text-anchor="end">on the brick:</text>
+<text x="2520" y="1463" class="s-txt-s" text-anchor="end">6 mm plugs + 5×50</text>
+<text x="1883" y="13" class="s-code" text-anchor="middle">V6</text>
+<text x="2233" y="13" class="s-code" text-anchor="middle">V7</text>
+<text x="2583" y="13" class="s-code" text-anchor="middle">V8</text>
+<text x="2255" y="1873" class="s-txt-s" text-anchor="middle">open bay</text>
+</svg><figcaption><b>Header on two brackets</b><span>One bracket on V6, one plugged into the kitchen-wall brick. V7 and V8 stand on the header like normal studs.</span></figcaption></figure>
+      <div>
+        <ol class="how">
+          <li>Draw a level line at 1180 from V6 to the kitchen wall.</li>
+          <li>Screw a bracket on V6's right face, top on the line.</li>
+          <li>Hold a bracket on the kitchen wall, top on the line, and mark its holes. Drill 6 mm, plug, and screw it on with 5×50.</li>
+          <li>Drop the header H onto both brackets. Screw up into it.</li>
+          <li>Stand V7 and V8 on the header with brackets at foot and top, like Joint 1 and 2. V8 gets them on its left face only, then 2 plugs into the kitchen wall.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Good to know</span>
+    <h2>Tips</h2>
+    <ul class="plain">
+      <li><b>Bit:</b> use the right driver bit for the anchor screws, and press hard. A slipping bit ruins the screw head.</li>
+      <li><b>Speed:</b> low gear and slow at the end. Stop as soon as the head sits on the steel; overdriving strips the wood.</li>
+      <li><b>Marking:</b> mark bracket heights with a square across the face. A pencil line on both studs plus the waterpas across is quicker than measuring each one.</li>
+      <li><b>OSB later:</b> if an OSB screw hits a bracket screw inside the stud, move it 3 cm up or down.</li>
+      <li><b>Insulation:</b> cut the glass wool around the brackets. A small slit lets it slide over the leg.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
