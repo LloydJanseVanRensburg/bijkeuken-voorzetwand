@@ -126,6 +126,8 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 .d-gips { fill: var(--line); stroke: var(--ink-soft); stroke-width: 1; }
 .d-plugline { stroke: var(--fix); stroke-width: 6; stroke-linecap: round; }
 .d-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.d-steel { fill: #8fa3b8; stroke: #4b5b6b; stroke-width: .8; }
+.d-screw { stroke: #4b5b6b; stroke-width: 2; }
 .d-ghostline { stroke: var(--marker); stroke-width: 1.5; stroke-dasharray: 6 4; }
 .d-lbl { fill: var(--ink); font: 13px var(--f-mono); }
 .d-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
@@ -144,11 +146,11 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
   </header>
 
   <section aria-label="Checklist">
-    <div class="progress"><div class="row"><span>Progress</span><span id="total">0/53</span></div><div class="meter"><i id="bar"></i></div></div>
+    <div class="progress"><div class="row"><span>Progress</span><span id="total">0/54</span></div><div class="meter"><i id="bar"></i></div></div>
     <div class="phases">
 <details class="phase" data-phase="1">
-  <summary><span class="step-no">1</span><span class="ph-title"><h3>Gear ready</h3><small>Everything within reach before the first mark.</small></span><span class="count" aria-live="polite">0/7</span></summary>
-  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p1-1"><span class="box"></span><span class="txt">Safety glasses, hearing protection, FFP2 mask, gloves<small>Brick and concrete dust is fine and nasty. Wear the mask for every hole.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>10 mm stone bit at least 160 mm long<small>It has to go 44 mm through the timber and about 60 mm into the brick or floor, so roughly 110 mm deep in total. A short bit won&#x27;t reach.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-3"><span class="box"></span><span class="txt">6 mm stone bit, 4 mm wood bit, the right bits for your screws<small>6 mm for the header bracket and the packing piece. 4 mm to pre-drill the top plate for the 6×160 screws.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-4"><span class="box"></span><span class="txt">Drill and detector charged; detector checked on a bit of wall you know is empty</span></label></li><li class="check"><label><input type="checkbox" id="p1-5"><span class="box"></span><span class="txt">Vacuum cleaner, painter&#x27;s tape, pencil, marker, tape measure, long and short waterpas<small>Painter&#x27;s tape takes marks on painted walls without leaving a mess.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-6"><span class="box"></span><span class="txt">Extra 6 mm plugs + 5×50 screws (4–6 more)<small>The header bracket and the packing piece together use up all 4 you bought.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-7"><span class="box"></span><span class="txt">Pieces sorted by code, leaned up in build order<small>Plates → studs → header → noggins → OSB row 1, 2, 3.</small></span></label></li></ul></div>
+  <summary><span class="step-no">1</span><span class="ph-title"><h3>Gear ready</h3><small>Everything within reach before the first mark.</small></span><span class="count" aria-live="polite">0/8</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p1-1"><span class="box"></span><span class="txt">Safety glasses, hearing protection, FFP2 mask, gloves<small>Brick and concrete dust is fine and nasty. Wear the mask for every hole.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>10 mm stone bit at least 160 mm long<small>It has to go 44 mm through the timber and about 60 mm into the brick or floor, so roughly 110 mm deep in total. A short bit won&#x27;t reach.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-3"><span class="box"></span><span class="txt">6 mm stone bit, 4 mm wood bit, the right bits for your screws<small>6 mm for the header bracket, the pillar brackets and the packing piece. 4 mm to pre-drill the top plate for the 6×160 screws.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-4"><span class="box"></span><span class="txt">Drill and detector charged; detector checked on a bit of wall you know is empty</span></label></li><li class="check"><label><input type="checkbox" id="p1-5"><span class="box"></span><span class="txt">Vacuum cleaner, painter&#x27;s tape, pencil, marker, tape measure, long and short waterpas<small>Painter&#x27;s tape takes marks on painted walls without leaving a mess.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-6"><span class="box"></span><span class="txt">Extra 6 mm plugs + 5×50 screws (12 more)<small>The header bracket and the packing piece use up the 4 you bought. The 6 pillar brackets need 1–2 each.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-7"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>6 small angle brackets with legs of 50 mm or less (for example 50×50×35)<small>For V3 and V4 on the pillar&#x27;s front face. Your 70 mm brackets don&#x27;t fit there: only 55 mm of stud sticks out past the pillar, so a 70 leg would poke 15 mm into the OSB.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-8"><span class="box"></span><span class="txt">Pieces sorted by code, leaned up in build order<small>Plates → studs → header → noggins → OSB row 1, 2, 3.</small></span></label></li></ul></div>
 </details>
 <details class="phase" data-phase="2">
   <summary><span class="step-no">2</span><span class="ph-title"><h3>Clear and clean</h3><small>A clean, empty wall and floor to work on.</small></span><span class="count" aria-live="polite">0/3</span></summary>
@@ -168,7 +170,7 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 </details>
 <details class="phase" data-phase="6">
   <summary><span class="step-no">6</span><span class="ph-title"><h3>Prep the pillar</h3><small>Flat, plumb sides for V3 and V4 to sit tight against.</small></span><span class="count" aria-live="polite">0/4</span></summary>
-  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p6-1"><span class="box"></span><span class="txt">Mortar lumps and paint drips scraped off both sides and the front face<small>Use a scraper or an old chisel. The stud must sit flat.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-2"><span class="box"></span><span class="txt">Both sides checked for plumb<small>If a side leans, the stud must not follow it. Wedge packers between stud and pillar at the plug points so the stud stays plumb.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-3"><span class="box"></span><span class="txt">Top bricks checked for looseness<small>Loose? Keep the top plug (P3/P6) lower than 1500.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-4"><span class="box"></span><span class="txt">Brick joints found near 300, 750 and 1500<small>Shift each plug height up or down a bit so it hits the middle of a brick, not a mortar joint.</small></span></label></li></ul></div>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p6-1"><span class="box"></span><span class="txt">Mortar lumps and paint drips scraped off both sides and the front face<small>Use a scraper or an old chisel. The stud must sit flat.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-2"><span class="box"></span><span class="txt">Both sides checked for plumb<small>If a side leans, the stud must not follow it. Wedge packers between stud and pillar at the bracket heights so the stud stays plumb.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-3"><span class="box"></span><span class="txt">Top bricks checked for looseness<small>Loose? Keep the top brackets (PB3/PB6) lower than 1500.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-4"><span class="box"></span><span class="txt">Brick joints found on the front face near 300, 750 and 1500<small>Shift each bracket up or down a bit so its plug hits the middle of a brick, not a mortar joint.</small></span></label></li></ul></div>
 </details>
 <details class="phase" data-phase="7">
   <summary><span class="step-no">7</span><span class="ph-title"><h3>Mark the layout</h3><small>Where every stud and plate goes, on floor and ceiling.</small></span><span class="count" aria-live="polite">0/7</span></summary>
@@ -176,7 +178,7 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 </details>
 <details class="phase" data-phase="8">
   <summary><span class="step-no">8</span><span class="ph-title"><h3>Mark the drill spots</h3><small>Every hole on the map below, marked on tape.</small></span><span class="count" aria-live="polite">0/7</span></summary>
-  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p8-1"><span class="box"></span><span class="txt">F1–F4 on the floor line: x 220 · 610 · 1275 · 1680, 82 mm out<small>One in the middle of each bay. At least 80 mm from a stud, so they don&#x27;t clash with the brackets.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-2"><span class="box"></span><span class="txt">P1–P6 on the pillar sides: heights 300 · 750 · 1500, 52 mm out<small>The studs overlap the pillar by 39 mm. At 52 there&#x27;s 22 mm of brick to the front corner, so drill with the hammer off. You&#x27;ll drill through the stud, so also mark these heights on V3 and V4.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-3"><span class="box"></span><span class="txt">K1–K2 on the kitchen wall: heights 1500 · 2150, 82 mm out<small>Only once the cable scan of that corner is clear.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-4"><span class="box"></span><span class="txt">HB: real bracket held on the kitchen wall, top at 1180, marked through its holes</span></label></li><li class="check"><label><input type="checkbox" id="p8-5"><span class="box"></span><span class="txt">C: one mark per joist on the ceiling line</span></label></li><li class="check"><label><input type="checkbox" id="p8-6"><span class="box"></span><span class="txt">E: one mark per batten on the V1 line</span></label></li><li class="check"><label><input type="checkbox" id="p8-7"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Final walk past every mark<small>None in a red zone, none within 80 mm of a stud side at the floor, none in the open bay.</small></span></label></li></ul><a class="maplink" href="#drillmap">Open the drill map ↓</a></div>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p8-1"><span class="box"></span><span class="txt">F1–F4 on the floor line: x 220 · 610 · 1275 · 1680, 82 mm out<small>One in the middle of each bay. At least 80 mm from a stud, so they don&#x27;t clash with the brackets.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-2"><span class="box"></span><span class="txt">PB1–PB6 on the pillar&#x27;s front face: heights 300 · 750 · 1500, 35 mm in from each side corner<small>Best: stand V3 and V4 first, hold a small bracket in the corner and mark through its outer hole. Use the hole furthest from the bend, so the plug is well away from the brick corner. Hammer off.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-3"><span class="box"></span><span class="txt">K1–K2 on the kitchen wall: heights 1500 · 2150, 82 mm out<small>Only once the cable scan of that corner is clear.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-4"><span class="box"></span><span class="txt">HB: real bracket held on the kitchen wall, top at 1180, marked through its holes</span></label></li><li class="check"><label><input type="checkbox" id="p8-5"><span class="box"></span><span class="txt">C: one mark per joist on the ceiling line</span></label></li><li class="check"><label><input type="checkbox" id="p8-6"><span class="box"></span><span class="txt">E: one mark per batten on the V1 line</span></label></li><li class="check"><label><input type="checkbox" id="p8-7"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Final walk past every mark<small>None in a red zone, none within 80 mm of a stud side at the floor, none in the open bay.</small></span></label></li></ul><a class="maplink" href="#drillmap">Open the drill map ↓</a></div>
 </details>
 <details class="phase" data-phase="9">
   <summary><span class="step-no">9</span><span class="ph-title"><h3>Dry fit</h3><small>Pieces in place loosely, before anything is fixed.</small></span><span class="count" aria-live="polite">0/4</span></summary>
@@ -233,24 +235,18 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 <text x="1275" y="2583" class="s-lbl" text-anchor="middle">F3</text>
 <circle cx="1680" cy="2451" r="26" class="s-fix"/>
 <text x="1680" y="2583" class="s-lbl" text-anchor="middle">F4</text>
-<circle cx="808" cy="2173" r="26" class="s-fix"/>
-<text x="760" y="2188" class="s-lbl" text-anchor="end">P1</text>
-<circle cx="1072" cy="2173" r="26" class="s-fix"/>
-<text x="1120" y="2188" class="s-lbl" text-anchor="start">P4</text>
-<line x1="808" y1="2173" x2="870" y2="2173" class="s-arrow"/>
-<line x1="1072" y1="2173" x2="1010" y2="2173" class="s-arrow"/>
-<circle cx="808" cy="1723" r="26" class="s-fix"/>
-<text x="760" y="1738" class="s-lbl" text-anchor="end">P2</text>
-<circle cx="1072" cy="1723" r="26" class="s-fix"/>
-<text x="1120" y="1738" class="s-lbl" text-anchor="start">P5</text>
-<line x1="808" y1="1723" x2="870" y2="1723" class="s-arrow"/>
-<line x1="1072" y1="1723" x2="1010" y2="1723" class="s-arrow"/>
-<circle cx="808" cy="973" r="26" class="s-fix"/>
-<text x="760" y="988" class="s-lbl" text-anchor="end">P3</text>
-<circle cx="1072" cy="973" r="26" class="s-fix"/>
-<text x="1120" y="988" class="s-lbl" text-anchor="start">P6</text>
-<line x1="808" y1="973" x2="870" y2="973" class="s-arrow"/>
-<line x1="1072" y1="973" x2="1010" y2="973" class="s-arrow"/>
+<circle cx="865" cy="2173" r="26" class="s-fix-open"/>
+<text x="760" y="2188" class="s-lbl" text-anchor="end">PB1</text>
+<circle cx="1015" cy="2173" r="26" class="s-fix-open"/>
+<text x="1120" y="2188" class="s-lbl" text-anchor="start">PB4</text>
+<circle cx="865" cy="1723" r="26" class="s-fix-open"/>
+<text x="760" y="1738" class="s-lbl" text-anchor="end">PB2</text>
+<circle cx="1015" cy="1723" r="26" class="s-fix-open"/>
+<text x="1120" y="1738" class="s-lbl" text-anchor="start">PB5</text>
+<circle cx="865" cy="973" r="26" class="s-fix-open"/>
+<text x="760" y="988" class="s-lbl" text-anchor="end">PB3</text>
+<circle cx="1015" cy="973" r="26" class="s-fix-open"/>
+<text x="1120" y="988" class="s-lbl" text-anchor="start">PB6</text>
 <circle cx="880" cy="1271" r="26" class="s-fix-open"/>
 <circle cx="1000" cy="1271" r="26" class="s-fix-open"/>
 <text x="940" y="1188" class="s-lbl" text-anchor="middle">PP</text>
@@ -283,27 +279,35 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
         <span><i class="dash"></i>screw wherever a joist or batten is found</span>
       </div>
     </figure>
-    <div class="scroll"><table><thead><tr><th>Code</th><th>Where</th><th>x</th><th>Height</th><th>From back wall</th><th>Fixing</th><th>Drill depth</th></tr></thead><tbody><tr><td class="code">F1–F4</td><td>Floor, through BP1/BP2</td><td class="mono">220 · 610 · 1275 · 1680</td><td class="mono">—</td><td class="mono">82</td><td>10×100 kozijnplug</td><td class="mono">110 from plate top</td></tr><tr><td class="code">P1–P3</td><td>Pillar left side, through V3</td><td class="mono">808</td><td class="mono">300 · 750 · 1500</td><td class="mono">52</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">P4–P6</td><td>Pillar right side, through V4</td><td class="mono">1072</td><td class="mono">300 · 750 · 1500</td><td class="mono">52</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">K1–K2</td><td>Kitchen wall, through V8</td><td class="mono">2583</td><td class="mono">1500 · 2150</td><td class="mono">82</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">HB</td><td>Kitchen wall, header bracket</td><td class="mono">2605</td><td class="mono">just under 1180</td><td class="mono">~82</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">PP</td><td>Pillar face, OSB packing piece</td><td class="mono">~880 · ~1000</td><td class="mono">1202</td><td class="mono">face</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">C</td><td>Ceiling joists, through TP + packers</td><td class="mono">at each joist</td><td class="mono">top</td><td class="mono">82</td><td>6×160, pre-drill 4 mm in the plate</td><td class="mono">—</td></tr><tr><td class="code">E</td><td>Exterior wall battens, through V1</td><td class="mono">22</td><td class="mono">at each batten</td><td class="mono">82</td><td>6×120</td><td class="mono">—</td></tr></tbody></table></div>
+    <div class="scroll"><table><thead><tr><th>Code</th><th>Where</th><th>x</th><th>Height</th><th>From back wall</th><th>Fixing</th><th>Drill depth</th></tr></thead><tbody><tr><td class="code">F1–F4</td><td>Floor, through BP1/BP2</td><td class="mono">220 · 610 · 1275 · 1680</td><td class="mono">—</td><td class="mono">82</td><td>10×100 kozijnplug</td><td class="mono">110 from plate top</td></tr><tr><td class="code">PB1–PB3</td><td>Pillar front face, small bracket for V3</td><td class="mono">~865</td><td class="mono">300 · 750 · 1500</td><td class="mono">face</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">PB4–PB6</td><td>Pillar front face, small bracket for V4</td><td class="mono">~1015</td><td class="mono">300 · 750 · 1500</td><td class="mono">face</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">K1–K2</td><td>Kitchen wall, through V8</td><td class="mono">2583</td><td class="mono">1500 · 2150</td><td class="mono">82</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">HB</td><td>Kitchen wall, header bracket</td><td class="mono">2605</td><td class="mono">just under 1180</td><td class="mono">~82</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">PP</td><td>Pillar face, OSB packing piece</td><td class="mono">~880 · ~1000</td><td class="mono">1202</td><td class="mono">face</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">C</td><td>Ceiling joists, through TP + packers</td><td class="mono">at each joist</td><td class="mono">top</td><td class="mono">82</td><td>6×160, pre-drill 4 mm in the plate</td><td class="mono">—</td></tr><tr><td class="code">E</td><td>Exterior wall battens, through V1</td><td class="mono">22</td><td class="mono">at each batten</td><td class="mono">82</td><td>6×120</td><td class="mono">—</td></tr></tbody></table></div>
     <figure>
-<svg viewBox="690 -60 560 260" role="img" aria-label="Seen from above: where the pillar plugs go in depth">
+<svg viewBox="690 -60 600 270" role="img" aria-label="Seen from above: small brackets in the front corners between the pillar and V3 and V4">
 <rect x="700" y="-20" width="480" height="20" class="d-gips"/>
 <text x="710" y="-30" class="d-lbl-s">back wall (gips) · never drill</text>
 <rect x="830" y="0" width="220" height="74" class="s-brick"/>
-<text x="940" y="100" class="d-lbl" text-anchor="middle">pillar sticks out 74</text>
+<text x="940" y="40" class="d-lbl" text-anchor="middle">pillar</text>
 <rect x="786" y="35" width="44" height="94" class="s-timber-d"/>
 <rect x="1050" y="35" width="44" height="94" class="s-timber-d"/>
 <text x="808" y="148" class="d-lbl" text-anchor="middle">V3</text>
 <text x="1072" y="148" class="d-lbl" text-anchor="middle">V4</text>
-<line x1="786" y1="52" x2="886" y2="52" class="d-plugline"/>
-<line x1="1094" y1="52" x2="994" y2="52" class="d-plugline"/>
-<line x1="760" y1="0" x2="760" y2="52" class="d-lead"/>
-<text x="752" y="32" class="d-lbl" text-anchor="end">52</text>
-<line x1="786" y1="168" x2="830" y2="168" class="d-lead"/><text x="808" y="186" class="d-lbl-s" text-anchor="middle">44</text>
-<line x1="830" y1="168" x2="886" y2="168" class="d-lead"/><text x="858" y="186" class="d-lbl-s" text-anchor="middle">56</text>
-<text x="1110" y="96" class="d-lbl-s">OSB goes</text><text x="1110" y="112" class="d-lbl-s">on this face ↓</text>
+<rect x="830" y="74" width="2.5" height="50" class="d-steel"/>
+<rect x="830" y="74" width="50" height="2.5" class="d-steel"/>
+<line x1="865" y1="76" x2="865" y2="16" class="d-plugline"/>
+<line x1="830" y1="92" x2="800" y2="92" class="d-screw"/>
+<line x1="830" y1="114" x2="800" y2="114" class="d-screw"/>
+<rect x="1047.5" y="74" width="2.5" height="50" class="d-steel"/>
+<rect x="1000" y="74" width="50" height="2.5" class="d-steel"/>
+<line x1="1015" y1="76" x2="1015" y2="16" class="d-plugline"/>
+<line x1="1050" y1="92" x2="1080" y2="92" class="d-screw"/>
+<line x1="1050" y1="114" x2="1080" y2="114" class="d-screw"/>
+<line x1="1200" y1="74" x2="1200" y2="129" class="d-lead"/><text x="1208" y="106" class="d-lbl-s">55 free</text>
+<line x1="830" y1="168" x2="865" y2="168" class="d-lead"/><text x="848" y="186" class="d-lbl-s" text-anchor="middle">35</text>
+<line x1="1015" y1="168" x2="1050" y2="168" class="d-lead"/><text x="1032" y="186" class="d-lbl-s" text-anchor="middle">35</text>
+<text x="940" y="112" class="d-lbl-s" text-anchor="middle">bracket legs 50 or less</text>
 <line x1="700" y1="129" x2="1180" y2="129" class="d-ghostline"/>
+<text x="940" y="205" class="d-lbl-s" text-anchor="middle">OSB goes on this face</text>
 </svg>
-      <figcaption><b>Pillar plugs, seen from above</b><span>The studs stand 35 mm off the back wall, so they overlap the pillar by 39 mm. The plugs go sideways through V3 and V4 into the pillar at 52 mm out, which leaves 22 mm of brick to the front corner: drill with the hammer off. That's 44 mm of timber and about 56 mm of brick, so set the depth stop at 110 mm from the stud face.</span></figcaption>
+      <figcaption><b>Pillar brackets, seen from above</b><span>V3 and V4 stand against the pillar sides but aren't plugged through them: with the 35 mm gap the overlap is only 39 mm, too little edge in both the timber and the brick. Instead, a small angle bracket sits in each front corner: one leg screwed to the stud's side face (the 55 mm that sticks out past the pillar), one leg plugged into the pillar's front face, 35 mm in from the corner. Legs must be 50 mm or less, or they'll stick into the OSB. Keep them clear of the packing piece at 1180.</span></figcaption>
     </figure>
   </section>
 </main>
