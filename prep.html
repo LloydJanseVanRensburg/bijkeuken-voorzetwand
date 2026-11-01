@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Get ready · Bijkeuken voorzetwand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+/* Same workshop look as the cut sheet: one column, tap-to-tick, phases open one at a time */
+:root {
+  --paper: #eef1f4; --sheet: #ffffff; --ink: #1b2430; --ink-soft: #566273; --line: #cfd6de;
+  --marker: #1f56c9; --timber: #e3c48e; --timber-edge: #a9874d; --brick: #b98a78; --hatch: #f2d9a8;
+  --fix: #c2410c; --done: #2f8a4c;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+    --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+    --fix: #fb923c; --done: #5cc27e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+  --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+  --fix: #fb923c; --done: #5cc27e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 700; }
+h2 { font-size: 1.75rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--marker); }
+.eyebrow { font: 600 .75rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--marker); }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+section, header { display: grid; gap: 16px; }
+main > *, section > *, header > *, .phases > *, .ph-body > *, figure > * { min-width: 0; }
+.lede { color: var(--ink-soft); }
+.back { font: 500 .9rem var(--f-mono); text-decoration: none; justify-self: start; }
+.note { border-left: 3px solid var(--fix); padding: 10px 14px; background: var(--sheet); border-radius: 0 6px 6px 0; display: grid; gap: 6px; }
+
+/* Overall progress */
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--paper); padding-block: 10px; display: grid; gap: 6px; }
+.progress .row { display: flex; justify-content: space-between; font: 600 .8rem/1 var(--f-mono); color: var(--ink-soft); }
+.meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--done); transition: width .25s; }
+
+/* Phases */
+.phases { display: grid; gap: 10px; }
+.phase { background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; }
+.phase summary { list-style: none; display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+.phase summary::-webkit-details-marker { display: none; }
+.phase summary:focus-visible { outline: 2px solid var(--marker); outline-offset: -2px; border-radius: 6px; }
+.step-no { font: 700 2.2rem/0.9 var(--f-display); color: var(--marker); font-variant-numeric: tabular-nums; text-align: center; }
+.ph-title { display: grid; gap: 2px; }
+.ph-title small { color: var(--ink-soft); font-size: .88rem; }
+.count { font: 600 .85rem/1 var(--f-mono); color: var(--ink-soft); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; }
+.phase.done { border-color: var(--done); }
+.phase.done .step-no { color: var(--done); }
+.phase.done .count { background: var(--done); border-color: var(--done); color: var(--sheet); }
+.phase[open] summary { border-bottom: 1px solid var(--line); }
+.ph-body { padding: 4px 16px 16px; display: grid; gap: 12px; }
+.maplink { font: 600 .9rem var(--f-mono); justify-self: start; }
+
+/* Checklists */
+.checks { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.check label { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check:last-child label { border-bottom: 0; }
+.check input { position: absolute; opacity: 0; pointer-events: none; }
+.check .box { width: 22px; height: 22px; border: 2px solid var(--ink-soft); border-radius: 4px; display: grid; place-content: center; margin-top: 1px; }
+.check input:focus-visible + .box { outline: 2px solid var(--marker); outline-offset: 2px; }
+.check input:checked + .box { background: var(--done); border-color: var(--done); }
+.check input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid var(--sheet); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.check input:checked ~ .txt { color: var(--ink-soft); }
+.check input:checked ~ .txt small { display: none; }
+.txt small { display: block; color: var(--ink-soft); font-size: .88rem; margin-top: 2px; }
+.flag { display: inline-block; font: 600 .66rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--sheet); background: var(--fix); padding: 4px 6px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.check input:checked ~ .txt .flag { background: var(--done); }
+.reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+.reset.armed { color: var(--fix); border-color: var(--fix); }
+
+/* Drill map */
+figure { margin: 0; display: grid; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
+figcaption { display: grid; gap: 4px; font-size: .92rem; }
+figcaption b { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
+figcaption span { color: var(--ink-soft); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll svg { display: block; min-width: 560px; width: 100%; height: auto; }
+figure > svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fix); }
+.dot.open { background: transparent; border: 2px solid var(--fix); }
+.dash { width: 18px; border-top: 3px dashed var(--fix); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
+.s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
+.s-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 3; }
+.s-open { fill: var(--hatch); opacity: .55; stroke: var(--ink-soft); stroke-width: 5; stroke-dasharray: 24 16; }
+.s-ghost { fill: var(--timber); fill-opacity: .25; stroke: var(--timber-edge); stroke-width: 3; stroke-dasharray: 14 10; }
+.s-pack { fill: var(--timber); fill-opacity: .5; stroke: var(--timber-edge); stroke-width: 4; }
+.s-fix { fill: var(--fix); }
+.s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 9; }
+.s-arrow { stroke: var(--fix); stroke-width: 10; }
+.s-maybe { stroke: var(--fix); stroke-width: 12; stroke-dasharray: 34 28; }
+.s-dim { stroke: var(--ink-soft); stroke-width: 3; }
+.s-txt-s { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 40px; }
+.s-code { fill: var(--marker); font-family: var(--f-mono); font-size: 44px; font-weight: 600; }
+.s-lbl { fill: var(--ink); font-family: var(--f-mono); font-size: 46px; font-weight: 600; }
+.s-timber-d { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 1.5; }
+.d-gips { fill: var(--line); stroke: var(--ink-soft); stroke-width: 1; }
+.d-plugline { stroke: var(--fix); stroke-width: 6; stroke-linecap: round; }
+.d-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.d-ghostline { stroke: var(--marker); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.d-lbl { fill: var(--ink); font: 13px var(--f-mono); }
+.d-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
+@media print { .progress, .reset, .back { display: none; } .phase { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a class="back" href="./">← Cut sheet &amp; build journey</a>
+    <span class="eyebrow">Before the first hole</span>
+    <h1>Get ready</h1>
+    <p class="lede">Work through the phases in order. Each one opens when the previous one is done, and your ticks stay saved on this phone. A red <b>Stop if not OK</b> means: don't carry on past that point until it's sorted. Message me if one of those fails.</p>
+    <div class="note"><h3>Golden rule</h3><p>Never drill into the back wall. The frame is fixed to the floor, the ceiling joists, the pillar sides and the kitchen wall only.</p></div>
+  </header>
+
+  <section aria-label="Checklist">
+    <div class="progress"><div class="row"><span>Progress</span><span id="total">0/53</span></div><div class="meter"><i id="bar"></i></div></div>
+    <div class="phases">
+<details class="phase" data-phase="1">
+  <summary><span class="step-no">1</span><span class="ph-title"><h3>Gear ready</h3><small>Everything within reach before the first mark.</small></span><span class="count" aria-live="polite">0/7</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p1-1"><span class="box"></span><span class="txt">Safety glasses, hearing protection, FFP2 mask, gloves<small>Brick and concrete dust is fine and nasty. Wear the mask for every hole.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>10 mm stone bit at least 160 mm long<small>It has to go 44 mm through the timber and about 60 mm into the brick or floor, so roughly 110 mm deep in total. A short bit won&#x27;t reach.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-3"><span class="box"></span><span class="txt">6 mm stone bit, 4 mm wood bit, the right bits for your screws<small>6 mm for the header bracket and the packing piece. 4 mm to pre-drill the top plate for the 6×160 screws.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-4"><span class="box"></span><span class="txt">Drill and detector charged; detector checked on a bit of wall you know is empty</span></label></li><li class="check"><label><input type="checkbox" id="p1-5"><span class="box"></span><span class="txt">Vacuum cleaner, painter&#x27;s tape, pencil, marker, tape measure, long and short waterpas<small>Painter&#x27;s tape takes marks on painted walls without leaving a mess.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-6"><span class="box"></span><span class="txt">Extra 6 mm plugs + 5×50 screws (4–6 more)<small>The header bracket and the packing piece together use up all 4 you bought.</small></span></label></li><li class="check"><label><input type="checkbox" id="p1-7"><span class="box"></span><span class="txt">Pieces sorted by code, leaned up in build order<small>Plates → studs → header → noggins → OSB row 1, 2, 3.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="2">
+  <summary><span class="step-no">2</span><span class="ph-title"><h3>Clear and clean</h3><small>A clean, empty wall and floor to work on.</small></span><span class="count" aria-live="polite">0/3</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p2-1"><span class="box"></span><span class="txt">Everything moved away from the wall; floor swept along the wall</span></label></li><li class="check"><label><input type="checkbox" id="p2-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Black water pipe along the floor moved<small>BP1 and BP2 must lie flat on the floor. Not moved yet? You can still do the pillar and kitchen-wall marking, but not the floor plate.</small></span></label></li><li class="check"><label><input type="checkbox" id="p2-3"><span class="box"></span><span class="txt">You know which fuse (groep) feeds the bijkeuken socket and lights<small>Switch it off while you drill near the kitchen-wall corner and the socket.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="3">
+  <summary><span class="step-no">3</span><span class="ph-title"><h3>Scan for danger</h3><small>Find what you must not hit. Mark it with a red cross on tape.</small></span><span class="count" aria-live="polite">0/6</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p3-1"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Underfloor heating? Ruled out<small>Look for a manifold or a separate thermostat, or ask. If there&#x27;s any chance of it: don&#x27;t drill the floor. Glue BP1 and BP2 down with PU construction adhesive (montagekit) instead.</small></span></label></li><li class="check"><label><input type="checkbox" id="p3-2"><span class="box"></span><span class="txt">Floor type known<small>Tiles: start with a tile bit and hammer off until you&#x27;re through the tile, then switch to the stone bit.</small></span></label></li><li class="check"><label><input type="checkbox" id="p3-3"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Kitchen-wall corner scanned from floor to ceiling, about 30 cm wide<small>Cables often run in the 15 cm next to corners and the ceiling. That&#x27;s exactly where V8 and the header bracket go.</small></span></label></li><li class="check"><label><input type="checkbox" id="p3-4"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Above, below and beside the socket and junction box scanned<small>Cables run straight up, down or sideways from them.</small></span></label></li><li class="check"><label><input type="checkbox" id="p3-5"><span class="box"></span><span class="txt">Ceiling along the top plate line scanned for light cables</span></label></li><li class="check"><label><input type="checkbox" id="p3-6"><span class="box"></span><span class="txt">Pillar sides scanned<small>Rare, but takes 10 seconds.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="4">
+  <summary><span class="step-no">4</span><span class="ph-title"><h3>Find what you fix into</h3><small>Joists and battens, marked and written down.</small></span><span class="count" aria-live="polite">0/4</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p4-1"><span class="box"></span><span class="txt">Every ceiling joist marked where it crosses the top plate line<small>Write down each joist&#x27;s x position (mm from the exterior wall).</small></span></label></li><li class="check"><label><input type="checkbox" id="p4-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Joist direction checked: they cross the wall<small>If they run parallel to the back wall, the plate may miss them. You&#x27;d need spring toggles every ~40 cm instead. Message me.</small></span></label></li><li class="check"><label><input type="checkbox" id="p4-3"><span class="box"></span><span class="txt">Battens behind the exterior-wall gips found along V1 (x 0–44)<small>Mark their heights. No batten? Then V1 gets 4 spring toggles.</small></span></label></li><li class="check"><label><input type="checkbox" id="p4-4"><span class="box"></span><span class="txt">Back wall: nothing to look for<small>The plan never fixes anything to it. Never drill it.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="5">
+  <summary><span class="step-no">5</span><span class="ph-title"><h3>Measure the room</h3><small>Confirm the numbers the cut pieces were based on.</small></span><span class="count" aria-live="polite">0/6</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p5-1"><span class="box"></span><span class="txt">Floor level along the wall checked; high point marked<small>Lay a stud on edge with the waterpas on it. Note how much packing the low end needs under the floor plate.</small></span></label></li><li class="check"><label><input type="checkbox" id="p5-2"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Lowest ceiling along the back wall is 2450 or more<small>The frame is 2447. Lower than 2450 anywhere (plus any floor packing) and the studs need shortening first.</small></span></label></li><li class="check"><label><input type="checkbox" id="p5-3"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Pillar sides at 830 and 1050 from the exterior wall, at floor, 1 m and 1.7 m<small>Up to ±7 mm is fine. More than that: message me before marking, because the noggins and OSB are already cut.</small></span></label></li><li class="check"><label><input type="checkbox" id="p5-4"><span class="box"></span><span class="txt">Wall width 2605 at floor, middle and top</span></label></li><li class="check"><label><input type="checkbox" id="p5-5"><span class="box"></span><span class="txt">Vent grille 130 mm or more from the back wall<small>Less: message me before you build that corner.</small></span></label></li><li class="check"><label><input type="checkbox" id="p5-6"><span class="box"></span><span class="txt">Window frame in the kitchen wall measured from the back wall<small>V8 sits 0–94 from the back wall. Its plugs must go into brick, not near the frame.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="6">
+  <summary><span class="step-no">6</span><span class="ph-title"><h3>Prep the pillar</h3><small>Flat, plumb sides for V3 and V4 to sit tight against.</small></span><span class="count" aria-live="polite">0/4</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p6-1"><span class="box"></span><span class="txt">Mortar lumps and paint drips scraped off both sides and the front face<small>Use a scraper or an old chisel. The stud must sit flat.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-2"><span class="box"></span><span class="txt">Both sides checked for plumb<small>If a side leans, the stud must not follow it. Wedge packers between stud and pillar at the plug points so the stud stays plumb.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-3"><span class="box"></span><span class="txt">Top bricks checked for looseness<small>Loose? Keep the top plug (P3/P6) lower than 1500.</small></span></label></li><li class="check"><label><input type="checkbox" id="p6-4"><span class="box"></span><span class="txt">Brick joints found near 300, 750 and 1500<small>Shift each plug height up or down a bit so it hits the middle of a brick, not a mortar joint.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="7">
+  <summary><span class="step-no">7</span><span class="ph-title"><h3>Mark the layout</h3><small>Where every stud and plate goes, on floor and ceiling.</small></span><span class="count" aria-live="polite">0/7</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p7-1"><span class="box"></span><span class="txt">Floor line 94 mm out from the back wall<small>This is the front edge of the floor plate.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-2"><span class="box"></span><span class="txt">Stud left edges on the floor: 0 · 393 · 786 · 1050 · 1455 · 1861<small>Put an X on the side where the stud goes.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-3"><span class="box"></span><span class="txt">Checked with the noggins on the floor<small>N1 (348) fits between V1–V2 and V2–V3. N2 (360) fits between V4–V5 and V5–V6.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-4"><span class="box"></span><span class="txt">Open bay start marked at 1905<small>BP2 ends here. Nothing gets fixed to the floor beyond it.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-5"><span class="box"></span><span class="txt">Stud marks copied up to the ceiling, plus V7 2211 and V8 2561<small>Stand a stud on its mark, plumb it with the waterpas on two faces, mark the ceiling. Or use a plumb bob.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-6"><span class="box"></span><span class="txt">Ceiling line 94 mm out from the back wall<small>The front edge of the top plate.</small></span></label></li><li class="check"><label><input type="checkbox" id="p7-7"><span class="box"></span><span class="txt">1180 marked on the kitchen wall<small>The top of the header bracket.</small></span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="8">
+  <summary><span class="step-no">8</span><span class="ph-title"><h3>Mark the drill spots</h3><small>Every hole on the map below, marked on tape.</small></span><span class="count" aria-live="polite">0/7</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p8-1"><span class="box"></span><span class="txt">F1–F4 on the floor line: x 220 · 610 · 1275 · 1680, 47 mm out<small>One in the middle of each bay. At least 80 mm from a stud, so they don&#x27;t clash with the brackets.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-2"><span class="box"></span><span class="txt">P1–P6 on the pillar sides: heights 300 · 750 · 1500, 37 mm out<small>37 mm is the middle of the pillar&#x27;s 74 mm, so you don&#x27;t break the front corner. You&#x27;ll drill through the stud, so also mark these heights on V3 and V4.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-3"><span class="box"></span><span class="txt">K1–K2 on the kitchen wall: heights 1500 · 2150, 47 mm out<small>Only once the cable scan of that corner is clear.</small></span></label></li><li class="check"><label><input type="checkbox" id="p8-4"><span class="box"></span><span class="txt">HB: real bracket held on the kitchen wall, top at 1180, marked through its holes</span></label></li><li class="check"><label><input type="checkbox" id="p8-5"><span class="box"></span><span class="txt">C: one mark per joist on the ceiling line</span></label></li><li class="check"><label><input type="checkbox" id="p8-6"><span class="box"></span><span class="txt">E: one mark per batten on the V1 line</span></label></li><li class="check"><label><input type="checkbox" id="p8-7"><span class="box"></span><span class="txt"><span class="flag">Stop if not OK</span>Final walk past every mark<small>None in a red zone, none within 80 mm of a stud side at the floor, none in the open bay.</small></span></label></li></ul><a class="maplink" href="#drillmap">Open the drill map ↓</a></div>
+</details>
+<details class="phase" data-phase="9">
+  <summary><span class="step-no">9</span><span class="ph-title"><h3>Dry fit</h3><small>Pieces in place loosely, before anything is fixed.</small></span><span class="count" aria-live="polite">0/4</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p9-1"><span class="box"></span><span class="txt">BP1 fits between the exterior wall and the pillar; BP2 from the pillar to the 1905 mark</span></label></li><li class="check"><label><input type="checkbox" id="p9-2"><span class="box"></span><span class="txt">TP1, TP2 and TP3 held up: joints at 1072 and 1883, on the V4 and V6 marks</span></label></li><li class="check"><label><input type="checkbox" id="p9-3"><span class="box"></span><span class="txt">One stud stood between floor plate and top plate<small>44 + 2359 + 44 = 2447. You should see about 3 mm to the ceiling at the exterior wall and about 26 mm at the kitchen wall.</small></span></label></li><li class="check"><label><input type="checkbox" id="p9-4"><span class="box"></span><span class="txt">Packers laid out where the floor needs them</span></label></li></ul></div>
+</details>
+<details class="phase" data-phase="10">
+  <summary><span class="step-no">10</span><span class="ph-title"><h3>First holes</h3><small>Set up the drill, then start Build journey step 2.</small></span><span class="count" aria-live="polite">0/5</span></summary>
+  <div class="ph-body"><ul class="checks"><li class="check"><label><input type="checkbox" id="p10-1"><span class="box"></span><span class="txt">Depth stop set: 110 mm from the timber face for the 10×100 plugs<small>6 mm holes in brick: about 60 mm.</small></span></label></li><li class="check"><label><input type="checkbox" id="p10-2"><span class="box"></span><span class="txt">Practice hole through an offcut<small>Get a feel for drilling straight. Have someone watch from the side, or set a small level on the drill.</small></span></label></li><li class="check"><label><input type="checkbox" id="p10-3"><span class="box"></span><span class="txt">Hammer: off for the first few mm, then on in brick and concrete. Always off in timber and gips</span></label></li><li class="check"><label><input type="checkbox" id="p10-4"><span class="box"></span><span class="txt">Push-through method understood<small>Hold the timber on its line, drill through it into the floor or brick, vacuum the hole, tap the plug through, tighten until snug. Don&#x27;t overtighten into the pillar.</small></span></label></li><li class="check"><label><input type="checkbox" id="p10-5"><span class="box"></span><span class="txt">Start with the floor plates, then the top plate<small>From here, follow the Build journey on the main page: steps 2 and 3.</small></span></label></li></ul></div>
+</details>
+    </div>
+    <button class="reset" id="reset" type="button">Clear all ticks</button>
+  </section>
+
+  <section id="drillmap">
+    <span class="eyebrow">Drill map · 1 drawing unit = 1 mm</span>
+    <h2>Every hole, seen from inside</h2>
+    <p class="lede">x is measured from the exterior wall; heights from the floor. Dashed timber shows where the frame will go, so you can see each hole sits clear of the brackets.</p>
+    <figure>
+      <div class="scroll">
+<svg id="map" viewBox="-300 -140 3260 2760" role="img" aria-label="Drill map of the back wall seen from inside the bijkeuken">
+<polygon points="0,2473 2605,2473 2605,0 0,23" class="s-wall"/>
+<rect x="1905" y="1293" width="700" height="1180" class="s-open"/>
+<text x="2255" y="1913" class="s-txt-s" text-anchor="middle">open bay</text>
+<text x="2255" y="1963" class="s-txt-s" text-anchor="middle">no drilling</text>
+<rect x="830" y="738" width="220" height="1735" class="s-brick"/>
+<rect x="0" y="2429" width="826" height="44" class="s-ghost"/>
+<rect x="1050" y="2429" width="853" height="44" class="s-ghost"/>
+<rect x="0" y="26" width="1069" height="44" class="s-ghost"/>
+<rect x="1072" y="26" width="811" height="44" class="s-ghost"/>
+<rect x="1886" y="26" width="719" height="44" class="s-ghost"/>
+<rect x="0" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="393" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="786" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="1050" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="1455" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="1861" y="70" width="44" height="2359" class="s-ghost"/>
+<rect x="2211" y="70" width="44" height="1179" class="s-ghost"/>
+<rect x="2561" y="70" width="44" height="1179" class="s-ghost"/>
+<rect x="1905" y="1249" width="697" height="44" class="s-ghost"/>
+<rect x="836" y="1196" width="208" height="150" class="s-pack"/>
+<text x="22" y="-40" class="s-code" text-anchor="middle">V1</text>
+<text x="415" y="-40" class="s-code" text-anchor="middle">V2</text>
+<text x="808" y="-40" class="s-code" text-anchor="middle">V3</text>
+<text x="1072" y="-40" class="s-code" text-anchor="middle">V4</text>
+<text x="1477" y="-40" class="s-code" text-anchor="middle">V5</text>
+<text x="1883" y="-40" class="s-code" text-anchor="middle">V6</text>
+<text x="2233" y="-40" class="s-code" text-anchor="middle">V7</text>
+<text x="2583" y="-40" class="s-code" text-anchor="middle">V8</text>
+<circle cx="220" cy="2451" r="26" class="s-fix"/>
+<text x="220" y="2583" class="s-lbl" text-anchor="middle">F1</text>
+<circle cx="610" cy="2451" r="26" class="s-fix"/>
+<text x="610" y="2583" class="s-lbl" text-anchor="middle">F2</text>
+<circle cx="1275" cy="2451" r="26" class="s-fix"/>
+<text x="1275" y="2583" class="s-lbl" text-anchor="middle">F3</text>
+<circle cx="1680" cy="2451" r="26" class="s-fix"/>
+<text x="1680" y="2583" class="s-lbl" text-anchor="middle">F4</text>
+<circle cx="808" cy="2173" r="26" class="s-fix"/>
+<text x="760" y="2188" class="s-lbl" text-anchor="end">P1</text>
+<circle cx="1072" cy="2173" r="26" class="s-fix"/>
+<text x="1120" y="2188" class="s-lbl" text-anchor="start">P4</text>
+<line x1="808" y1="2173" x2="870" y2="2173" class="s-arrow"/>
+<line x1="1072" y1="2173" x2="1010" y2="2173" class="s-arrow"/>
+<circle cx="808" cy="1723" r="26" class="s-fix"/>
+<text x="760" y="1738" class="s-lbl" text-anchor="end">P2</text>
+<circle cx="1072" cy="1723" r="26" class="s-fix"/>
+<text x="1120" y="1738" class="s-lbl" text-anchor="start">P5</text>
+<line x1="808" y1="1723" x2="870" y2="1723" class="s-arrow"/>
+<line x1="1072" y1="1723" x2="1010" y2="1723" class="s-arrow"/>
+<circle cx="808" cy="973" r="26" class="s-fix"/>
+<text x="760" y="988" class="s-lbl" text-anchor="end">P3</text>
+<circle cx="1072" cy="973" r="26" class="s-fix"/>
+<text x="1120" y="988" class="s-lbl" text-anchor="start">P6</text>
+<line x1="808" y1="973" x2="870" y2="973" class="s-arrow"/>
+<line x1="1072" y1="973" x2="1010" y2="973" class="s-arrow"/>
+<circle cx="880" cy="1271" r="26" class="s-fix-open"/>
+<circle cx="1000" cy="1271" r="26" class="s-fix-open"/>
+<text x="940" y="1188" class="s-lbl" text-anchor="middle">PP</text>
+<circle cx="2583" cy="973" r="26" class="s-fix"/>
+<text x="2640" y="988" class="s-lbl" text-anchor="start">K1</text>
+<circle cx="2583" cy="323" r="26" class="s-fix"/>
+<text x="2640" y="338" class="s-lbl" text-anchor="start">K2</text>
+<circle cx="2595" cy="1363" r="26" class="s-fix-open"/>
+<circle cx="2595" cy="1323" r="26" class="s-fix-open"/>
+<text x="2640" y="1358" class="s-lbl" text-anchor="start">HB</text>
+<line x1="22" y1="2173" x2="22" y2="323" class="s-maybe"/>
+<text x="-40" y="1488" class="s-lbl" text-anchor="end">E</text>
+<line x1="60" y1="48" x2="2560" y2="48" class="s-maybe"/>
+<text x="1300" y="198" class="s-lbl" text-anchor="middle">C · one per joist</text>
+<line x1="-20" y1="2173" x2="-90" y2="2173" class="s-dim"/>
+<text x="-105" y="2187" class="s-txt-s" text-anchor="end">300</text>
+<line x1="-20" y1="1723" x2="-90" y2="1723" class="s-dim"/>
+<text x="-105" y="1737" class="s-txt-s" text-anchor="end">750</text>
+<line x1="-20" y1="1293" x2="-90" y2="1293" class="s-dim"/>
+<text x="-105" y="1307" class="s-txt-s" text-anchor="end">1180</text>
+<line x1="-20" y1="973" x2="-90" y2="973" class="s-dim"/>
+<text x="-105" y="987" class="s-txt-s" text-anchor="end">1500</text>
+<line x1="-20" y1="323" x2="-90" y2="323" class="s-dim"/>
+<text x="-105" y="337" class="s-txt-s" text-anchor="end">2150</text>
+</svg>
+      </div>
+      <div class="legend">
+        <span><i class="dot"></i>10 mm hole, kozijnplug 10×100</span>
+        <span><i class="dot open"></i>6 mm hole, plug + 5×50</span>
+        <span><i class="dash"></i>screw wherever a joist or batten is found</span>
+      </div>
+    </figure>
+    <div class="scroll"><table><thead><tr><th>Code</th><th>Where</th><th>x</th><th>Height</th><th>From back wall</th><th>Fixing</th><th>Drill depth</th></tr></thead><tbody><tr><td class="code">F1–F4</td><td>Floor, through BP1/BP2</td><td class="mono">220 · 610 · 1275 · 1680</td><td class="mono">—</td><td class="mono">47</td><td>10×100 kozijnplug</td><td class="mono">110 from plate top</td></tr><tr><td class="code">P1–P3</td><td>Pillar left side, through V3</td><td class="mono">808</td><td class="mono">300 · 750 · 1500</td><td class="mono">37</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">P4–P6</td><td>Pillar right side, through V4</td><td class="mono">1072</td><td class="mono">300 · 750 · 1500</td><td class="mono">37</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">K1–K2</td><td>Kitchen wall, through V8</td><td class="mono">2583</td><td class="mono">1500 · 2150</td><td class="mono">47</td><td>10×100 kozijnplug</td><td class="mono">110 from stud face</td></tr><tr><td class="code">HB</td><td>Kitchen wall, header bracket</td><td class="mono">2605</td><td class="mono">just under 1180</td><td class="mono">~47</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">PP</td><td>Pillar face, OSB packing piece</td><td class="mono">~880 · ~1000</td><td class="mono">1202</td><td class="mono">face</td><td>6 mm plug + 5×50</td><td class="mono">~60 into brick</td></tr><tr><td class="code">C</td><td>Ceiling joists, through TP + packers</td><td class="mono">at each joist</td><td class="mono">top</td><td class="mono">47</td><td>6×160, pre-drill 4 mm in the plate</td><td class="mono">—</td></tr><tr><td class="code">E</td><td>Exterior wall battens, through V1</td><td class="mono">22</td><td class="mono">at each batten</td><td class="mono">47</td><td>6×120</td><td class="mono">—</td></tr></tbody></table></div>
+    <figure>
+<svg viewBox="690 -60 560 260" role="img" aria-label="Seen from above: where the pillar plugs go in depth">
+<rect x="700" y="-20" width="480" height="20" class="d-gips"/>
+<text x="710" y="-30" class="d-lbl-s">back wall (gips) · never drill</text>
+<rect x="830" y="0" width="220" height="74" class="s-brick"/>
+<text x="940" y="110" class="d-lbl" text-anchor="middle">pillar sticks out 74</text>
+<rect x="786" y="0" width="44" height="94" class="s-timber-d"/>
+<rect x="1050" y="0" width="44" height="94" class="s-timber-d"/>
+<text x="808" y="125" class="d-lbl" text-anchor="middle">V3</text>
+<text x="1072" y="125" class="d-lbl" text-anchor="middle">V4</text>
+<line x1="786" y1="37" x2="886" y2="37" class="d-plugline"/>
+<line x1="1094" y1="37" x2="994" y2="37" class="d-plugline"/>
+<line x1="760" y1="0" x2="760" y2="37" class="d-lead"/>
+<text x="752" y="24" class="d-lbl" text-anchor="end">37</text>
+<line x1="786" y1="160" x2="830" y2="160" class="d-lead"/><text x="808" y="180" class="d-lbl-s" text-anchor="middle">44</text>
+<line x1="830" y1="160" x2="886" y2="160" class="d-lead"/><text x="858" y="180" class="d-lbl-s" text-anchor="middle">56</text>
+<text x="1110" y="60" class="d-lbl-s">OSB goes</text><text x="1110" y="76" class="d-lbl-s">on this face ↓</text>
+<line x1="700" y1="94" x2="1180" y2="94" class="d-ghostline"/>
+</svg>
+      <figcaption><b>Pillar plugs, seen from above</b><span>The plugs go sideways through V3 and V4 into the pillar, 37 mm out from the back wall: the middle of the pillar's 74 mm. That's 44 mm of timber and about 56 mm of brick, so set the depth stop at 110 mm from the stud face.</span></figcaption>
+    </figure>
+  </section>
+</main>
+<script>
+(function () {
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem("prep:" + k) || "null"); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem("prep:" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const phases = [...document.querySelectorAll(".phase")];
+  const boxes = [...document.querySelectorAll(".phase input[type=checkbox]")];
+  const ticks = store.get("ticks") || {};
+  boxes.forEach(b => { b.checked = !!ticks[b.id]; });
+
+  function update(openNext) {
+    let done = 0, firstOpen = null;
+    phases.forEach(p => {
+      const bs = [...p.querySelectorAll("input")];
+      const n = bs.filter(b => b.checked).length;
+      done += n;
+      p.querySelector(".count").textContent = `${n}/${bs.length}`;
+      const complete = n === bs.length;
+      if (complete && openNext === p) {
+        p.open = false;
+        const next = phases[phases.indexOf(p) + 1];
+        if (next) { next.open = true; next.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      }
+      p.classList.toggle("done", complete);
+      if (!complete && !firstOpen) firstOpen = p;
+    });
+    document.getElementById("total").textContent = `${done}/${boxes.length}`;
+    document.getElementById("bar").style.width = `${(100 * done / boxes.length).toFixed(1)}%`;
+    return firstOpen;
+  }
+
+  boxes.forEach(b => b.addEventListener("change", () => {
+    ticks[b.id] = b.checked;
+    store.set("ticks", ticks);
+    update(b.closest(".phase"));
+  }));
+
+  const first = update(null);
+  if (first) first.open = true;
+
+  const reset = document.getElementById("reset");
+  let armed = null;
+  reset.addEventListener("click", () => {
+    if (!armed) {
+      reset.classList.add("armed");
+      reset.textContent = "Tap again to clear everything";
+      armed = setTimeout(() => { armed = null; reset.classList.remove("armed"); reset.textContent = "Clear all ticks"; }, 3000);
+      return;
+    }
+    clearTimeout(armed); armed = null;
+    boxes.forEach(b => { b.checked = false; ticks[b.id] = false; });
+    store.set("ticks", ticks);
+    reset.classList.remove("armed"); reset.textContent = "Clear all ticks";
+    phases.forEach((p, i) => { p.open = i === 0; });
+    update(null);
+  });
+})();
+</script>
+</body>
+</html>

@@ -159,6 +159,7 @@ ol.steps li::marker { font: 600 .9rem var(--f-mono); color: var(--marker); }
 .download:hover { filter: brightness(1.08); }
 .download:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .download svg { width: 18px; height: 18px; }
+.download.alt { background: var(--sheet); color: var(--marker); border: 1px solid var(--marker); }
 .details { display: grid; align-items: start; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
 figure { margin: 0; display: grid; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
 figure svg { width: 100%; height: auto; display: block; }
@@ -227,6 +228,7 @@ figcaption span { color: var(--ink-soft); }
     </div>
     <div class="actions">
       <a class="download" href="zaagplan.pdf" download="bijkeuken-voorzetwand-zaagplan.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"></path></svg>Download cutting plan (PDF)</a>
+      <a class="download alt" href="prep.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12l5 5L20 6"></path></svg>Get ready &amp; drill map</a>
     </div>
   </header>
   <section>
