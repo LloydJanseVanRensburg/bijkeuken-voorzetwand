@@ -80,16 +80,6 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 td.num, th.num { text-align: right; }
 .code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
 
-/* Stud mode switch */
-.switch { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--sheet); justify-self: start; flex-wrap: wrap; }
-.switch input { position: absolute; opacity: 0; pointer-events: none; }
-.switch label { padding: 10px 14px; cursor: pointer; font: 500 .9rem/1.2 var(--f-body); display: grid; gap: 2px; }
-.switch label small { font: 400 .75rem/1.2 var(--f-mono); color: var(--ink-soft); }
-.switch input:checked + label { background: var(--marker); color: var(--sheet); }
-.switch input:checked + label small { color: var(--sheet); opacity: .85; }
-.switch input:focus-visible + label { outline: 2px solid var(--marker); outline-offset: -4px; }
-.modebox { display: grid; gap: 10px; }
-
 /* Bars */
 .bars { display: grid; gap: 10px; }
 .bar { display: grid; grid-template-columns: 2.4rem 1fr; gap: 10px; align-items: center; cursor: pointer; border-radius: 4px; padding: 4px; }
@@ -130,7 +120,6 @@ ol.steps li::marker { font: 600 .9rem var(--f-mono); color: var(--marker); }
 .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 .reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; }
 .reset:focus-visible { outline: 2px solid var(--marker); }
-[data-mode="full"] .only-split, [data-mode="split"] .only-full { display: none; }
 
 /* SVG theme hooks */
 .s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
@@ -139,7 +128,6 @@ ol.steps li::marker { font: 600 .9rem var(--f-mono); color: var(--marker); }
 .s-timber { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 3; }
 .s-cap { fill: var(--timber); stroke: var(--marker); stroke-width: 5; }
 .s-joint { stroke: var(--marker); stroke-width: 6; stroke-dasharray: 30 18; fill: none; }
-.s-splice { fill: var(--marker); }
 .s-fix { fill: var(--fix); }
 .s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 8; }
 .s-hatch { fill: var(--hatch); opacity: .55; }
@@ -194,7 +182,7 @@ figcaption span { color: var(--ink-soft); }
 @media print {
   body { padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 12px; }
   main { gap: 22px; max-width: none; }
-  .actions, .reset, .switch, .modebox > .lede, .check .box { display: none !important; }
+  .actions, .reset, .check .box { display: none !important; }
   section:has(.switch) { display: none !important; }
   body { background: #fff; }
   .scroll { overflow: visible; }
@@ -212,7 +200,7 @@ figcaption span { color: var(--ink-soft); }
 .photo img { width: 100%; height: auto; display: block; border-radius: 4px; }
 </style>
 
-<main id="app" data-mode="full">
+<main id="app">
   <header>
     <span class="eyebrow">Zaagservice cut sheet · Hornbach Zaandam</span>
     <h1>Bijkeuken voorzetwand</h1>
@@ -245,19 +233,6 @@ figcaption span { color: var(--ink-soft); }
   </section>
 
 
-  <section>
-    <span class="eyebrow">Studs</span>
-    <h2>Full-length or two-piece studs</h2>
-    <div class="modebox">
-      <p class="lede">The Clio takes 2.40 m, so full-length studs are selected. Two-piece studs stay here as a backup, for example if Hornbach is out of 300 cm bars. The switch changes the frame drawing, the bar plan and the shopping list.</p>
-      <div class="switch" role="radiogroup" aria-label="Stud type">
-        <input type="radio" name="mode" id="mode-split" value="split"><label for="mode-split">Two-piece studs<small>car &lt; 2.40 m · 1196 + 1163</small></label>
-        <input type="radio" name="mode" id="mode-full" value="full" checked=""><label for="mode-full">Full-length studs<small>car ≥ 2.40 m · 1 × 2359</small></label>
-      </div>
-      <p class="only-split">Studs V1–V6 are each two pieces joined at height 1240, just above the first noggins. A flat steel plate goes on the front and back face of each joint. The noggins sit on the side faces, so they don't get in the way. The OSB in the middle row runs across the joints and holds them in line.</p>
-      <p class="only-full">Studs V1–V6 are each one piece of 2359, from floor plate to top plate. This is the strongest and quickest option.</p>
-    </div>
-  </section>
 
   <section>
     <span class="eyebrow">Elevation · seen from inside the bijkeuken</span>
@@ -271,7 +246,6 @@ figcaption span { color: var(--ink-soft); }
       <span><i class="sw" style="background:var(--brick);border-color:var(--ink-soft)"></i>Brick pillar (74 deep, OSB 55 mm in front)</span>
       <span><i class="dot"></i>Plug into brick or floor</span>
       <span><i class="dot open"></i>Screw into a joist or batten behind the gips</span>
-      <span class="only-split"><i class="sw" style="background:var(--marker);border-color:var(--marker)"></i>Stud joint + plates front and back</span>
       <span><i class="sw" style="background:var(--hatch);border-color:var(--ink-soft)"></i>Open bay, no OSB</span>
     </div>
   </section>
@@ -285,9 +259,7 @@ figcaption span { color: var(--ink-soft); }
       <table>
         <thead><tr><th>Code</th><th class="num">Length</th><th class="num">Qty</th><th>Where it goes</th></tr></thead>
         <tbody>
-          <tr class="only-split"><td class="code">S-lo</td><td class="num mono">1196</td><td class="num mono">6</td><td>Lower stud halves V1–V6, floor plate → joint at 1240</td></tr>
-          <tr class="only-split"><td class="code">S-up</td><td class="num mono">1163</td><td class="num mono">6</td><td>Upper stud halves V1–V6, joint at 1240 → top plate</td></tr>
-          <tr class="only-full"><td class="code">S</td><td class="num mono">2359</td><td class="num mono">6</td><td>Full studs V1–V6, floor plate → top plate</td></tr>
+          <tr><td class="code">S</td><td class="num mono">2359</td><td class="num mono">6</td><td>Full studs V1–V6, floor plate → top plate</td></tr>
           <tr><td class="code">SH</td><td class="num mono">1178</td><td class="num mono">2</td><td>Short studs V7 and V8, header → top plate</td></tr>
           <tr><td class="code">H</td><td class="num mono">697</td><td class="num mono">1</td><td>Header over the open bay, bottom face at 1180, V6 → kitchen wall</td></tr>
           <tr><td class="code">TP1</td><td class="num mono">1069</td><td class="num mono">1</td><td>Top plate, exterior wall → centre of V4</td></tr>
@@ -302,13 +274,12 @@ figcaption span { color: var(--ink-soft); }
         </tbody>
       </table>
     </div>
-    <p class="lede">Only 270 cm bars in stock? Take 11 bars: one stud (or two halves) per bar for 6 bars, and the rest spread over the other 5.</p>
   </section>
 
   <section>
     <span class="eyebrow">OSB/3 · 18 mm · 3 sheets of 2500 × 1250</span>
     <h2>Sheet plan</h2>
-    <p class="lede">Sheet 1 gives the three tall bottom panels. Sheets 2 and 3 are first cut into strips across the long side, then each strip is cut to width. Panel codes match the wall layout below: column A–D, row 1 at the bottom. Sizes are wall width × wall height. Tap a sheet once it's cut. 2440 × 1220 sheets work too, with the same cuts.</p>
+    <p class="lede">Sheet 1 gives the three tall bottom panels. Sheets 2 and 3 are first cut into strips across the long side, then each strip is cut to width. Panel codes match the wall layout below: column A–D, row 1 at the bottom. Sizes are wall width × wall height. Tap a sheet once it's cut.</p>
     <div class="sheets" id="sheets"><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 1</h3><small>A1 · B1 · C1 + packing</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 1: A1 · B1 · C1 + packing"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="803" height="1192" class="s-osb"></rect><text x="401.5" y="586" class="s-ptxt" text-anchor="middle">A1</text><text x="401.5" y="681" class="s-ptxt-s" text-anchor="middle">803 × 1192</text><rect x="807" y="0" width="666" height="1192" class="s-osb"></rect><text x="1140" y="586" class="s-ptxt" text-anchor="middle">B1</text><text x="1140" y="681" class="s-ptxt-s" text-anchor="middle">666 × 1192</text><rect x="1477" y="0" width="426" height="1192" class="s-osb"></rect><text x="1690" y="586" class="s-ptxt" text-anchor="middle">C1</text><text x="1690" y="681" class="s-ptxt-s" text-anchor="middle" style="font-size:56px">426 × 1192</text><rect x="1907" y="0" width="218" height="150" class="s-osb"></rect><text x="2016" y="100" class="s-ptxt" text-anchor="middle" style="font-size:60px">pack</text></svg></div><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 2</h3><small>D2 · A2 · C2 · B2</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 2: D2 · A2 · C2 · B2"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="628" height="717" class="s-osb"></rect><text x="314" y="348.5" class="s-ptxt" text-anchor="middle">D2</text><text x="314" y="443.5" class="s-ptxt-s" text-anchor="middle">717 × 628</text><rect x="632" y="0" width="628" height="803" class="s-osb"></rect><text x="946" y="391.5" class="s-ptxt" text-anchor="middle">A2</text><text x="946" y="486.5" class="s-ptxt-s" text-anchor="middle">803 × 628</text><rect x="632" y="807" width="628" height="403" class="s-osb"></rect><text x="946" y="998.5" class="s-ptxt" text-anchor="middle">C2</text><text x="946" y="1093.5" class="s-ptxt-s" text-anchor="middle">403 × 628</text><rect x="1264" y="0" width="628" height="666" class="s-osb"></rect><text x="1578" y="323" class="s-ptxt" text-anchor="middle">B2</text><text x="1578" y="418" class="s-ptxt-s" text-anchor="middle">666 × 628</text></svg></div><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 3</h3><small>A3 · C3 · B3 · D3</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 3: A3 · C3 · B3 · D3"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="612" height="803" class="s-osb"></rect><text x="306" y="391.5" class="s-ptxt" text-anchor="middle">A3</text><text x="306" y="486.5" class="s-ptxt-s" text-anchor="middle">803 × 612</text><rect x="0" y="807" width="612" height="403" class="s-osb"></rect><text x="306" y="998.5" class="s-ptxt" text-anchor="middle">C3</text><text x="306" y="1093.5" class="s-ptxt-s" text-anchor="middle">403 × 612</text><rect x="616" y="0" width="612" height="666" class="s-osb"></rect><text x="922" y="323" class="s-ptxt" text-anchor="middle">B3</text><text x="922" y="418" class="s-ptxt-s" text-anchor="middle">666 × 612</text><rect x="1232" y="0" width="612" height="717" class="s-osb"></rect><text x="1538" y="348.5" class="s-ptxt" text-anchor="middle">D3</text><text x="1538" y="443.5" class="s-ptxt-s" text-anchor="middle">717 × 612</text></svg></div></div>
     <div class="panel scroll">
       <svg id="osb" viewBox="-60 -60 2725 2585" role="img" aria-label="OSB panel layout on the wall, with the open bay at the bottom right"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="3" y="1265" width="803" height="1192" class="s-osb"></rect><text x="404.5" y="1851" class="s-ptxt" text-anchor="middle">A1</text><text x="404.5" y="1941" class="s-ptxt-s" text-anchor="middle">803 × 1192</text><rect x="809.5" y="1265" width="666" height="1192" class="s-osb"></rect><text x="1142.5" y="1851" class="s-ptxt" text-anchor="middle">B1</text><text x="1142.5" y="1941" class="s-ptxt-s" text-anchor="middle">666 × 1192</text><rect x="1478.5" y="1265" width="426.5" height="1192" class="s-osb"></rect><text x="1691.75" y="1851" class="s-ptxt" text-anchor="middle">C1</text><text x="1691.75" y="1941" class="s-ptxt-s" text-anchor="middle">426 × 1192</text><rect x="3" y="633.5" width="803" height="628" class="s-osb"></rect><text x="404.5" y="937.5" class="s-ptxt" text-anchor="middle">A2</text><text x="404.5" y="1027.5" class="s-ptxt-s" text-anchor="middle">803 × 628</text><rect x="809.5" y="633.5" width="666" height="628" class="s-osb"></rect><text x="1142.5" y="937.5" class="s-ptxt" text-anchor="middle">B2</text><text x="1142.5" y="1027.5" class="s-ptxt-s" text-anchor="middle">666 × 628</text><rect x="1478.5" y="633.5" width="403" height="628" class="s-osb"></rect><text x="1680" y="937.5" class="s-ptxt" text-anchor="middle">C2</text><text x="1680" y="1027.5" class="s-ptxt-s" text-anchor="middle">403 × 628</text><rect x="1884.5" y="633.5" width="717" height="628" class="s-osb"></rect><text x="2243" y="937.5" class="s-ptxt" text-anchor="middle">D2</text><text x="2243" y="1027.5" class="s-ptxt-s" text-anchor="middle">717 × 628</text><rect x="3" y="18.5" width="803" height="612" class="s-osb"></rect><text x="404.5" y="314.5" class="s-ptxt" text-anchor="middle">A3</text><text x="404.5" y="404.5" class="s-ptxt-s" text-anchor="middle">803 × 612</text><rect x="809.5" y="18.5" width="666" height="612" class="s-osb"></rect><text x="1142.5" y="314.5" class="s-ptxt" text-anchor="middle">B3</text><text x="1142.5" y="404.5" class="s-ptxt-s" text-anchor="middle">666 × 612</text><rect x="1478.5" y="18.5" width="403" height="612" class="s-osb"></rect><text x="1680" y="314.5" class="s-ptxt" text-anchor="middle">C3</text><text x="1680" y="404.5" class="s-ptxt-s" text-anchor="middle">403 × 612</text><rect x="1884.5" y="18.5" width="717" height="612" class="s-osb"></rect><text x="2243" y="314.5" class="s-ptxt" text-anchor="middle">D3</text><text x="2243" y="404.5" class="s-ptxt-s" text-anchor="middle">717 × 612</text><rect x="1905" y="1285" width="700" height="1180" class="s-open-osb"></rect><text x="2255" y="1875" class="s-ptxt-s" text-anchor="middle">open</text></svg>
@@ -317,13 +288,12 @@ figcaption span { color: var(--ink-soft); }
   </section>
 
   <section>
-    <span class="eyebrow">Shopping list · trip 1 (tomorrow)</span>
+    <span class="eyebrow">Shopping list · trip 1</span>
     <h2>Everything else for the frame and OSB</h2>
     <ul class="checks" data-list="shop">
-      <li class="check"><label><input type="checkbox" id="s1"><span class="box"></span><span class="txt"><span class="qty">10×</span> vuren 44×94, 300 cm<small>11× if only 270 cm</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s2"><span class="box"></span><span class="txt"><span class="qty">3×</span> OSB/3 18 mm, 2500 × 1250 (or 2440 × 1220)</span></label></li>
+      <li class="check"><label><input type="checkbox" id="s1"><span class="box"></span><span class="txt"><span class="qty">10×</span> vuren 44×94, 300 cm</span></label></li>
+      <li class="check"><label><input type="checkbox" id="s2"><span class="box"></span><span class="txt"><span class="qty">3×</span> OSB/3 18 mm, 2500 × 1250</span></label></li>
       <li class="check"><label><input type="checkbox" id="s3"><span class="box"></span><span class="txt"><span class="qty">~5 m²</span> glaswol plaat, ~100 mm<small>It squeezes slightly into the 94 mm cavity. The open bay stays empty.</small></span></label></li>
-      <li class="check only-split"><label><input type="checkbox" id="s12"><span class="box"></span><span class="txt"><span class="qty">12×</span> flat steel plate (gatenplaat), galvanised, 40 wide × ~200 long<small>Front and back of each stud joint. Plus a box of 5×35 anchor screws (~100).</small></span></label></li>
       <li class="check"><label><input type="checkbox" id="s16"><span class="box"></span><span class="txt"><span class="qty">60×</span> hoekanker (90° angle bracket) 70×70×55, galvanised<small>49 needed: 19 for the stud ends, 8 for the open bay, 22 for the noggins</small></span></label></li>
       <li class="check"><label><input type="checkbox" id="s17"><span class="box"></span><span class="txt"><span class="qty">500×</span> ankerschroef 5×35<small>8 per bracket</small></span></label></li>
       <li class="check"><label><input type="checkbox" id="s4"><span class="box"></span><span class="txt"><span class="qty">20×</span> kozijnplug 10×100<small>Floor and V8 into the kitchen wall (a few spare)</small></span></label></li>
@@ -530,7 +500,7 @@ figcaption span { color: var(--ink-soft); }
 <script>
 (function () {
   const NS = "http://www.w3.org/2000/svg";
-  const H = 2465, W = 2605, JOINT = 1240;
+  const H = 2465, W = 2605;
   const fullStuds = [0, 393, 786, 1050, 1455, 1861];
   const shortStuds = [2211, 2561];
   const app = document.getElementById("app");
@@ -546,7 +516,6 @@ figcaption span { color: var(--ink-soft); }
     return n;
   };
   const Y = y => H - y; // floor-based y to svg y
-  let mode = store.get("mode") === "split" ? "split" : "full";
 
   // ---------- Frame elevation ----------
   function drawFrame() {
@@ -574,7 +543,6 @@ figcaption span { color: var(--ink-soft); }
     [[44, 393], [437, 786], [1094, 1455], [1499, 1861]].forEach(([a, b]) => rect(a, b, 1180, 1224));
     [[44, 393], [437, 786], [830, 1050], [1094, 1455], [1499, 1861], [1905, 2211], [2255, 2561]].forEach(([a, b]) => rect(a, b, 1811, 1855));
     // stud joints
-    if (mode === "split") fullStuds.forEach(x => el("rect", { x: x - 8, y: Y(JOINT + 100), width: 60, height: 200, class: "s-splice", opacity: .8 }, f));
     // OSB joints
     [[808, 0], [1477, 0], [1883, 1180]].forEach(([x, y0]) => el("line", { x1: x, x2: x, y1: Y(y0), y2: 0, class: "s-joint" }, f));
     el("line", { x1: 0, x2: W, y1: Y(1202), y2: Y(1202), class: "s-joint" }, f);
@@ -602,7 +570,6 @@ figcaption span { color: var(--ink-soft); }
     el("text", { x: 0, y: H + 200, class: "s-txt-s" }, f, "stud left edge, mm from exterior wall");
     // heights
     const ticks = [[1180, "noggin 1180", 50], [1811, "noggin 1811", -10], [1735, "pillar 1735", 50]];
-    if (mode === "split") ticks.push([JOINT, "joint 1240", -10]);
     ticks.forEach(([y, t, dy]) => {
       el("line", { x1: W + 20, x2: W + 70, y1: Y(y), y2: Y(y), class: "s-dim" }, f);
       el("text", { x: W + 85, y: Y(y) + dy, class: "s-txt-s" }, f, t);
@@ -640,7 +607,7 @@ figcaption span { color: var(--ink-soft); }
   // ---------- Bars ----------
   const doneBars = new Set(store.get("bars") || []);
   function drawBars() {
-    const S = mode === "split" ? [[1196, "S-lo"], [1163, "S-up"]] : [[2359, "S"]];
+    const S = [[2359, "S"]];
     const bars = [
       [...S, [360, "N2"]],
       [...S, [360, "N2"]],
@@ -725,15 +692,6 @@ figcaption span { color: var(--ink-soft); }
     });
   }
 
-  function applyMode() {
-    app.dataset.mode = mode;
-    document.getElementById("mode-" + mode).checked = true;
-    drawFrame();
-    drawBars();
-  }
-  document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener("change", () => {
-    mode = r.value; store.set("mode", mode); applyMode();
-  }));
 
   // ---------- Checklists ----------
   const checks = store.get("checks") || {};
@@ -857,7 +815,8 @@ figcaption span { color: var(--ink-soft); }
   drawGips();
   drawSteps();
   drawSheets();
-  applyMode();
+  drawFrame();
+  drawBars();
 })();
 </script>
 
