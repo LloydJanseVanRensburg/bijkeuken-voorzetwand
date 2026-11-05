@@ -12,8 +12,8 @@ const btnReset = box.querySelector("[data-act=reset]");
 
 // ---- sizes (same numbers as the cupboard sketch) ----
 const W = 2.605, H = 2.465, VZW = 0.147;          // wall width, height, voorzetwand depth from old wall
-const ROOM_D = 2.2;                                  // room depth shown
-const T = 0.018, FILL = 0.02, STORE_IN = 0.64, NICHE_W = 0.56;
+const ROOM_D = 2.6;                                  // room depth shown
+const T = 0.018, FILL = 0.05, STORE_IN = 0.61, NICHE_W = 0.56;
 const xL = FILL, xM = xL + T + STORE_IN, xR = xM + T + NICHE_W, CUP_R = xR + T;
 const PLINTH = 0.1, DEPTH = 0.58, SLOT = 0.06;
 const yShelf = PLINTH + T + 1.46, yTop = H - SLOT;
@@ -42,7 +42,7 @@ function init() {
   scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 50);
-  const HOME = { pos: new THREE.Vector3(2.35, 1.6, 4.7), target: new THREE.Vector3(1.3, 1.2, 0.3) };
+  const HOME = { pos: new THREE.Vector3(1.05, 1.75, 4.9), target: new THREE.Vector3(1.4, 1.15, 0.5) };
   camera.position.copy(HOME.pos);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -140,6 +140,10 @@ function init() {
     steel: new THREE.MeshStandardMaterial({ color: 0xa9b0b8, roughness: 0.35, metalness: 0.8 }),
     dark: new THREE.MeshStandardMaterial({ color: 0x2a2e33, roughness: 0.6 }),
     oak: new THREE.MeshStandardMaterial({ map: oakTex, roughness: 0.55 }),
+    black: new THREE.MeshStandardMaterial({ color: 0x1d1f22, roughness: 0.45, metalness: 0.4 }),
+    pane: new THREE.MeshStandardMaterial({ color: 0xcfe3ef, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false }),
+    paving: new THREE.MeshStandardMaterial({ color: 0xb9b4aa, roughness: 0.9 }),
+    hedge: new THREE.MeshStandardMaterial({ color: 0x5b7a3e, roughness: 1 }),
     appliance: new THREE.MeshStandardMaterial({ color: 0xf8f8f8, roughness: 0.3 }),
     panel: new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.35 }),
     glass: new THREE.MeshStandardMaterial({ color: 0x1f2a36, roughness: 0.08, metalness: 0.2, transparent: true, opacity: 0.85 }),
@@ -161,13 +165,50 @@ function init() {
   }
 
   // ---- room shell ----
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W + 0.4, ROOM_D + VZW), M.floor);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W + 1.6, ROOM_D + VZW), M.floor);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.set(W / 2 + 0.2, 0, (ROOM_D - VZW) / 2);
+  floor.position.set(W / 2 + 0.8, 0, (ROOM_D - VZW) / 2);
   floor.receiveShadow = true;
   room.add(floor);
-  // exterior wall on the left
-  cube(-0.12, 0, -VZW, 0.12, H, ROOM_D + VZW, M.side, room, false);
+  // side walls with their openings (z ranges from the wall face, y ranges from the floor)
+  function sideWall(x0, th, openings) {
+    const cuts = [-VZW, ROOM_D, ...openings.flatMap(o => [o.z0, o.z1])].sort((a, b) => a - b);
+    for (let i = 0; i < cuts.length - 1; i++) {
+      const a = cuts[i], b = cuts[i + 1];
+      if (b - a < 1e-6) continue;
+      const o = openings.find(o => a >= o.z0 - 1e-6 && b <= o.z1 + 1e-6);
+      if (!o) { cube(x0, 0, a, th, H, b - a, M.side, room, false); continue; }
+      if (o.y0 > 0) cube(x0, 0, a, th, o.y0, b - a, M.side, room, false);
+      cube(x0, o.y1, a, th, H - o.y1, b - a, M.side, room, false);
+    }
+  }
+  // a framed glass opening in a side wall; inner = room-side x of the wall, s = +1 if the room is at +x
+  function glazing(inner, s, o, frameMat, opts = {}) {
+    const fw = opts.fw || 0.06, fd = 0.08, xf = s > 0 ? inner - fd : inner;
+    cube(xf, o.y0, o.z0, fd, o.y1 - o.y0, fw, frameMat);
+    cube(xf, o.y0, o.z1 - fw, fd, o.y1 - o.y0, fw, frameMat);
+    cube(xf, o.y1 - fw, o.z0, fd, fw, o.z1 - o.z0, frameMat);
+    if (o.y0 > 0 || opts.sill) cube(xf, o.y0, o.z0, fd, fw, o.z1 - o.z0, frameMat);
+    const gy0 = (opts.panel || o.y0) + (o.y0 > 0 || opts.panel ? fw : 0);
+    if (opts.panel) cube(xf + 0.02, o.y0, o.z0 + fw, 0.04, opts.panel - o.y0 + fw, o.z1 - o.z0 - 2 * fw, frameMat);
+    const g = new THREE.Mesh(new THREE.PlaneGeometry(o.z1 - o.z0 - 2 * fw, o.y1 - fw - gy0), M.pane);
+    g.rotation.y = Math.PI / 2;
+    g.position.set(xf + fd / 2, (gy0 + o.y1 - fw) / 2, (o.z0 + o.z1) / 2);
+    room.add(g);
+  }
+  // exterior wall (left): a tall side light, then the garden door
+  const SIDE = { z0: 0.98, z1: 1.52, y0: 0.08, y1: 2.12 }, GDOOR = { z0: 1.52, z1: 2.42, y0: 0, y1: 2.12 };
+  sideWall(-0.14, 0.14, [SIDE, GDOOR]);
+  glazing(0, 1, SIDE, M.white);
+  glazing(0, 1, GDOOR, M.white, { panel: 0.72 });
+  cube(0.002, 1.0, SIDE.z0 + 0.06, 0.03, 0.05, SIDE.z1 - SIDE.z0 - 0.12, M.steel);                 // hook rail
+  for (let i = 0; i < 4; i++) cube(0.03, 1.0, SIDE.z0 + 0.12 + i * 0.1, 0.05, 0.012, 0.012, M.steel);
+  cube(0.0, 1.02, GDOOR.z1 - 0.14, 0.06, 0.02, 0.12, M.steel);                                   // door handle
+  cube(0.0, 0.98, GDOOR.z1 - 0.1, 0.012, 0.11, 0.035, M.steel);
+  // garden outside
+  const pav = new THREE.Mesh(new THREE.PlaneGeometry(2.2, ROOM_D + 1.2), M.paving);
+  pav.rotation.x = -Math.PI / 2; pav.position.set(-1.25, -0.005, ROOM_D / 2); room.add(pav);
+  cube(-2.3, 0, -0.4, 0.5, 1.8, ROOM_D + 0.8, M.hedge, room, false);
   // voorzetwand (painted OSB face at z = 0), with the open washer bay cut out
   cube(0, 0, -VZW, BAY.x, H, VZW, M.wall);
   cube(BAY.x, BAY.h, -VZW, W - BAY.x, H - BAY.h, VZW, M.wall);
@@ -176,8 +217,16 @@ function init() {
   const tap = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.08, 16), M.steel);
   tap.rotation.x = Math.PI / 2; tap.position.set(2.3, 1.0, -VZW + 0.04); room.add(tap);
   cube(2.42, 0.95, -VZW, 0.08, 0.08, 0.02, M.white);
-  // kitchen-side return wall
-  cube(W, 0, -VZW, 0.1, H, VZW + 0.7, M.side, room, false);
+  // kitchen wall (right): window above the washer, then the steel-framed kitchen door
+  const KWIN = { z0: 0.1, z1: 1.18, y0: 1.0, y1: 2.2 }, KDOOR = { z0: 1.45, z1: 2.35, y0: 0, y1: 2.15 };
+  sideWall(W, 0.14, [KWIN, KDOOR]);
+  glazing(W, -1, KWIN, M.white, { fw: 0.07 });
+  glazing(W + 0.01, -1, { z0: KWIN.z0 + 0.07, z1: KWIN.z1 - 0.07, y0: KWIN.y0 + 0.07, y1: KWIN.y1 - 0.07 }, M.black, { fw: 0.025 });
+  cube(W - 0.03, KWIN.y0 - 0.02, KWIN.z0 - 0.03, 0.17, 0.025, KWIN.z1 - KWIN.z0 + 0.06, M.white);  // sill
+  glazing(W, -1, KDOOR, M.black, { fw: 0.04 });
+  cube(W - 0.1, 1.0, KDOOR.z0 + 0.06, 0.03, 0.2, 0.02, M.black);                                  // handle
+  // a hint of the kitchen beyond
+  cube(W + 1.4, 0, -VZW, 0.05, H, ROOM_D + VZW, M.side, room, false);
   // ceiling trim
   cube(0, H - 0.04, 0, W, 0.04, 0.02, M.white, room, false);
 
@@ -231,7 +280,7 @@ function init() {
     cube(hx - 0.006, handleY[0], T + 0.018, 0.012, handleY[1] - handleY[0], 0.012, M.handle, piv);
     [handleY[0] + 0.02, handleY[1] - 0.02].forEach(y => cube(hx - 0.005, y - 0.005, T, 0.01, 0.01, 0.018, M.handle, piv));
     cup.add(piv);
-    doors.push({ piv, dir: hingeLeft ? -1 : 1 });
+    doors.push({ piv, dir: hingeLeft ? -1 : 1, max: hingeLeft ? 90 : 105 });  // left doors stop at 90°: the exterior wall
   }
   const g = 0.002, mid = xM + T / 2;
   door(xL + g, mid - g, PLINTH + g, yShelf - g, true, [0.8, 1.2]);
@@ -302,7 +351,7 @@ function init() {
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    camera.fov = w / h < 1 ? 44 : 40;
+    camera.fov = w / h < 1 ? 50 : 44;
     camera.updateProjectionMatrix();
     dirty = true;
   }
@@ -311,7 +360,7 @@ function init() {
   controls.addEventListener("change", () => { dirty = true; });
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; dirty = true; }).observe(stage);
 
-  function setDoors(t) { doors.forEach(d => { d.piv.rotation.y = d.dir * t * THREE.MathUtils.degToRad(105); }); dirty = true; }
+  function setDoors(t) { doors.forEach(d => { d.piv.rotation.y = d.dir * t * THREE.MathUtils.degToRad(d.max); }); dirty = true; }
   btnDoors.addEventListener("click", () => {
     open = !open;
     btnDoors.textContent = open ? "Close doors" : "Open doors";
