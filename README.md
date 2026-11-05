@@ -8,3 +8,4 @@ Build plan for an insulated 44×94 stud wall with 18 mm OSB in the bijkeuken: fr
 - `pipes.html`: how the frame clears the water pipe along the floor
 - `brackets.html`: where every 90° bracket goes and how each joint is fitted
 - `progress.html`: photo gallery of the build, stage by stage
+- `cupboard.html`: first idea sketch for the fridge + storage cupboard

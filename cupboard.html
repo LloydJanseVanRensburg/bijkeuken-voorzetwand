@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fridge cupboard · Bijkeuken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+/* Same workshop look as the cut sheet: one column, tap-to-tick, phases open one at a time */
+:root {
+  --paper: #eef1f4; --sheet: #ffffff; --ink: #1b2430; --ink-soft: #566273; --line: #cfd6de;
+  --marker: #1f56c9; --timber: #e3c48e; --timber-edge: #a9874d; --brick: #b98a78; --hatch: #f2d9a8;
+  --fix: #c2410c; --done: #2f8a4c;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+    --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+    --fix: #fb923c; --done: #5cc27e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
+  --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+  --fix: #fb923c; --done: #5cc27e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 700; }
+h2 { font-size: 1.75rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--marker); }
+.eyebrow { font: 600 .75rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--marker); }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+section, header { display: grid; gap: 16px; }
+main > *, section > *, header > *, .phases > *, .ph-body > *, figure > * { min-width: 0; }
+.lede { color: var(--ink-soft); }
+.back { font: 500 .9rem var(--f-mono); text-decoration: none; justify-self: start; }
+.note { border-left: 3px solid var(--fix); padding: 10px 14px; background: var(--sheet); border-radius: 0 6px 6px 0; display: grid; gap: 6px; }
+
+/* Overall progress */
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--paper); padding-block: 10px; display: grid; gap: 6px; }
+.progress .row { display: flex; justify-content: space-between; font: 600 .8rem/1 var(--f-mono); color: var(--ink-soft); }
+.meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--done); transition: width .25s; }
+
+/* Phases */
+.phases { display: grid; gap: 10px; }
+.phase { background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; }
+.phase summary { list-style: none; display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+.phase summary::-webkit-details-marker { display: none; }
+.phase summary:focus-visible { outline: 2px solid var(--marker); outline-offset: -2px; border-radius: 6px; }
+.step-no { font: 700 2.2rem/0.9 var(--f-display); color: var(--marker); font-variant-numeric: tabular-nums; text-align: center; }
+.ph-title { display: grid; gap: 2px; }
+.ph-title small { color: var(--ink-soft); font-size: .88rem; }
+.count { font: 600 .85rem/1 var(--f-mono); color: var(--ink-soft); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; }
+.phase.done { border-color: var(--done); }
+.phase.done .step-no { color: var(--done); }
+.phase.done .count { background: var(--done); border-color: var(--done); color: var(--sheet); }
+.phase[open] summary { border-bottom: 1px solid var(--line); }
+.ph-body { padding: 4px 16px 16px; display: grid; gap: 12px; }
+.maplink { font: 600 .9rem var(--f-mono); justify-self: start; }
+
+/* Checklists */
+.checks { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.check label { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check:last-child label { border-bottom: 0; }
+.check input { position: absolute; opacity: 0; pointer-events: none; }
+.check .box { width: 22px; height: 22px; border: 2px solid var(--ink-soft); border-radius: 4px; display: grid; place-content: center; margin-top: 1px; }
+.check input:focus-visible + .box { outline: 2px solid var(--marker); outline-offset: 2px; }
+.check input:checked + .box { background: var(--done); border-color: var(--done); }
+.check input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid var(--sheet); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.check input:checked ~ .txt { color: var(--ink-soft); }
+.check input:checked ~ .txt small { display: none; }
+.txt small { display: block; color: var(--ink-soft); font-size: .88rem; margin-top: 2px; }
+.flag { display: inline-block; font: 600 .66rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--sheet); background: var(--fix); padding: 4px 6px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.check input:checked ~ .txt .flag { background: var(--done); }
+.reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+.reset.armed { color: var(--fix); border-color: var(--fix); }
+
+/* Drill map */
+figure { margin: 0; display: grid; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
+figcaption { display: grid; gap: 4px; font-size: .92rem; }
+figcaption b { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
+figcaption span { color: var(--ink-soft); }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll svg { display: block; min-width: 560px; width: 100%; height: auto; }
+figure > svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fix); }
+.dot.open { background: transparent; border: 2px solid var(--fix); }
+.dash { width: 18px; border-top: 3px dashed var(--fix); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
+.s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
+.s-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 3; }
+.s-open { fill: var(--hatch); opacity: .55; stroke: var(--ink-soft); stroke-width: 5; stroke-dasharray: 24 16; }
+.s-ghost { fill: var(--timber); fill-opacity: .25; stroke: var(--timber-edge); stroke-width: 3; stroke-dasharray: 14 10; }
+.s-pack { fill: var(--timber); fill-opacity: .5; stroke: var(--timber-edge); stroke-width: 4; }
+.s-fix { fill: var(--fix); }
+.s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 9; }
+.s-arrow { stroke: var(--fix); stroke-width: 10; }
+.s-maybe { stroke: var(--fix); stroke-width: 12; stroke-dasharray: 34 28; }
+.s-dim { stroke: var(--ink-soft); stroke-width: 3; }
+.s-txt-s { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 40px; }
+.s-code { fill: var(--marker); font-family: var(--f-mono); font-size: 44px; font-weight: 600; }
+.s-lbl { fill: var(--ink); font-family: var(--f-mono); font-size: 46px; font-weight: 600; }
+.s-timber-d { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 1.5; }
+.d-gips { fill: var(--line); stroke: var(--ink-soft); stroke-width: 1; }
+.d-plugline { stroke: var(--fix); stroke-width: 6; stroke-linecap: round; }
+.d-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.d-steel { fill: #8fa3b8; stroke: #4b5b6b; stroke-width: .8; }
+.d-screw { stroke: #4b5b6b; stroke-width: 2; }
+.d-ghostline { stroke: var(--marker); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.d-lbl { fill: var(--ink); font: 13px var(--f-mono); }
+.d-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
+@media print { .progress, .reset, .back { display: none; } .phase { break-inside: avoid; } }
+
+main { max-width: 1040px; }
+.k-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
+.k-bay { fill: var(--line); opacity: .5; stroke: var(--ink-soft); stroke-width: 3; stroke-dasharray: 20 14; }
+.k-wallcut { fill: var(--line); stroke: var(--ink-soft); stroke-width: 3; }
+.k-body { fill: var(--timber); fill-opacity: .35; stroke: var(--timber-edge); stroke-width: 4; }
+.k-side { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 3; }
+.k-fill { fill: var(--timber); fill-opacity: .7; stroke: var(--timber-edge); stroke-width: 3; }
+.k-plinth { fill: var(--timber); fill-opacity: .65; stroke: var(--timber-edge); stroke-width: 3; }
+.k-door { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 4; }
+.k-grille { stroke: var(--ink-soft); stroke-width: 8; stroke-linecap: round; }
+.k-grillecut { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 3; stroke-dasharray: 10 8; }
+.k-handle { stroke: var(--ink); stroke-width: 16; stroke-linecap: round; }
+.k-fridge { fill: none; stroke: var(--marker); stroke-width: 5; stroke-dasharray: 22 14; }
+.k-fridge-l { stroke: var(--marker); stroke-width: 4; stroke-dasharray: 22 14; }
+.k-app { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; stroke-dasharray: 18 12; }
+.k-app-line { fill: none; stroke: var(--ink-soft); stroke-width: 4; stroke-dasharray: 18 12; }
+.k-swing { fill: none; stroke: var(--ink-soft); stroke-width: 3; stroke-dasharray: 14 10; }
+.k-swing-door { stroke: var(--timber-edge); stroke-width: 10; }
+.k-air { fill: none; stroke: var(--fix); stroke-width: 12; stroke-linejoin: round; marker-end: url(#none); }
+.k-air-cold { fill: none; stroke: var(--marker); stroke-width: 12; }
+.duo { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 700px) { .duo { grid-template-columns: 1fr; } }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.tag { display: inline-block; font: 600 .7rem/1 var(--f-mono); padding: 4px 6px; border-radius: 4px; background: var(--fix); color: var(--sheet); letter-spacing: .06em; vertical-align: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <a class="back" href="./">← Cut sheet &amp; build journey</a>
+    <span class="eyebrow">Next project · idea</span>
+    <h1>Fridge cupboard</h1>
+    <p class="lede">A floor-to-ceiling cupboard from the exterior wall to the dryer. The old built-in fridge goes in the right column, next to the dryer. The left column holds brooms, the vacuum and the mop, with top cupboards over both.</p>
+    <p class="note"><span><span class="tag">SKETCH</span> The fridge height (1450) and the gap to the dryer (1310) are guesses from the photo. Measure them first, then the drawings get exact sizes and a cut list.</span></p>
+  </header>
+
+  <section>
+    <h2>Front view</h2>
+    <figure>
+      <div class="scroll"><svg viewBox="-200 -230 2865 2965" role="img" aria-label="Front view of the wall with the cupboard on the left, next to dryer and washer"><rect x="0" y="0" width="2605" height="2465" class="k-wall"/><rect x="1905" y="1285" width="700" height="1180" class="k-bay"/><rect x="1310" y="1615" width="600" height="850" class="k-app"/><circle cx="1610.0" cy="2108.0" r="180.0" class="k-app-line"/><text x="1610.0" y="1565" text-anchor="middle" class="s-txt-s">dryer</text><rect x="1925" y="1615" width="600" height="850" class="k-app"/><circle cx="2225.0" cy="2108.0" r="180.0" class="k-app-line"/><text x="2225.0" y="1565" text-anchor="middle" class="s-txt-s">washer</text><rect x="20" y="60" width="1254" height="2305" class="k-body"/><rect x="0" y="0" width="20" height="2465" class="k-fill"/><rect x="20" y="2365" width="1254" height="100" class="k-plinth"/><line x1="738" y1="2440" x2="738" y2="2390" class="k-grille"/><line x1="772" y1="2440" x2="772" y2="2390" class="k-grille"/><line x1="806" y1="2440" x2="806" y2="2390" class="k-grille"/><line x1="840" y1="2440" x2="840" y2="2390" class="k-grille"/><line x1="874" y1="2440" x2="874" y2="2390" class="k-grille"/><line x1="908" y1="2440" x2="908" y2="2390" class="k-grille"/><line x1="942" y1="2440" x2="942" y2="2390" class="k-grille"/><line x1="976" y1="2440" x2="976" y2="2390" class="k-grille"/><line x1="1010" y1="2440" x2="1010" y2="2390" class="k-grille"/><line x1="1044" y1="2440" x2="1044" y2="2390" class="k-grille"/><line x1="1078" y1="2440" x2="1078" y2="2390" class="k-grille"/><line x1="1112" y1="2440" x2="1112" y2="2390" class="k-grille"/><line x1="1146" y1="2440" x2="1146" y2="2390" class="k-grille"/><line x1="1180" y1="2440" x2="1180" y2="2390" class="k-grille"/><rect x="20" y="0" width="1254" height="60" class="k-plinth"/><line x1="738" y1="46" x2="738" y2="14" class="k-grille"/><line x1="772" y1="46" x2="772" y2="14" class="k-grille"/><line x1="806" y1="46" x2="806" y2="14" class="k-grille"/><line x1="840" y1="46" x2="840" y2="14" class="k-grille"/><line x1="874" y1="46" x2="874" y2="14" class="k-grille"/><line x1="908" y1="46" x2="908" y2="14" class="k-grille"/><line x1="942" y1="46" x2="942" y2="14" class="k-grille"/><line x1="976" y1="46" x2="976" y2="14" class="k-grille"/><line x1="1010" y1="46" x2="1010" y2="14" class="k-grille"/><line x1="1044" y1="46" x2="1044" y2="14" class="k-grille"/><line x1="1078" y1="46" x2="1078" y2="14" class="k-grille"/><line x1="1112" y1="46" x2="1112" y2="14" class="k-grille"/><line x1="1146" y1="46" x2="1146" y2="14" class="k-grille"/><line x1="1180" y1="46" x2="1180" y2="14" class="k-grille"/><rect x="23" y="890" width="661.0" height="1472" class="k-door"/><rect x="690.0" y="890" width="581.0" height="1472" class="k-door"/><rect x="23" y="63" width="661.0" height="821" class="k-door"/><rect x="690.0" y="63" width="581.0" height="821" class="k-door"/><rect x="706.0" y="897" width="540" height="1450" class="k-fridge"/><line x1="706.0" y1="1825.0" x2="1246.0" y2="1825.0" class="k-fridge-l"/><line x1="638" y1="1665" x2="638" y2="1265" class="k-handle"/><line x1="736" y1="1665" x2="736" y2="1265" class="k-handle"/><line x1="638" y1="827" x2="638" y2="627" class="k-handle"/><line x1="736" y1="827" x2="736" y2="627" class="k-handle"/><text x="349.0" y="1465" text-anchor="middle" class="s-lbl">brooms</text><text x="349.0" y="1525" text-anchor="middle" class="s-txt-s">vacuum · mop</text><text x="976.0" y="1465" text-anchor="middle" class="s-lbl">fridge</text><text x="976.0" y="1525" text-anchor="middle" class="s-txt-s">behind door</text><text x="647.0" y="488.5" text-anchor="middle" class="s-txt-s">top cupboards</text><text x="2255" y="1235" text-anchor="middle" class="s-txt-s">open bay</text><line x1="0" y1="-120" x2="1274" y2="-120" class="s-dim"/><line x1="0" y1="-106" x2="0" y2="-134" class="s-dim"/><line x1="1274" y1="-106" x2="1274" y2="-134" class="s-dim"/><text x="637.0" y="-172" text-anchor="middle" class="s-txt-s">≈ 1274</text><line x1="38" y1="2535" x2="678" y2="2535" class="s-dim"/><line x1="38" y1="2549" x2="38" y2="2521" class="s-dim"/><line x1="678" y1="2549" x2="678" y2="2521" class="s-dim"/><text x="358.0" y="2565" text-anchor="middle" class="s-txt-s">640</text><line x1="696" y1="2535" x2="1256" y2="2535" class="s-dim"/><line x1="696" y1="2549" x2="696" y2="2521" class="s-dim"/><line x1="1256" y1="2549" x2="1256" y2="2521" class="s-dim"/><text x="976.0" y="2565" text-anchor="middle" class="s-txt-s">560</text><line x1="1274" y1="1475" x2="1310" y2="1475" class="s-dim"/><line x1="1274" y1="1489" x2="1274" y2="1461" class="s-dim"/><line x1="1310" y1="1489" x2="1310" y2="1461" class="s-dim"/><text x="1292.0" y="1423" text-anchor="middle" class="s-txt-s"></text><text x="1294" y="1425" text-anchor="start" class="s-txt-s">gap 36</text><line x1="-90" y1="2465" x2="-90" y2="0" class="s-dim"/><line x1="-104" y1="2465" x2="-76" y2="2465" class="s-dim"/><line x1="-104" y1="0" x2="-76" y2="0" class="s-dim"/><text x="-114" y="1232.5" text-anchor="middle" class="s-txt-s" transform="rotate(-90 -114 1232.5)">2465</text><text x="976.0" y="1585" text-anchor="middle" class="s-txt-s">niche ≈ 1460</text><text x="349.0" y="2430" text-anchor="middle" class="s-txt-s">plinth 100</text><text x="349.0" y="44" text-anchor="middle" class="s-txt-s">vent strip 60</text><text x="-10" y="2665" text-anchor="start" class="s-txt-s">exterior wall</text><text x="2605" y="2665" text-anchor="end" class="s-txt-s">kitchen side</text></svg></div>
+      <figcaption><b>The whole wall, seen from the room</b><span>Cupboard on the left, dryer and washer on the right, and the open washer bay stays free. The fridge (blue dashes) sits behind a wooden door that matches the storage door, and the door lines run straight across both columns.</span></figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Top view and airflow</h2>
+    <div class="duo">
+      <figure>
+        <div class="scroll"><svg viewBox="-200 -200 2865 1470" role="img" aria-label="Top view: cupboard, dryer and washer in a row against the wall, with door swings"><rect x="-60" y="-160" width="2665" height="160" class="k-wallcut"/><rect x="-160" y="-160" width="100" height="1410" class="k-wallcut"/><text x="1302.5" y="-55" text-anchor="middle" class="s-txt-s">voorzetwand (gips face)</text><rect x="0" y="0" width="20" height="580" class="k-fill"/><rect x="20" y="0" width="1254" height="580" class="k-body"/><rect x="20" y="0" width="18" height="580" class="k-side"/><rect x="678" y="0" width="18" height="580" class="k-side"/><rect x="1256" y="0" width="18" height="580" class="k-side"/><rect x="20" y="580" width="1254" height="18" class="k-door"/><path d="M20 598 A667.0 667.0 0 0 0 153.4 1251.6599999999999" class="k-swing"/><line x1="20" y1="598" x2="153.4" y2="1251.6599999999999" class="k-swing-door"/><path d="M1274 598 A587.0 587.0 0 0 1 1156.6 1173.26" class="k-swing"/><line x1="1274" y1="598" x2="1156.6" y2="1173.26" class="k-swing-door"/><rect x="706.0" y="45" width="540" height="545" class="k-fridge"/><text x="976.0" y="300" text-anchor="middle" class="s-lbl">fridge</text><text x="358.0" y="300" text-anchor="middle" class="s-lbl">storage</text><rect x="1310" y="0" width="600" height="600" class="k-app"/><text x="1610.0" y="320" text-anchor="middle" class="s-txt-s">dryer</text><rect x="1925" y="0" width="600" height="600" class="k-app"/><text x="2225.0" y="320" text-anchor="middle" class="s-txt-s">washer</text></svg></div>
+        <figcaption><b>From above</b><span>About 600 deep with the doors, so the front lines up with the washer and dryer. A 20 mm strip against the exterior wall takes up a wall that isn't straight. The doors are hinged on the outside, so both open away from the middle.</span></figcaption>
+      </figure>
+      <figure>
+        <svg viewBox="-200 -40 1260 2545" role="img" aria-label="Side cut through the fridge column showing air coming in at the plinth, rising behind the fridge and leaving at the ceiling strip"><rect x="-160" y="0" width="160" height="2465" class="k-wallcut"/><rect x="0" y="2365" width="18" height="0" class="k-side"/><rect x="0" y="2347" width="580" height="18" class="k-side"/><rect x="50" y="869" width="530" height="18" class="k-side"/><rect x="0" y="60" width="580" height="18" class="k-side"/><rect x="60" y="2365" width="18" height="100" class="k-side"/><rect x="520" y="2365" width="18" height="100" class="k-grillecut"/><rect x="580" y="890" width="18" height="1472" class="k-door"/><rect x="580" y="63" width="18" height="821" class="k-door"/><rect x="500" y="0" width="18" height="60" class="k-grillecut"/><rect x="50" y="897" width="530" height="1450" class="k-fridge"/><text x="315" y="1622.0" text-anchor="middle" class="s-lbl">fridge</text><path d="M720 2420 L25 2420" class="k-air-cold"/><path d="M25 2420 L25 200 L520 200 L520 30 L720 30" class="k-air"/><text x="730" y="2434" class="s-txt-s">cool air in</text><text x="730" y="44" class="s-txt-s">warm air out</text><text x="-80.0" y="1232.5" text-anchor="middle" class="s-txt-s" transform="rotate(-90 -80.0 1232.5)">voorzetwand</text><text x="80" y="767" class="s-txt-s">open at the back</text></svg>
+        <figcaption><b>Side cut, fridge column</b><span>A built-in fridge needs air. It comes in through a grille in the plinth, rises behind the fridge and leaves through the strip at the ceiling.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Measure before the next version</h2>
+    <ul class="plain">
+      <li><b>Fridge label</b> (inside, on the side wall): brand and model. That gives the niche height and the door fixing type.</li>
+      <li><b>Exterior wall → dryer side</b>, at floor height and at 1 m.</li>
+      <li><b>Ceiling height</b> above where the cupboard goes.</li>
+      <li><b>Free space in the room</b> in front of the cupboard, so the fridge door and drawers open fully.</li>
+      <li><b>Where the fridge plugs in</b>: the nearest socket now, and whether a socket can go in a top cupboard.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
