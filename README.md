@@ -13,3 +13,7 @@ Photo journal and build plans for the bijkeuken: an insulated stud wall, then a 
 
 **Part 2 · Laundry corner**
 - `cupboard.html`: sketch of the fridge cupboard, worktop and wall strips
+
+**3D model**
+- `model.js`: the 3D model of the planned bijkeuken on the home page (three.js)
+- `vendor/`: three.js r160 (MIT licence), kept in the repo so the site loads nothing from other servers except Google Fonts
