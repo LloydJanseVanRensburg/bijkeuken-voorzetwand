@@ -1,29 +1,17 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-</head>
-<body>
-<title>Bijkeuken voorzetwand</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<title>Bijkeuken · build journal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
 <style>
-/* Layout: a single workshop cut-sheet column, drawings to scale, tap-to-tick lists for the zaagservice */
+/* Same workshop look as the cut sheet: one column, tap-to-tick, phases open one at a time */
 :root {
-  --paper: #eef1f4;
-  --sheet: #ffffff;
-  --ink: #1b2430;
-  --ink-soft: #566273;
-  --line: #cfd6de;
-  --marker: #1f56c9;      /* carpenter's marker: joints, codes */
-  --timber: #e3c48e;
-  --timber-edge: #a9874d;
-  --osb: #d7b77c;
-  --brick: #b98a78;
-  --hatch: #f2d9a8;
-  --fix: #c2410c;         /* fixing points */
-  --done: #2f8a4c;
+  --paper: #eef1f4; --sheet: #ffffff; --ink: #1b2430; --ink-soft: #566273; --line: #cfd6de;
+  --marker: #1f56c9; --timber: #e3c48e; --timber-edge: #a9874d; --brick: #b98a78; --hatch: #f2d9a8;
+  --fix: #c2410c; --done: #2f8a4c;
   --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -32,716 +20,345 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
-    --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --osb: #7d6439;
-    --brick: #7a5446; --hatch: #4a3c22; --fix: #fb923c; --done: #5cc27e;
+    --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+    --fix: #fb923c; --done: #5cc27e;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
   --paper: #12171e; --sheet: #1a212b; --ink: #e6ebf1; --ink-soft: #9aa6b5; --line: #2e3845;
-  --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --osb: #7d6439;
-  --brick: #7a5446; --hatch: #4a3c22; --fix: #fb923c; --done: #5cc27e;
+  --marker: #7da6ff; --timber: #8a6c3f; --timber-edge: #c9a56a; --brick: #7a5446; --hatch: #4a3c22;
+  --fix: #fb923c; --done: #5cc27e;
 }
 * { box-sizing: border-box; }
 body {
-  margin: 0;
-  background: var(--paper); color: var(--ink);
-  font: 16px/1.55 var(--f-body);
+  margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--f-body);
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 28px 64px;
 }
 main { max-width: 880px; margin: 0 auto; display: grid; gap: 40px; }
 h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.1; }
-h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 700; letter-spacing: .01em; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 700; }
 h2 { font-size: 1.75rem; font-weight: 600; }
-h3 { font-size: 1.2rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
 p { margin: 0; max-width: 65ch; }
+a { color: var(--marker); }
 .eyebrow { font: 600 .75rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--marker); }
-.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
-section { display: grid; gap: 16px; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+section, header { display: grid; gap: 16px; }
+main > *, section > *, header > *, .phases > *, .ph-body > *, figure > * { min-width: 0; }
 .lede { color: var(--ink-soft); }
-header { display: grid; gap: 14px; }
-.specs { display: flex; flex-wrap: wrap; gap: 8px; }
-.spec { font: 500 .85rem/1 var(--f-mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--sheet); }
-.spec b { color: var(--marker); font-weight: 600; }
-.panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
-.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.scroll svg { display: block; min-width: 640px; width: 100%; height: auto; }
-.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sw { width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--timber-edge); }
-.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fix); }
-.dot.open { background: transparent; border: 2px solid var(--fix); }
-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
-th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-td.num, th.num { text-align: right; }
-.code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
+.back { font: 500 .9rem var(--f-mono); text-decoration: none; justify-self: start; }
+.note { border-left: 3px solid var(--fix); padding: 10px 14px; background: var(--sheet); border-radius: 0 6px 6px 0; display: grid; gap: 6px; }
 
-/* Bars */
-.bars { display: grid; gap: 10px; }
-.bar { display: grid; grid-template-columns: 2.4rem 1fr; gap: 10px; align-items: center; cursor: pointer; border-radius: 4px; padding: 4px; }
-.bar:focus-visible, .check input:focus-visible + span, .sheet-card:focus-visible { outline: 2px solid var(--marker); outline-offset: 2px; }
-.bar-no { font: 600 .95rem/1 var(--f-mono); text-align: center; padding: 8px 0; border: 1px solid var(--line); border-radius: 4px; background: var(--sheet); }
-.track { display: flex; height: 46px; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: repeating-linear-gradient(135deg, transparent 0 6px, var(--line) 6px 7px); }
-.seg { background: var(--timber); border-right: 2px solid var(--sheet); display: grid; place-content: center; text-align: center; min-width: 0; padding: 0 2px; line-height: 1.05; }
-.seg .len { font: 600 .82rem/1 var(--f-mono); color: var(--ink); }
-.seg .c { font: 500 .62rem/1.2 var(--f-mono); color: var(--ink-soft); }
-.seg.spare { background: transparent; }
-.bar.done .bar-no { background: var(--done); color: var(--sheet); border-color: var(--done); }
-.bar.done .track { opacity: .45; }
+/* Overall progress */
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--paper); padding-block: 10px; display: grid; gap: 6px; }
+.progress .row { display: flex; justify-content: space-between; font: 600 .8rem/1 var(--f-mono); color: var(--ink-soft); }
+.meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--done); transition: width .25s; }
 
-/* Sheets */
-.sheets { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.sheet-card { display: grid; gap: 8px; cursor: pointer; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); }
-.sheet-card svg { width: 100%; height: auto; display: block; }
-.sheet-card.done { border-color: var(--done); }
-.sheet-card.done svg { opacity: .45; }
-.sheet-card .t { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.sheet-card .t small { font: 500 .75rem/1 var(--f-mono); color: var(--ink-soft); }
-.sheet-card.done .t small { color: var(--done); }
+/* Phases */
+.phases { display: grid; gap: 10px; }
+.phase { background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; }
+.phase summary { list-style: none; display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; cursor: pointer; }
+.phase summary::-webkit-details-marker { display: none; }
+.phase summary:focus-visible { outline: 2px solid var(--marker); outline-offset: -2px; border-radius: 6px; }
+.step-no { font: 700 2.2rem/0.9 var(--f-display); color: var(--marker); font-variant-numeric: tabular-nums; text-align: center; }
+.ph-title { display: grid; gap: 2px; }
+.ph-title small { color: var(--ink-soft); font-size: .88rem; }
+.count { font: 600 .85rem/1 var(--f-mono); color: var(--ink-soft); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; white-space: nowrap; }
+.phase.done { border-color: var(--done); }
+.phase.done .step-no { color: var(--done); }
+.phase.done .count { background: var(--done); border-color: var(--done); color: var(--sheet); }
+.phase[open] summary { border-bottom: 1px solid var(--line); }
+.ph-body { padding: 4px 16px 16px; display: grid; gap: 12px; }
+.maplink { font: 600 .9rem var(--f-mono); justify-self: start; }
 
 /* Checklists */
 .checks { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
-.check label { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check label { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check:last-child label { border-bottom: 0; }
 .check input { position: absolute; opacity: 0; pointer-events: none; }
 .check .box { width: 22px; height: 22px; border: 2px solid var(--ink-soft); border-radius: 4px; display: grid; place-content: center; margin-top: 1px; }
+.check input:focus-visible + .box { outline: 2px solid var(--marker); outline-offset: 2px; }
 .check input:checked + .box { background: var(--done); border-color: var(--done); }
 .check input:checked + .box::after { content: ""; width: 6px; height: 11px; border: solid var(--sheet); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); }
-.check input:checked ~ .txt { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--line); }
-.txt small { display: block; color: var(--ink-soft); font-size: .85rem; }
-.qty { font-family: var(--f-mono); font-weight: 600; }
+.check input:checked ~ .txt { color: var(--ink-soft); }
+.check input:checked ~ .txt small { display: none; }
+.txt small { display: block; color: var(--ink-soft); font-size: .88rem; margin-top: 2px; }
+.flag { display: inline-block; font: 600 .66rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--sheet); background: var(--fix); padding: 4px 6px; border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+.check input:checked ~ .txt .flag { background: var(--done); }
+.reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+.reset.armed { color: var(--fix); border-color: var(--fix); }
 
-ol.steps { margin: 0; padding-left: 1.6rem; display: grid; gap: 10px; max-width: 65ch; }
-ol.steps li::marker { font: 600 .9rem var(--f-mono); color: var(--marker); }
-.note { border-left: 3px solid var(--marker); padding: 10px 14px; background: var(--sheet); border-radius: 0 6px 6px 0; display: grid; gap: 6px; }
-.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.reset { justify-self: start; font: 500 .8rem var(--f-mono); color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; }
-.reset:focus-visible { outline: 2px solid var(--marker); }
-
-/* SVG theme hooks */
-.s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
-.s-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 3; }
-.s-brickline { stroke: var(--sheet); stroke-width: 4; opacity: .6; fill: none; }
-.s-timber { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 3; }
-.s-cap { fill: var(--timber); stroke: var(--marker); stroke-width: 5; }
-.s-joint { stroke: var(--marker); stroke-width: 6; stroke-dasharray: 30 18; fill: none; }
-.s-fix { fill: var(--fix); }
-.s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 8; }
-.s-hatch { fill: var(--hatch); opacity: .55; }
-.s-dim { stroke: var(--ink-soft); stroke-width: 3; fill: none; }
-.s-txt { fill: var(--ink); font-family: var(--f-mono); font-size: 50px; }
-.s-txt-s { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 40px; }
-.s-code { fill: var(--marker); font-family: var(--f-mono); font-size: 42px; font-weight: 600; }
-.s-osb { fill: var(--osb); stroke: var(--timber-edge); stroke-width: 6; }
-.s-sheet { fill: var(--paper); stroke: var(--ink-soft); stroke-width: 6; }
-.s-ptxt { fill: var(--ink); font-family: var(--f-mono); font-size: 90px; font-weight: 600; }
-.s-ptxt-s { fill: var(--ink); font-family: var(--f-mono); font-size: 70px; }
-.s-open { fill: var(--hatch); opacity: .55; stroke: var(--ink-soft); stroke-width: 5; stroke-dasharray: 24 16; }
-.s-open-osb { fill: var(--paper); stroke: var(--ink-soft); stroke-width: 6; stroke-dasharray: 30 20; }
-
-.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.download { display: inline-flex; align-items: center; gap: 8px; font: 600 .95rem/1 var(--f-body); color: var(--sheet); background: var(--marker); padding: 12px 16px; border-radius: 6px; text-decoration: none; }
-.download:hover { filter: brightness(1.08); }
-.download:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.download svg { width: 18px; height: 18px; }
-.download.alt { background: var(--sheet); color: var(--marker); border: 1px solid var(--marker); }
-.details { display: grid; align-items: start; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+/* Drill map */
 figure { margin: 0; display: grid; gap: 10px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
-figure svg { width: 100%; height: auto; display: block; }
 figcaption { display: grid; gap: 4px; font-size: .92rem; }
 figcaption b { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
 figcaption span { color: var(--ink-soft); }
-.d-bracket { fill: var(--marker); }
-.d-ghost { fill: none; stroke: var(--marker); stroke-width: 2; stroke-dasharray: 6 4; }
-.d-screw { stroke: var(--fix); stroke-width: 3; stroke-linecap: round; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll svg { display: block; min-width: 560px; width: 100%; height: auto; }
+figure > svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--fix); }
+.dot.open { background: transparent; border: 2px solid var(--fix); }
+.dash { width: 18px; border-top: 3px dashed var(--fix); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.code { font: 600 .85rem/1 var(--f-mono); color: var(--marker); white-space: nowrap; }
+.s-wall { fill: var(--sheet); stroke: var(--ink-soft); stroke-width: 4; }
+.s-brick { fill: var(--brick); stroke: var(--ink-soft); stroke-width: 3; }
+.s-open { fill: var(--hatch); opacity: .55; stroke: var(--ink-soft); stroke-width: 5; stroke-dasharray: 24 16; }
+.s-ghost { fill: var(--timber); fill-opacity: .25; stroke: var(--timber-edge); stroke-width: 3; stroke-dasharray: 14 10; }
+.s-pack { fill: var(--timber); fill-opacity: .5; stroke: var(--timber-edge); stroke-width: 4; }
+.s-fix { fill: var(--fix); }
+.s-fix-open { fill: var(--sheet); stroke: var(--fix); stroke-width: 9; }
+.s-arrow { stroke: var(--fix); stroke-width: 10; }
+.s-maybe { stroke: var(--fix); stroke-width: 12; stroke-dasharray: 34 28; }
+.s-dim { stroke: var(--ink-soft); stroke-width: 3; }
+.s-txt-s { fill: var(--ink-soft); font-family: var(--f-mono); font-size: 40px; }
+.s-code { fill: var(--marker); font-family: var(--f-mono); font-size: 44px; font-weight: 600; }
+.s-lbl { fill: var(--ink); font-family: var(--f-mono); font-size: 46px; font-weight: 600; }
+.s-timber-d { fill: var(--timber); stroke: var(--timber-edge); stroke-width: 1.5; }
 .d-gips { fill: var(--line); stroke: var(--ink-soft); stroke-width: 1; }
-.d-floor { fill: var(--brick); opacity: .55; }
-.d-wool { fill: var(--hatch); }
-.d-plug { fill: var(--fix); }
+.d-plugline { stroke: var(--fix); stroke-width: 6; stroke-linecap: round; }
+.d-lead { stroke: var(--ink-soft); stroke-width: 1; }
+.d-steel { fill: #8fa3b8; stroke: #4b5b6b; stroke-width: .8; }
+.d-screw { stroke: #4b5b6b; stroke-width: 2; }
+.d-ghostline { stroke: var(--marker); stroke-width: 1.5; stroke-dasharray: 6 4; }
 .d-lbl { fill: var(--ink); font: 13px var(--f-mono); }
 .d-lbl-s { fill: var(--ink-soft); font: 12px var(--f-mono); }
-.d-lead { stroke: var(--ink-soft); stroke-width: 1; fill: none; }
-.steps-grid { display: grid; gap: 14px; }
-.step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; background: var(--sheet); border: 1px solid var(--line); border-radius: 6px; padding: 16px; align-items: start; }
-.step svg { width: 100%; height: auto; display: block; }
-.step-body { display: grid; gap: 10px; align-content: start; }
-.step-head { display: flex; align-items: baseline; gap: 12px; }
-.step-no { font: 700 2.6rem/0.9 var(--f-display); color: var(--marker); font-variant-numeric: tabular-nums; }
-.parts { display: flex; flex-wrap: wrap; gap: 6px; }
-.part { font: 500 .78rem/1 var(--f-mono); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); }
-.part b { color: var(--marker); }
-.st-new { fill: var(--marker); stroke: var(--marker); stroke-width: 3; }
-.st-new-osb { fill: var(--marker); fill-opacity: .3; stroke: var(--marker); stroke-width: 8; }
-.st-mark { stroke: var(--marker); stroke-width: 10; stroke-dasharray: 40 30; }
-.st-wool { fill: var(--hatch); }
-@media (max-width: 620px) { .step { grid-template-columns: 1fr; } }
-@page { size: A4; margin: 12mm; }
-@media print {
-  body { padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 12px; }
-  main { gap: 22px; max-width: none; }
-  .actions, .reset, .check .box { display: none !important; }
-  section:has(.switch) { display: none !important; }
-  body { background: #fff; }
-  .scroll { overflow: visible; }
-  .scroll svg { min-width: 0; width: 100%; }
-  #frame, #osb { width: 72%; margin: 0 auto; }
-  .panel, figure, .step, .bar, .sheet-card, table, .note { break-inside: avoid; }
-  h2 { break-after: avoid; }
-  .check label { grid-template-columns: 1fr; padding: 4px; }
-}
+@media print { .progress, .reset, .back { display: none; } .phase { break-inside: avoid; } }
 
-.trip { display: inline-block; font: 600 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sheet); background: var(--fix); padding: 5px 8px; border-radius: 3px; justify-self: start; }
-.photo img { width: 100%; height: auto; display: block; border-radius: 4px; }
+/* Journal home */
+main { max-width: 1040px; }
+section { scroll-margin-top: 120px; }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.part { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 12px; align-content: start; }
+.part > p { color: var(--ink-soft); font-size: .95rem; }
+.part-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.part-head h2 { margin: 0; }
+.part-head h2 a { color: inherit; text-decoration: none; }
+.part-no { width: 40px; height: 40px; border-radius: 50%; display: grid; place-content: center; background: var(--marker); color: var(--sheet); font: 700 1.1rem/1 var(--f-mono); }
+.pill { font: 600 .7rem/1 var(--f-mono); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft); white-space: nowrap; }
+.pill.live { border-color: var(--done); color: var(--done); }
+.part-links { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.part-links .lbl { font: 600 .68rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.part-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.part-links a { display: inline-block; padding: 7px 11px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; font: 600 .85rem/1 var(--f-body); }
+.part-links a:hover { border-color: var(--marker); }
+.track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 6px; }
+.track li { display: grid; gap: 6px; font: 600 .68rem/1.2 var(--f-mono); color: var(--ink-soft); }
+.track i { display: block; height: 8px; border-radius: 4px; background: var(--line); }
+.track li.done { color: var(--done); }
+.track li.done i { background: var(--done); }
+.track-row { display: flex; justify-content: space-between; gap: 8px; font: 600 .78rem/1.2 var(--f-mono); color: var(--ink-soft); }
+.gallery { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.g-card { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.g-thumb { display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; border: 0; background: var(--line); cursor: zoom-in; overflow: hidden; }
+.g-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+.g-thumb:hover img { transform: scale(1.03); }
+.g-thumb:focus-visible { outline: 3px solid var(--marker); outline-offset: -3px; }
+.g-empty { cursor: default; display: grid; place-content: center; background: repeating-linear-gradient(45deg, transparent 0 10px, var(--line) 10px 11px); }
+.g-empty span { font: 600 .8rem var(--f-mono); color: var(--ink-soft); background: var(--sheet); padding: 6px 10px; border-radius: 4px; border: 1px dashed var(--ink-soft); }
+.g-txt { padding: 14px 16px 16px; display: grid; gap: 6px; align-content: start; }
+.g-row { display: flex; justify-content: space-between; gap: 8px; }
+.g-stage { font: 600 .72rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--marker); }
+.g-date { font-size: .75rem; color: var(--ink-soft); }
+.g-txt p { color: var(--ink-soft); font-size: .92rem; }
+.g-card.todo { border-style: dashed; }
+.g-card.todo .g-stage { color: var(--ink-soft); }
+
+/* Slider viewer */
+dialog.viewer { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: #0b0f14; color: #e6ebf1; }
+body:has(dialog[open]) { overflow: hidden; }
+dialog.viewer::backdrop { background: rgb(0 0 0 / .85); }
+.v-wrap { height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.v-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; font: 600 .85rem var(--f-mono); }
+.v-stage { position: relative; overflow: hidden; touch-action: pan-y; min-height: 0; }
+.v-strip { display: flex; height: 100%; transition: transform .35s ease; }
+.v-strip.drag { transition: none; }
+.v-slide { flex: 0 0 100%; height: 100%; min-height: 0; display: grid; place-items: center; padding: 8px 16px; }
+.v-slide img { min-height: 0; }
+.v-slide img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; user-select: none; -webkit-user-drag: none; }
+.v-nav { position: absolute; top: 50%; translate: 0 -50%; width: 48px; height: 48px; border-radius: 50%; border: 0; background: rgb(255 255 255 / .14); color: #fff; font-size: 1.6rem; cursor: pointer; display: grid; place-content: center; }
+.v-nav:hover { background: rgb(255 255 255 / .26); }
+.v-nav:disabled { opacity: .25; cursor: default; }
+.v-prev { left: 16px; } .v-next { right: 16px; }
+.v-close { border: 0; background: rgb(255 255 255 / .14); color: #fff; font: 600 .85rem var(--f-mono); padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+.v-cap { padding: 8px 16px 4px; display: grid; gap: 4px; max-width: 880px; margin: 0 auto; width: 100%; }
+.v-cap h3 { color: #fff; }
+.v-cap p { color: #aab5c3; font-size: .92rem; max-width: none; }
+.v-thumbs { display: flex; gap: 8px; justify-content: center; padding: 10px 16px 16px; overflow-x: auto; }
+.v-thumbs button { flex: 0 0 auto; width: 72px; aspect-ratio: 4 / 3; padding: 0; border: 2px solid transparent; border-radius: 4px; overflow: hidden; background: none; cursor: pointer; opacity: .55; }
+.v-thumbs button[aria-current="true"] { border-color: #7da6ff; opacity: 1; }
+.v-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 600px) { .v-nav { display: none; } .track li span { font-size: .6rem; } }
+
+/*nav*/
+.site-nav { position: sticky; top: 0; z-index: 50; background: var(--paper); border-bottom: 1px solid var(--line);
+  margin: -28px calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 28px calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); }
+.sn-in { max-width: 1040px; margin: 0 auto; }
+.sn-top { display: flex; align-items: center; gap: 8px 20px; flex-wrap: wrap; padding: 12px 0 10px; }
+.sn-brand { font: 700 1.35rem/1 var(--f-display); color: var(--ink); text-decoration: none; letter-spacing: .01em; display: inline-flex; align-items: baseline; gap: 8px; }
+.sn-brand small { font: 600 .68rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.sn-parts { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
+.sn-parts::-webkit-scrollbar { display: none; }
+.sn-parts a { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 999px; text-decoration: none;
+  font: 600 .9rem/1 var(--f-body); color: var(--ink-soft); border: 1px solid transparent; }
+.sn-parts a:hover { color: var(--ink); background: var(--sheet); }
+.sn-parts a[aria-current] { color: var(--ink); background: var(--sheet); border-color: var(--line); }
+.sn-parts b { display: inline-grid; place-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--line); color: var(--ink); font: 700 .7rem/1 var(--f-mono); }
+.sn-parts a[aria-current] b { background: var(--marker); color: var(--sheet); }
+.sn-sub { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid var(--line); }
+.sn-sub::-webkit-scrollbar { display: none; }
+.sn-sub a { flex: 0 0 auto; padding: 10px 0 9px; text-decoration: none; font: 600 .78rem/1 var(--f-mono); color: var(--ink-soft); border-bottom: 2px solid transparent; }
+.sn-sub a:hover { color: var(--ink); }
+.sn-sub a[aria-current] { color: var(--marker); border-bottom-color: var(--marker); }
+.sn-sub .sn-lbl { color: var(--ink-soft); opacity: .7; font: 600 .7rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 11px 0 10px; flex: 0 0 auto; }
+@media (max-width: 560px) { .sn-parts { margin-left: 0; width: 100%; } .sn-brand small { display: none; } }
+@media print { .site-nav { display: none; } }
+/*/nav*/
 </style>
-
-<main id="app">
+</head>
+<body>
+<!--nav--><nav class="site-nav" aria-label="Site"><div class="sn-in"><div class="sn-top"><a class="sn-brand" href="./">Bijkeuken<small>build journal</small></a><div class="sn-parts"><a href="./" aria-current="page">Journey</a><a href="wall.html"><b>1</b>Stud wall</a><a href="cupboard.html"><b>2</b>Laundry corner</a></div></div></div></nav><!--/nav-->
+<main>
   <header>
-    <span class="eyebrow">Zaagservice cut sheet · Hornbach Zaandam</span>
-    <h1>Bijkeuken voorzetwand</h1>
-    <p class="lede">Insulated stud wall in front of the gips back wall. The frame holds itself up and is fixed into the floor, the ceiling joists, the brick pillar and the brick kitchen wall. A 700 × 1180 bay by the kitchen wall stays open, so the existing tap, sockets and pipes stay where they are. Hornbach cuts every piece to final size. All sizes are in millimetres.</p>
-    <div class="specs">
-      <span class="spec">Wall <b>2605</b> wide, ceiling <b>2450–2473</b></span>
-      <span class="spec">Open bay <b>700 × 1180</b></span>
-      <span class="spec">Frame <b>44 × 94</b> vuren</span>
-      <span class="spec">OSB/3 <b>18 mm</b></span>
-      <span class="spec"><b>10</b> bars of 300 cm</span>
-      <span class="spec"><b>3</b> OSB sheets</span>
-      <span class="spec">Finish <b>painted OSB</b></span>
-    </div>
-    <div class="actions">
-      <a class="download" href="zaagplan.pdf" download="bijkeuken-voorzetwand-zaagplan.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"></path></svg>Download cutting plan (PDF)</a>
-      <a class="download alt" href="prep.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12l5 5L20 6"></path></svg>Get ready &amp; drill map</a>
-      <a class="download alt" href="brackets.html">Brackets</a>
-      <a class="download alt" href="pipes.html">Pipes</a>
-      <a class="download alt" href="progress.html">Progress photos</a>
-      <a class="download alt" href="cupboard.html">Fridge cupboard &amp; laundry idea</a>
-    </div>
+    <span class="eyebrow">Build journal</span>
+    <h1>Bijkeuken</h1>
+    <p class="lede">Turning the bare back wall of the bijkeuken into an insulated wall with a fridge cupboard and a laundry corner, one part at a time. Each part has its photos here and its plans behind the links. Tap a photo to open the viewer, then swipe or use the arrow keys.</p>
   </header>
-  <section>
-    <span class="eyebrow">The wall today</span>
-    <h2>Starting point</h2>
-    <figure class="photo">
-      <img src="wall.jpg" alt="The bijkeuken back wall: gips wall with the white brick pillar, washer tap, drain and socket at the bottom right, kitchen wall and window on the right" width="1600" height="1200">
-      <figcaption><b>Seen from inside the bijkeuken</b><span>Left: the exterior wall (gips) with the vent grille. Middle: the brick pillar. Right: the brick kitchen wall and window. The tap, drain, socket and junction box at the bottom right all stay reachable in the open bay. The ceiling slopes from 2450 at the exterior wall to 2473 at the kitchen wall.</span></figcaption>
-    </figure>
-    <div class="note"><h3>Check the vent grille</h3><p>The frame stands 35 mm off the back wall to clear the water pipe, so the new wall sticks out 147 mm. Measure from the back wall to the nearest edge of the grille at the top left. If it's less than about 150 mm, the wall would cover part of it. Tell me before you build that corner.</p></div>
-  </section>
 
+  <div class="parts">
+<article class="part">
+  <div class="part-head"><span class="part-no">1</span><div><span class="eyebrow">Part 1</span><h2><a href="#part-1">Stud wall</a></h2></div><span class="pill live">Built · paint next</span></div>
+  <p>An insulated 44×94 stud wall with 18 mm OSB in front of the old back wall. It stands 35 mm off that wall so the water pipe runs free behind it, and a bay by the kitchen wall stays open for the washer tap, drain and socket.</p>
+  <div class="track-row"><span>3 of 5 stages done</span><span>Next: Paint</span></div>
+  <ol class="track" style="--n:5" aria-label="Stages of part 1"><li class="done"><i></i><span>Frame up</span></li><li class="done"><i></i><span>Insulation</span></li><li class="done"><i></i><span>OSB</span></li><li class=""><i></i><span>Paint</span></li><li class=""><i></i><span>Finishing</span></li></ol>
+  <div class="part-links"><span class="lbl">Plans</span><ul><li><a href="wall.html">Plan &amp; cut list <span aria-hidden="true">→</span></a></li><li><a href="prep.html">Get ready &amp; drill map <span aria-hidden="true">→</span></a></li><li><a href="brackets.html">Brackets <span aria-hidden="true">→</span></a></li><li><a href="pipes.html">Pipes <span aria-hidden="true">→</span></a></li></ul></div>
+</article><article class="part">
+  <div class="part-head"><span class="part-no">2</span><div><span class="eyebrow">Part 2</span><h2><a href="#part-2">Laundry corner</a></h2></div><span class="pill">Planning</span></div>
+  <p>A floor-to-ceiling cupboard for the built-in fridge and the cleaning gear, a worktop over the dryer and washer, and wall strips above it for shelves, a hanging rail and baskets.</p>
+  <div class="track-row"><span>0 of 3 stages done</span><span>Next: Fridge cupboard</span></div>
+  <ol class="track" style="--n:3" aria-label="Stages of part 2"><li class=""><i></i><span>Fridge cupboard</span></li><li class=""><i></i><span>Worktop</span></li><li class=""><i></i><span>Wall strips &amp; shelves</span></li></ol>
+  <div class="part-links"><span class="lbl">Plans</span><ul><li><a href="cupboard.html">Cupboard &amp; worktop <span aria-hidden="true">→</span></a></li></ul></div>
+</article>
+  </div>
 
-
-  <section>
-    <span class="eyebrow">Elevation · seen from inside the bijkeuken</span>
-    <h2>Frame layout</h2>
-    <p class="lede">The first noggins have their bottom face at 1180, and the second row at 1811. The open bay by the kitchen wall has no floor plate (pipes) and no stud at the bottom. V6 frames its left side. A header at 1180 spans over it, and the short studs V7 and V8 stand on that header. The frame is built level with its top at 2447. The thin band above it is the gap to the sloping ceiling, filled with packers. The blue dashed lines are the OSB joints. Drawn to scale: 1 drawing unit = 1 mm.</p>
-    <div class="panel scroll">
-      <svg id="frame" viewBox="-260 -230 3440 2930" role="img" aria-label="Frame elevation: studs V1 to V8, noggins at 1180 and 1811, open bay 700 by 1180 at the kitchen wall"><polygon points="0,2465 2605,2465 2605,-8 0,15" class="s-wall"></polygon><polygon points="0,18 2605,18 2605,-8 0,15" class="s-hatch"></polygon><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><line x1="830" x2="1050" y1="2400" y2="2400" class="s-brickline"></line><line x1="980" x2="980" y1="2400" y2="2335" class="s-brickline"></line><line x1="830" x2="1050" y1="2335" y2="2335" class="s-brickline"></line><line x1="900" x2="900" y1="2335" y2="2270" class="s-brickline"></line><line x1="830" x2="1050" y1="2270" y2="2270" class="s-brickline"></line><line x1="980" x2="980" y1="2270" y2="2205" class="s-brickline"></line><line x1="830" x2="1050" y1="2205" y2="2205" class="s-brickline"></line><line x1="900" x2="900" y1="2205" y2="2140" class="s-brickline"></line><line x1="830" x2="1050" y1="2140" y2="2140" class="s-brickline"></line><line x1="980" x2="980" y1="2140" y2="2075" class="s-brickline"></line><line x1="830" x2="1050" y1="2075" y2="2075" class="s-brickline"></line><line x1="900" x2="900" y1="2075" y2="2010" class="s-brickline"></line><line x1="830" x2="1050" y1="2010" y2="2010" class="s-brickline"></line><line x1="980" x2="980" y1="2010" y2="1945" class="s-brickline"></line><line x1="830" x2="1050" y1="1945" y2="1945" class="s-brickline"></line><line x1="900" x2="900" y1="1945" y2="1880" class="s-brickline"></line><line x1="830" x2="1050" y1="1880" y2="1880" class="s-brickline"></line><line x1="980" x2="980" y1="1880" y2="1815" class="s-brickline"></line><line x1="830" x2="1050" y1="1815" y2="1815" class="s-brickline"></line><line x1="900" x2="900" y1="1815" y2="1750" class="s-brickline"></line><line x1="830" x2="1050" y1="1750" y2="1750" class="s-brickline"></line><line x1="980" x2="980" y1="1750" y2="1685" class="s-brickline"></line><line x1="830" x2="1050" y1="1685" y2="1685" class="s-brickline"></line><line x1="900" x2="900" y1="1685" y2="1620" class="s-brickline"></line><line x1="830" x2="1050" y1="1620" y2="1620" class="s-brickline"></line><line x1="980" x2="980" y1="1620" y2="1555" class="s-brickline"></line><line x1="830" x2="1050" y1="1555" y2="1555" class="s-brickline"></line><line x1="900" x2="900" y1="1555" y2="1490" class="s-brickline"></line><line x1="830" x2="1050" y1="1490" y2="1490" class="s-brickline"></line><line x1="980" x2="980" y1="1490" y2="1425" class="s-brickline"></line><line x1="830" x2="1050" y1="1425" y2="1425" class="s-brickline"></line><line x1="900" x2="900" y1="1425" y2="1360" class="s-brickline"></line><line x1="830" x2="1050" y1="1360" y2="1360" class="s-brickline"></line><line x1="980" x2="980" y1="1360" y2="1295" class="s-brickline"></line><line x1="830" x2="1050" y1="1295" y2="1295" class="s-brickline"></line><line x1="900" x2="900" y1="1295" y2="1230" class="s-brickline"></line><line x1="830" x2="1050" y1="1230" y2="1230" class="s-brickline"></line><line x1="980" x2="980" y1="1230" y2="1165" class="s-brickline"></line><line x1="830" x2="1050" y1="1165" y2="1165" class="s-brickline"></line><line x1="900" x2="900" y1="1165" y2="1100" class="s-brickline"></line><line x1="830" x2="1050" y1="1100" y2="1100" class="s-brickline"></line><line x1="980" x2="980" y1="1100" y2="1035" class="s-brickline"></line><line x1="830" x2="1050" y1="1035" y2="1035" class="s-brickline"></line><line x1="900" x2="900" y1="1035" y2="970" class="s-brickline"></line><line x1="830" x2="1050" y1="970" y2="970" class="s-brickline"></line><line x1="980" x2="980" y1="970" y2="905" class="s-brickline"></line><line x1="830" x2="1050" y1="905" y2="905" class="s-brickline"></line><line x1="900" x2="900" y1="905" y2="840" class="s-brickline"></line><line x1="830" x2="1050" y1="840" y2="840" class="s-brickline"></line><line x1="980" x2="980" y1="840" y2="775" class="s-brickline"></line><line x1="830" x2="1050" y1="775" y2="775" class="s-brickline"></line><line x1="900" x2="900" y1="775" y2="730" class="s-brickline"></line><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="s-timber"></rect><rect x="437" y="1241" width="349" height="44" class="s-timber"></rect><rect x="1094" y="1241" width="361" height="44" class="s-timber"></rect><rect x="1499" y="1241" width="362" height="44" class="s-timber"></rect><rect x="44" y="610" width="349" height="44" class="s-timber"></rect><rect x="437" y="610" width="349" height="44" class="s-timber"></rect><rect x="830" y="610" width="220" height="44" class="s-timber"></rect><rect x="1094" y="610" width="361" height="44" class="s-timber"></rect><rect x="1499" y="610" width="362" height="44" class="s-timber"></rect><rect x="1905" y="610" width="306" height="44" class="s-timber"></rect><rect x="2255" y="610" width="306" height="44" class="s-timber"></rect><line x1="808" x2="808" y1="2465" y2="0" class="s-joint"></line><line x1="1477" x2="1477" y1="2465" y2="0" class="s-joint"></line><line x1="1883" x2="1883" y1="1285" y2="0" class="s-joint"></line><line x1="0" x2="2605" y1="1263" y2="1263" class="s-joint"></line><line x1="0" x2="2605" y1="632" y2="632" class="s-joint"></line><circle cx="808" cy="2115" r="22" class="s-fix"></circle><circle cx="1072" cy="2115" r="22" class="s-fix"></circle><circle cx="808" cy="1615" r="22" class="s-fix"></circle><circle cx="1072" cy="1615" r="22" class="s-fix"></circle><circle cx="808" cy="965" r="22" class="s-fix"></circle><circle cx="1072" cy="965" r="22" class="s-fix"></circle><circle cx="2583" cy="915" r="22" class="s-fix"></circle><circle cx="2583" cy="315" r="22" class="s-fix"></circle><circle cx="2575" cy="1263" r="22" class="s-fix"></circle><circle cx="22" cy="2065" r="22" class="s-fix-open"></circle><circle cx="22" cy="1465" r="22" class="s-fix-open"></circle><circle cx="22" cy="865" r="22" class="s-fix-open"></circle><circle cx="22" cy="265" r="22" class="s-fix-open"></circle><circle cx="300" cy="40" r="22" class="s-fix-open"></circle><circle cx="900" cy="40" r="22" class="s-fix-open"></circle><circle cx="1500" cy="40" r="22" class="s-fix-open"></circle><circle cx="2100" cy="40" r="22" class="s-fix-open"></circle><circle cx="200" cy="2443" r="22" class="s-fix"></circle><circle cx="620" cy="2443" r="22" class="s-fix"></circle><circle cx="1250" cy="2443" r="22" class="s-fix"></circle><circle cx="1750" cy="2443" r="22" class="s-fix"></circle><text x="22" y="-40" class="s-code" text-anchor="middle">V1</text><text x="415" y="-40" class="s-code" text-anchor="middle">V2</text><text x="808" y="-40" class="s-code" text-anchor="middle">V3</text><text x="1072" y="-40" class="s-code" text-anchor="middle">V4</text><text x="1477" y="-40" class="s-code" text-anchor="middle">V5</text><text x="1883" y="-40" class="s-code" text-anchor="middle">V6</text><text x="2233" y="-40" class="s-code" text-anchor="middle">V7</text><text x="2583" y="-40" class="s-code" text-anchor="middle">V8</text><line x1="0" x2="2605" y1="-150" y2="-150" class="s-dim"></line><line x1="0" x2="0" y1="-180" y2="-120" class="s-dim"></line><line x1="2605" x2="2605" y1="-180" y2="-120" class="s-dim"></line><text x="1302.5" y="-170" class="s-txt" text-anchor="middle">2605</text><line x1="0" x2="0" y1="2485" y2="2535" class="s-dim"></line><text x="8" y="2595" class="s-txt-s" text-anchor="start">0</text><line x1="393" x2="393" y1="2485" y2="2535" class="s-dim"></line><text x="401" y="2595" class="s-txt-s" text-anchor="start">393</text><line x1="786" x2="786" y1="2485" y2="2535" class="s-dim"></line><text x="794" y="2595" class="s-txt-s" text-anchor="start">786</text><line x1="1050" x2="1050" y1="2485" y2="2535" class="s-dim"></line><text x="1058" y="2595" class="s-txt-s" text-anchor="start">1050</text><line x1="1455" x2="1455" y1="2485" y2="2535" class="s-dim"></line><text x="1463" y="2595" class="s-txt-s" text-anchor="start">1455</text><line x1="1861" x2="1861" y1="2485" y2="2535" class="s-dim"></line><text x="1869" y="2595" class="s-txt-s" text-anchor="start">1861</text><line x1="2211" x2="2211" y1="2485" y2="2535" class="s-dim"></line><text x="2219" y="2595" class="s-txt-s" text-anchor="start">2211</text><line x1="2561" x2="2561" y1="2485" y2="2535" class="s-dim"></line><text x="2605" y="2595" class="s-txt-s" text-anchor="end">2561</text><text x="0" y="2665" class="s-txt-s">stud left edge, mm from exterior wall</text><line x1="2625" x2="2675" y1="1285" y2="1285" class="s-dim"></line><text x="2690" y="1335" class="s-txt-s">noggin 1180</text><line x1="2625" x2="2675" y1="654" y2="654" class="s-dim"></line><text x="2690" y="644" class="s-txt-s">noggin 1811</text><line x1="2625" x2="2675" y1="730" y2="730" class="s-dim"></line><text x="2690" y="780" class="s-txt-s">pillar 1735</text><text x="2690" y="-20" class="s-txt-s">ceiling 2473</text><text x="2690" y="62" class="s-txt-s">frame 2447</text><text x="-20" y="29" class="s-txt-s" text-anchor="end">2450</text><text x="2255" y="1825" class="s-txt" text-anchor="middle">open bay</text><text x="2255" y="1905" class="s-txt-s" text-anchor="middle">700 × 1180</text><text x="2255" y="1278" class="s-code" text-anchor="middle">H</text><text x="-60" y="1232.5" class="s-txt-s" text-anchor="middle" transform="rotate(-90 -60 1232.5)">exterior wall (gips)</text><text x="3055" y="1232.5" class="s-txt-s" text-anchor="middle" transform="rotate(90 3055 1232.5)">kitchen wall (brick)</text></svg>
-    </div>
-    <div class="legend">
-      <span><i class="sw" style="background:var(--timber)"></i>44×94 timber</span>
-      <span><i class="sw" style="background:var(--brick);border-color:var(--ink-soft)"></i>Brick pillar (74 deep, OSB 55 mm in front)</span>
-      <span><i class="dot"></i>Plug into brick or floor</span>
-      <span><i class="dot open"></i>Screw into a joist or batten behind the gips</span>
-      <span><i class="sw" style="background:var(--hatch);border-color:var(--ink-soft)"></i>Open bay, no OSB</span>
-    </div>
-  </section>
-
-  <section>
-    <span class="eyebrow">Timber · 44 × 94 vuren · 10 bars of 300 cm</span>
-    <h2>Bar plan for the zaagservice</h2>
-    <p class="lede">Show this to the saw operator. Tap a bar once it's cut. The hatched part is offcut. Write the code on each piece with a marker. Bar 10 is mostly spare, for blocking and mistakes.</p>
-    <div class="bars" id="bars"><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">1</span><div class="track" aria-label="Bar 1: 2359 + 360"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:360 0 0"><span class="len">360</span><span class="c">N2</span></div><div class="seg spare" style="flex:281 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">2</span><div class="track" aria-label="Bar 2: 2359 + 360"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:360 0 0"><span class="len">360</span><span class="c">N2</span></div><div class="seg spare" style="flex:281 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">3</span><div class="track" aria-label="Bar 3: 2359 + 360"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:360 0 0"><span class="len">360</span><span class="c">N2</span></div><div class="seg spare" style="flex:281 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">4</span><div class="track" aria-label="Bar 4: 2359 + 360"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:360 0 0"><span class="len">360</span><span class="c">N2</span></div><div class="seg spare" style="flex:281 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">5</span><div class="track" aria-label="Bar 5: 2359 + 348"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:348 0 0"><span class="len">348</span><span class="c">N1</span></div><div class="seg spare" style="flex:293 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">6</span><div class="track" aria-label="Bar 6: 2359 + 348"><div class="seg" style="flex:2359 0 0"><span class="len">2359</span><span class="c">S</span></div><div class="seg" style="flex:348 0 0"><span class="len">348</span><span class="c">N1</span></div><div class="seg spare" style="flex:293 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">7</span><div class="track" aria-label="Bar 7: 1178 + 1069 + 305"><div class="seg" style="flex:1178 0 0"><span class="len">1178</span><span class="c">SH</span></div><div class="seg" style="flex:1069 0 0"><span class="len">1069</span><span class="c">TP1</span></div><div class="seg" style="flex:305 0 0"><span class="len">305</span><span class="c">N4</span></div><div class="seg spare" style="flex:448 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">8</span><div class="track" aria-label="Bar 8: 1178 + 853 + 811"><div class="seg" style="flex:1178 0 0"><span class="len">1178</span><span class="c">SH</span></div><div class="seg" style="flex:853 0 0"><span class="len">853</span><span class="c">BP2</span></div><div class="seg" style="flex:811 0 0"><span class="len">811</span><span class="c">TP2</span></div><div class="seg spare" style="flex:158 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">9</span><div class="track" aria-label="Bar 9: 826 + 719 + 348 + 348 + 218 + 305"><div class="seg" style="flex:826 0 0"><span class="len">826</span><span class="c">BP1</span></div><div class="seg" style="flex:719 0 0"><span class="len">719</span><span class="c">TP3</span></div><div class="seg" style="flex:348 0 0"><span class="len">348</span><span class="c">N1</span></div><div class="seg" style="flex:348 0 0"><span class="len">348</span><span class="c">N1</span></div><div class="seg" style="flex:218 0 0"><span class="len">218</span><span class="c">N3</span></div><div class="seg" style="flex:305 0 0"><span class="len">305</span><span class="c">N4</span></div><div class="seg spare" style="flex:236 0 0"></div></div></div><div class="bar" tabindex="0" role="button" aria-pressed="false"><span class="bar-no">10</span><div class="track" aria-label="Bar 10: 697"><div class="seg" style="flex:697 0 0"><span class="len">697</span><span class="c">H</span></div><div class="seg spare" style="flex:2303 0 0"></div></div></div></div>
-    <div class="panel scroll" style="padding:0">
-      <table>
-        <thead><tr><th>Code</th><th class="num">Length</th><th class="num">Qty</th><th>Where it goes</th></tr></thead>
-        <tbody>
-          <tr><td class="code">S</td><td class="num mono">2359</td><td class="num mono">6</td><td>Full studs V1–V6, floor plate → top plate</td></tr>
-          <tr><td class="code">SH</td><td class="num mono">1178</td><td class="num mono">2</td><td>Short studs V7 and V8, header → top plate</td></tr>
-          <tr><td class="code">H</td><td class="num mono">697</td><td class="num mono">1</td><td>Header over the open bay, bottom face at 1180, V6 → kitchen wall</td></tr>
-          <tr><td class="code">TP1</td><td class="num mono">1069</td><td class="num mono">1</td><td>Top plate, exterior wall → centre of V4</td></tr>
-          <tr><td class="code">TP2</td><td class="num mono">811</td><td class="num mono">1</td><td>Top plate, V4 centre → V6 centre</td></tr>
-          <tr><td class="code">TP3</td><td class="num mono">719</td><td class="num mono">1</td><td>Top plate, V6 centre → kitchen wall</td></tr>
-          <tr><td class="code">BP1</td><td class="num mono">826</td><td class="num mono">1</td><td>Floor plate, exterior wall → pillar</td></tr>
-          <tr><td class="code">BP2</td><td class="num mono">853</td><td class="num mono">1</td><td>Floor plate, pillar → open bay (runs under V6)</td></tr>
-          <tr><td class="code">N1</td><td class="num mono">348</td><td class="num mono">4</td><td>Noggins V1–V2 and V2–V3, both rows</td></tr>
-          <tr><td class="code">N2</td><td class="num mono">360</td><td class="num mono">4</td><td>Noggins V4–V5 and V5–V6, both rows</td></tr>
-          <tr><td class="code">N3</td><td class="num mono">218</td><td class="num mono">1</td><td>Noggin above the pillar, V3–V4, row 2</td></tr>
-          <tr><td class="code">N4</td><td class="num mono">305</td><td class="num mono">2</td><td>Noggins V6–V7 and V7–V8, row 2</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <span class="eyebrow">OSB/3 · 18 mm · 3 sheets of 2500 × 1250</span>
-    <h2>Sheet plan</h2>
-    <p class="lede">Sheet 1 gives the three tall bottom panels. Sheets 2 and 3 are first cut into strips across the long side, then each strip is cut to width. Panel codes match the wall layout below: column A–D, row 1 at the bottom. Sizes are wall width × wall height. Tap a sheet once it's cut.</p>
-    <div class="sheets" id="sheets"><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 1</h3><small>A1 · B1 · C1 + packing</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 1: A1 · B1 · C1 + packing"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="803" height="1192" class="s-osb"></rect><text x="401.5" y="586" class="s-ptxt" text-anchor="middle">A1</text><text x="401.5" y="681" class="s-ptxt-s" text-anchor="middle">803 × 1192</text><rect x="807" y="0" width="666" height="1192" class="s-osb"></rect><text x="1140" y="586" class="s-ptxt" text-anchor="middle">B1</text><text x="1140" y="681" class="s-ptxt-s" text-anchor="middle">666 × 1192</text><rect x="1477" y="0" width="426" height="1192" class="s-osb"></rect><text x="1690" y="586" class="s-ptxt" text-anchor="middle">C1</text><text x="1690" y="681" class="s-ptxt-s" text-anchor="middle" style="font-size:56px">426 × 1192</text><rect x="1907" y="0" width="218" height="150" class="s-osb"></rect><text x="2016" y="100" class="s-ptxt" text-anchor="middle" style="font-size:60px">pack</text></svg></div><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 2</h3><small>D2 · A2 · C2 · B2</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 2: D2 · A2 · C2 · B2"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="628" height="717" class="s-osb"></rect><text x="314" y="348.5" class="s-ptxt" text-anchor="middle">D2</text><text x="314" y="443.5" class="s-ptxt-s" text-anchor="middle">717 × 628</text><rect x="632" y="0" width="628" height="803" class="s-osb"></rect><text x="946" y="391.5" class="s-ptxt" text-anchor="middle">A2</text><text x="946" y="486.5" class="s-ptxt-s" text-anchor="middle">803 × 628</text><rect x="632" y="807" width="628" height="403" class="s-osb"></rect><text x="946" y="998.5" class="s-ptxt" text-anchor="middle">C2</text><text x="946" y="1093.5" class="s-ptxt-s" text-anchor="middle">403 × 628</text><rect x="1264" y="0" width="628" height="666" class="s-osb"></rect><text x="1578" y="323" class="s-ptxt" text-anchor="middle">B2</text><text x="1578" y="418" class="s-ptxt-s" text-anchor="middle">666 × 628</text></svg></div><div class="sheet-card" tabindex="0" role="button"><div class="t"><h3>Sheet 3</h3><small>A3 · C3 · B3 · D3</small></div><svg viewBox="-20 -20 2540 1290" role="img" aria-label="Sheet 3: A3 · C3 · B3 · D3"><rect x="0" y="0" width="2500" height="1250" class="s-sheet"></rect><rect x="0" y="0" width="612" height="803" class="s-osb"></rect><text x="306" y="391.5" class="s-ptxt" text-anchor="middle">A3</text><text x="306" y="486.5" class="s-ptxt-s" text-anchor="middle">803 × 612</text><rect x="0" y="807" width="612" height="403" class="s-osb"></rect><text x="306" y="998.5" class="s-ptxt" text-anchor="middle">C3</text><text x="306" y="1093.5" class="s-ptxt-s" text-anchor="middle">403 × 612</text><rect x="616" y="0" width="612" height="666" class="s-osb"></rect><text x="922" y="323" class="s-ptxt" text-anchor="middle">B3</text><text x="922" y="418" class="s-ptxt-s" text-anchor="middle">666 × 612</text><rect x="1232" y="0" width="612" height="717" class="s-osb"></rect><text x="1538" y="348.5" class="s-ptxt" text-anchor="middle">D3</text><text x="1538" y="443.5" class="s-ptxt-s" text-anchor="middle">717 × 612</text></svg></div></div>
-    <div class="panel scroll">
-      <svg id="osb" viewBox="-60 -60 2725 2585" role="img" aria-label="OSB panel layout on the wall, with the open bay at the bottom right"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="3" y="1265" width="803" height="1192" class="s-osb"></rect><text x="404.5" y="1851" class="s-ptxt" text-anchor="middle">A1</text><text x="404.5" y="1941" class="s-ptxt-s" text-anchor="middle">803 × 1192</text><rect x="809.5" y="1265" width="666" height="1192" class="s-osb"></rect><text x="1142.5" y="1851" class="s-ptxt" text-anchor="middle">B1</text><text x="1142.5" y="1941" class="s-ptxt-s" text-anchor="middle">666 × 1192</text><rect x="1478.5" y="1265" width="426.5" height="1192" class="s-osb"></rect><text x="1691.75" y="1851" class="s-ptxt" text-anchor="middle">C1</text><text x="1691.75" y="1941" class="s-ptxt-s" text-anchor="middle">426 × 1192</text><rect x="3" y="633.5" width="803" height="628" class="s-osb"></rect><text x="404.5" y="937.5" class="s-ptxt" text-anchor="middle">A2</text><text x="404.5" y="1027.5" class="s-ptxt-s" text-anchor="middle">803 × 628</text><rect x="809.5" y="633.5" width="666" height="628" class="s-osb"></rect><text x="1142.5" y="937.5" class="s-ptxt" text-anchor="middle">B2</text><text x="1142.5" y="1027.5" class="s-ptxt-s" text-anchor="middle">666 × 628</text><rect x="1478.5" y="633.5" width="403" height="628" class="s-osb"></rect><text x="1680" y="937.5" class="s-ptxt" text-anchor="middle">C2</text><text x="1680" y="1027.5" class="s-ptxt-s" text-anchor="middle">403 × 628</text><rect x="1884.5" y="633.5" width="717" height="628" class="s-osb"></rect><text x="2243" y="937.5" class="s-ptxt" text-anchor="middle">D2</text><text x="2243" y="1027.5" class="s-ptxt-s" text-anchor="middle">717 × 628</text><rect x="3" y="18.5" width="803" height="612" class="s-osb"></rect><text x="404.5" y="314.5" class="s-ptxt" text-anchor="middle">A3</text><text x="404.5" y="404.5" class="s-ptxt-s" text-anchor="middle">803 × 612</text><rect x="809.5" y="18.5" width="666" height="612" class="s-osb"></rect><text x="1142.5" y="314.5" class="s-ptxt" text-anchor="middle">B3</text><text x="1142.5" y="404.5" class="s-ptxt-s" text-anchor="middle">666 × 612</text><rect x="1478.5" y="18.5" width="403" height="612" class="s-osb"></rect><text x="1680" y="314.5" class="s-ptxt" text-anchor="middle">C3</text><text x="1680" y="404.5" class="s-ptxt-s" text-anchor="middle">403 × 612</text><rect x="1884.5" y="18.5" width="717" height="612" class="s-osb"></rect><text x="2243" y="314.5" class="s-ptxt" text-anchor="middle">D3</text><text x="2243" y="404.5" class="s-ptxt-s" text-anchor="middle">717 × 612</text><rect x="1905" y="1285" width="700" height="1180" class="s-open-osb"></rect><text x="2255" y="1875" class="s-ptxt-s" text-anchor="middle">open</text></svg>
-    </div>
-    <p class="lede">Gaps: 8 mm at the floor, 3 mm at joints and walls. Row 3 ends flush with the top of the frame at 2447. The gap above it (3 mm at the exterior wall, 26 mm at the kitchen wall) gets a ceiling trim strip at the end. C1 ends flush with the inside face of V6, so the left edge of the open bay is clean. D2 sits in row 2 like the other panels, so the bottom 24 mm of the header shows above the bay. Paint it or cover it with a lat.</p>
-  </section>
-
-  <section>
-    <span class="eyebrow">Shopping list · trip 1</span>
-    <h2>Everything else for the frame and OSB</h2>
-    <ul class="checks" data-list="shop">
-      <li class="check"><label><input type="checkbox" id="s1"><span class="box"></span><span class="txt"><span class="qty">10×</span> vuren 44×94, 300 cm</span></label></li>
-      <li class="check"><label><input type="checkbox" id="s2"><span class="box"></span><span class="txt"><span class="qty">3×</span> OSB/3 18 mm, 2500 × 1250</span></label></li>
-      <li class="check"><label><input type="checkbox" id="s3"><span class="box"></span><span class="txt"><span class="qty">~5 m²</span> glaswol plaat, ~100 mm<small>It squeezes slightly into the 94 mm cavity. The open bay stays empty.</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s16"><span class="box"></span><span class="txt"><span class="qty">60×</span> hoekanker (90° angle bracket) 70×70×55, galvanised<small>49 needed: 19 for the stud ends, 8 for the open bay, 22 for the noggins</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s17"><span class="box"></span><span class="txt"><span class="qty">500×</span> ankerschroef 5×35<small>8 per bracket</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s4"><span class="box"></span><span class="txt"><span class="qty">20×</span> kozijnplug 10×100<small>Floor and V8 into the kitchen wall (a few spare)</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s18"><span class="box"></span><span class="txt"><span class="qty">16×</span> plug 6 mm + screw 5×50<small>Header bracket, packing piece, and the small pillar brackets</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s19"><span class="box"></span><span class="txt"><span class="qty">6×</span> small angle bracket, legs 50 mm or less (e.g. 50×50×35)<small>Holds V3 and V4 to the pillar's front face. A 70 leg won't fit: only 55 mm of stud sticks out past the pillar.</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s5"><span class="box"></span><span class="txt"><span class="qty">~10×</span> spring toggles (hollow-wall anchors)<small>Backup for the gips if a joist or batten can't be found</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s6"><span class="box"></span><span class="txt"><span class="qty">50×</span> constructieschroef 6×120<small>V1 into the battens, header, spare</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s13"><span class="box"></span><span class="txt"><span class="qty">~20×</span> constructieschroef 6×160<small>Top plate through the packers into the joists, and studs into battens behind the gips</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s7"><span class="box"></span><span class="txt"><span class="qty">300×</span> spaanplaatschroef 4×45<small>OSB: every 150 mm along edges, every 300 mm in the field</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s14"><span class="box"></span><span class="txt">Detector that finds wood, metal and live cables<small>For the ceiling joists and the battens behind the gips, and to avoid cables before drilling</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s8"><span class="box"></span><span class="txt">Packers (uitvulplaatjes), mixed 2–10 mm<small>To fill the 3–26 mm gap above the top plate at every joist, and to level the floor plate</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="s9"><span class="box"></span><span class="txt">10 mm stone drill bit, ≥ 150 mm long</span></label></li>
-      <li class="check"><label><input type="checkbox" id="s10"><span class="box"></span><span class="txt">Marker, mask (FFP2), gloves</span></label></li>
+  <section id="part-1">
+    <span class="eyebrow">Part 1 · Built · paint next</span>
+    <h2>Stud wall</h2>
+    <ul class="gallery">
+<li class="g-card">
+  <button class="g-thumb" type="button" data-i="0" aria-label="Open photo: Before">
+    <img src="photos/01-before-thumb.jpg" alt="Before: The bare back wall: the brick pillar, the black water pipe on the floor and the washer corner." loading="lazy" width="720" height="540">
+  </button>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Start</span><span class="g-date mono">End of Oct</span></div><h3>Before</h3><p>The bare back wall: the brick pillar, the black water pipe on the floor and the washer corner.</p></div>
+</li><li class="g-card">
+  <button class="g-thumb" type="button" data-i="1" aria-label="Open photo: Frame up">
+    <img src="photos/02-frame-thumb.jpg" alt="Frame up: 44×94 frame standing 35 mm off the back wall, so the water pipe runs free behind the floor plates. Angle brackets on every joint, small brackets holding V3 and V4 to the pillar front, and the open bay left free for the washer." loading="lazy" width="720" height="540">
+  </button>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 1</span><span class="g-date mono">3 Nov</span></div><h3>Frame up</h3><p>44×94 frame standing 35 mm off the back wall, so the water pipe runs free behind the floor plates. Angle brackets on every joint, small brackets holding V3 and V4 to the pillar front, and the open bay left free for the washer.</p></div>
+</li><li class="g-card">
+  <button class="g-thumb" type="button" data-i="2" aria-label="Open photo: Insulation">
+    <img src="photos/03-insulation-thumb.jpg" alt="Insulation: Glass wool clamped into every bay, flush with the stud faces. Thinner wool in front of the pillar, and the open bay stays empty." loading="lazy" width="720" height="540">
+  </button>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 2</span><span class="g-date mono">4 Nov</span></div><h3>Insulation</h3><p>Glass wool clamped into every bay, flush with the stud faces. Thinner wool in front of the pillar, and the open bay stays empty.</p></div>
+</li><li class="g-card">
+  <button class="g-thumb" type="button" data-i="3" aria-label="Open photo: OSB">
+    <img src="photos/04-osb-thumb.jpg" alt="OSB: 18 mm OSB in three rows, every panel labelled A1–D3, with joints on the studs and noggins. The washer bay stays open for the tap, drain and socket." loading="lazy" width="720" height="540">
+  </button>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 3</span><span class="g-date mono">4 Nov</span></div><h3>OSB</h3><p>18 mm OSB in three rows, every panel labelled A1–D3, with joints on the studs and noggins. The washer bay stays open for the tap, drain and socket.</p></div>
+</li><li class="g-card todo">
+  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 4</span><span class="g-date mono">next</span></div><h3>Paint</h3><p>Insulating primer on the visible OSB so the marker codes don&#x27;t bleed through, then two coats of washable white satin paint.</p></div>
+</li><li class="g-card todo">
+  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 5</span><span class="g-date mono">next</span></div><h3>Finishing</h3><p>Caulk along the side walls, the ceiling trim over the gap at the top, and clean painted edges around the open bay.</p></div>
+</li>
+    </ul>
+  </section><section id="part-2">
+    <span class="eyebrow">Part 2 · Planning</span>
+    <h2>Laundry corner</h2>
+    <ul class="gallery">
+<li class="g-card">
+  <button class="g-thumb" type="button" data-i="4" aria-label="Open photo: Machines back in">
+    <img src="photos/05-laundry-start-thumb.jpg" alt="Machines back in: Fridge, dryer and washer back against the new OSB wall. The fridge gets its cupboard on the left; the worktop goes over the dryer and washer." loading="lazy" width="720" height="540">
+  </button>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Start</span><span class="g-date mono">5 Nov</span></div><h3>Machines back in</h3><p>Fridge, dryer and washer back against the new OSB wall. The fridge gets its cupboard on the left; the worktop goes over the dryer and washer.</p></div>
+</li><li class="g-card todo">
+  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 1</span><span class="g-date mono">next</span></div><h3>Fridge cupboard</h3><p>Two white columns from the exterior wall to the dryer: the built-in fridge behind a matching door, and a tall storage column for brooms, the vacuum and the mop, with top cupboards over both.</p></div>
+</li><li class="g-card todo">
+  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 2</span><span class="g-date mono">next</span></div><h3>Worktop</h3><p>A worktop over the dryer and washer at about 918 high, resting on battens on the cupboard side and the wall.</p></div>
+</li><li class="g-card todo">
+  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 3</span><span class="g-date mono">next</span></div><h3>Wall strips &amp; shelves</h3><p>Wall strips above the worktop carrying shelves, a hanging rail for clothes and the laundry baskets.</p></div>
+</li>
     </ul>
   </section>
-  <section>
-    <span class="eyebrow">Finish · after the OSB is up</span>
-    <h2>Paint the OSB</h2>
-    <p class="lede">The OSB is the finished wall: no extra layer on top. The cupboard, worktop and wall strips screw straight into it anywhere. Where it stays visible, it gets an insulating primer and two coats of washable satin paint. The chip texture stays visible under the paint.</p>
-    <h3>Shopping list · finish</h3>
-    <ul class="checks" data-list="shop2">
-      <li class="check"><label><input type="checkbox" id="f1"><span class="box"></span><span class="txt">Insulating primer (isolerende / vlekkenblokkerende primer), ~2.5 L<small>Stops the marker codes and the resin in the OSB from bleeding through the white paint</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="f2"><span class="box"></span><span class="txt">Washable satin wall paint (zijdeglans muurverf), white, ~2.5 L<small>Two coats. Satin wipes clean better than matte in a laundry room.</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="f3"><span class="box"></span><span class="txt">Roller (short pile) + tray, brush for the edges, masking tape</span></label></li>
-      <li class="check"><label><input type="checkbox" id="g6"><span class="box"></span><span class="txt"><span class="qty">2×</span> acrylic caulk (acrylaatkit, overschilderbaar) + caulk gun<small>Joints with the side walls and the ceiling</small></span></label></li>
-      <li class="check"><label><input type="checkbox" id="g10"><span class="box"></span><span class="txt"><span class="qty">1×</span> ceiling trim strip (plafondlijst), at least 40 mm, 2.6 m + mounting kit<small>Covers the 3–26 mm gap between the wall and the sloping ceiling</small></span></label></li>
-    </ul>
-  </section>
-
-
-  <section>
-    <span class="eyebrow">Fixing</span>
-    <h2>Where the frame is held</h2>
-    <p class="lede">The floor, the ceiling joists, the pillar and the kitchen wall carry the frame. Timber-to-timber joints use 90° angle brackets (hoekankers). The OSB screwed over everything makes it one stiff panel.</p>
-    <div class="panel scroll" style="padding:0">
-      <table>
-        <thead><tr><th>Where</th><th>Piece</th><th>Fixing</th></tr></thead>
-        <tbody>
-          <tr><td>Studs ↔ plates</td><td class="code">V1–V8</td><td>Two angle brackets per stud end, one on each side face. Against the pillar or kitchen wall only the free side gets one.</td></tr>
-          <tr><td>Noggins ↔ studs</td><td class="code">N1–N4</td><td>One angle bracket under each end. Screw the bracket to the stud at the right height first, then drop the noggin on it.</td></tr>
-          <tr><td>Floor</td><td class="code">BP1, BP2</td><td>Plug 10×100 through the plate every ~50 cm, between the studs. BP2 stops at the open bay, clear of the pipes.</td></tr>
-          <tr><td>Ceiling joists</td><td class="code">TP1–3</td><td>The ceiling slopes, so the gap above the level plate grows from ~3 mm (exterior wall) to ~26 mm (kitchen wall). Put stacked packers at every joist, then 6×160 up through plate and packers into the joist. If the joists run parallel to the wall and the plate misses them: spring toggles through the gips every ~40 cm.</td></tr>
-          <tr><td>Pillar sides (brick)</td><td class="code">V3, V4</td><td>3 small angle brackets each (legs ≤ 50 mm) in the front corner: one leg on the stud side, one on the pillar front face with a 6 mm plug + 5×50. No plugs through the stud: with the 35 mm gap the overlap is only 39 mm.</td></tr>
-          <tr><td>Kitchen wall (brick)</td><td class="code">V8, H</td><td>V8: 2 × plug 10×100. Header: an angle bracket on the brick with 6 mm plugs and 5×50 screws.</td></tr>
-          <tr><td>Exterior wall (gips)</td><td class="code">V1</td><td>6×120 into the battens behind the gips (detector). No batten found: 4 spring toggles.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-  <section>
-    <span class="eyebrow">Details · 1 drawing unit = 1 mm</span>
-    <h2>How the pieces connect</h2>
-    <p class="lede">Every timber joint uses a 90° angle bracket (hoekanker 70×70×55, 2.5 mm) with 5×35 anchor screws, 4 per leg. Brackets always go on the <b>side faces</b> of the timber, inside the 94 mm depth. Never put one on the front face, where the OSB goes, or on the back face, against the wall.</p>
-    <div class="details">
-      <figure>
-        <svg viewBox="0 0 420 300" role="img" aria-label="Front view: stud standing on a plate with an angle bracket on each side">
-          <rect x="20" y="236" width="380" height="44" class="s-timber"></rect>
-          <rect x="188" y="10" width="44" height="226" class="s-timber"></rect>
-          <path d="M182 166 L188 166 L188 236 L118 236 L118 230 L182 230 Z" class="d-bracket"></path>
-          <path d="M238 166 L232 166 L232 236 L302 236 L302 230 L238 230 Z" class="d-bracket"></path>
-          <line x1="176" y1="186" x2="204" y2="186" class="d-screw"></line><line x1="176" y1="212" x2="204" y2="212" class="d-screw"></line>
-          <line x1="244" y1="186" x2="216" y2="186" class="d-screw"></line><line x1="244" y1="212" x2="216" y2="212" class="d-screw"></line>
-          <line x1="138" y1="224" x2="138" y2="252" class="d-screw"></line><line x1="164" y1="224" x2="164" y2="252" class="d-screw"></line>
-          <line x1="256" y1="224" x2="256" y2="252" class="d-screw"></line><line x1="282" y1="224" x2="282" y2="252" class="d-screw"></line>
-          <text x="210" y="80" class="d-lbl" text-anchor="middle" transform="rotate(-90 210 80)">stud</text>
-          <text x="210" y="263" class="d-lbl" text-anchor="middle">floor plate (top plate: same, upside down)</text>
-          <path d="M262 110 L238 176" class="d-lead"></path>
-          <text x="256" y="88" class="d-lbl">bracket each side</text>
-          <text x="256" y="104" class="d-lbl-s">8 × 5×35 per bracket</text>
-        </svg>
-        <figcaption><b>Stud to plate</b><span>Stand the stud on its mark and check it's plumb. Screw one bracket to each side face, at the bottom and the top. V7 and V8 sit on the header the same way.</span></figcaption>
-      </figure>
-      <figure>
-        <svg viewBox="0 0 420 300" role="img" aria-label="Front view: noggin between two studs resting on angle brackets">
-          <rect x="20" y="0" width="44" height="300" class="s-timber"></rect>
-          <rect x="356" y="0" width="44" height="300" class="s-timber"></rect>
-          <rect x="64" y="110" width="292" height="44" class="s-timber"></rect>
-          <path d="M64 154 L134 154 L134 160 L70 160 L70 224 L64 224 Z" class="d-bracket"></path>
-          <path d="M356 154 L286 154 L286 160 L350 160 L350 224 L356 224 Z" class="d-bracket"></path>
-          <line x1="76" y1="180" x2="48" y2="180" class="d-screw"></line><line x1="76" y1="206" x2="48" y2="206" class="d-screw"></line>
-          <line x1="344" y1="180" x2="372" y2="180" class="d-screw"></line><line x1="344" y1="206" x2="372" y2="206" class="d-screw"></line>
-          <line x1="94" y1="166" x2="94" y2="138" class="d-screw"></line><line x1="118" y1="166" x2="118" y2="138" class="d-screw"></line>
-          <line x1="326" y1="166" x2="326" y2="138" class="d-screw"></line><line x1="302" y1="166" x2="302" y2="138" class="d-screw"></line>
-          <text x="210" y="137" class="d-lbl" text-anchor="middle">noggin</text>
-          <path d="M64 154 H20" class="d-lead" stroke-dasharray="4 3"></path>
-          <text x="210" y="96" class="d-lbl-s" text-anchor="middle">bottom at 1180 or 1811</text>
-          <text x="210" y="218" class="d-lbl" text-anchor="middle">1 bracket under each end</text>
-          <text x="210" y="236" class="d-lbl-s" text-anchor="middle">screw brackets to the studs first,</text>
-          <text x="210" y="252" class="d-lbl-s" text-anchor="middle">then drop the noggin on them</text>
-          <text x="42" y="290" class="d-lbl-s" text-anchor="middle">stud</text>
-          <text x="378" y="290" class="d-lbl-s" text-anchor="middle">stud</text>
-        </svg>
-        <figcaption><b>Noggin to studs</b><span>The brackets hold the noggin up like small shelves, so you don't have to hold the noggin while you screw. The header H over the open bay goes in the same way: a bracket on V6, and a bracket plugged into the kitchen wall brick.</span></figcaption>
-      </figure>
-      <figure>
-        <svg viewBox="0 -30 480 230" role="img" aria-label="Top view section: gips back wall, studs, glass wool, OSB, bracket on the stud side face">
-          <rect x="0" y="0" width="480" height="12.5" class="d-gips"></rect>
-          <rect x="64" y="12.5" width="349" height="94" class="d-wool"></rect>
-          <rect x="20" y="12.5" width="44" height="94" class="s-timber"></rect>
-          <rect x="413" y="12.5" width="44" height="94" class="s-timber"></rect>
-          <rect x="0" y="106.5" width="480" height="18" class="s-osb"></rect>
-          <rect x="64" y="32" width="6" height="55" class="d-bracket"></rect>
-          <rect x="70" y="32" width="70" height="55" class="d-ghost"></rect>
-          <text x="240" y="-10" class="d-lbl" text-anchor="middle">gips back wall</text>
-          <text x="280" y="64" class="d-lbl" text-anchor="middle">glaswol ~100 mm</text>
-          <text x="300" y="155" class="d-lbl" text-anchor="middle">OSB 18 · room side</text>
-          <path d="M67 87 L90 160" class="d-lead"></path>
-          <text x="10" y="180" class="d-lbl">bracket on the side face, inside the 94</text>
-          <text x="10" y="196" class="d-lbl-s">dashed: its other leg, on the plate below</text>
-          <text x="42" y="64" class="d-lbl-s" text-anchor="middle" transform="rotate(-90 42 64)">44×94</text>
-        </svg>
-        <figcaption><b>Seen from above</b><span>The stud's 94 side runs away from the wall. Bracket legs are 55 wide, so they fit within the 94 and never touch the gips or the OSB.</span></figcaption>
-      </figure>
-      <figure>
-        <svg viewBox="-70 -10 430 390" role="img" aria-label="Side section at the floor: plate plugged into the floor, OSB 8 mm above floor">
-          <rect x="-12.5" y="0" width="12.5" height="300" class="d-gips"></rect>
-          <rect x="-70" y="300" width="430" height="80" class="d-floor"></rect>
-          <rect x="0" y="256" width="94" height="44" class="s-timber"></rect>
-          <rect x="0" y="0" width="94" height="256" class="s-timber"></rect>
-          <rect x="94" y="0" width="18" height="292" class="s-osb"></rect>
-          <rect x="20" y="186" width="55" height="70" class="d-ghost"></rect>
-          <rect x="43" y="262" width="8" height="94" class="d-plug"></rect>
-          <rect x="37" y="256" width="20" height="5" class="d-plug"></rect>
-          <text x="47" y="120" class="d-lbl" text-anchor="middle" transform="rotate(-90 47 120)">stud</text>
-          <text x="-40" y="150" class="d-lbl-s" text-anchor="middle" transform="rotate(-90 -40 150)">gips back wall</text>
-          <path d="M112 60 H130" class="d-lead"></path><text x="134" y="64" class="d-lbl">OSB 18</text>
-          <path d="M112 296 H130 V318" class="d-lead"></path><text x="134" y="330" class="d-lbl-s">8 mm gap at the floor</text>
-          <path d="M94 278 H130 V266" class="d-lead"></path><text x="134" y="262" class="d-lbl">floor plate 44×94</text>
-          <path d="M51 350 H130" class="d-lead"></path><text x="134" y="354" class="d-lbl">plug 10×100, every ~50 cm</text>
-          <path d="M75 220 H130" class="d-lead"></path><text x="134" y="216" class="d-lbl-s">bracket (on the stud's side)</text>
-        </svg>
-        <figcaption><b>Floor plate</b><span>35 mm out from the gips, with the water pipe running free behind it. Drill through the plate into the floor and hammer in the plugs, between the stud positions so they don't clash with the brackets.</span></figcaption>
-      </figure>
-      <figure>
-        <svg viewBox="-70 -60 430 390" role="img" aria-label="Side section at the ceiling: top plate screwed into joist through gips ceiling">
-          <rect x="-70" y="-50" width="430" height="90" class="s-timber"></rect>
-          <rect x="-70" y="40" width="430" height="12.5" class="d-gips"></rect>
-          <rect x="-12.5" y="52.5" width="12.5" height="270" class="d-gips"></rect>
-          <rect x="0" y="52.5" width="94" height="44" class="s-timber"></rect>
-          <rect x="0" y="96.5" width="94" height="226" class="s-timber"></rect>
-          <rect x="94" y="55.5" width="18" height="267" class="s-osb"></rect>
-          <rect x="20" y="96.5" width="55" height="70" class="d-ghost"></rect>
-          <rect x="44.5" y="-23.5" width="5" height="120" class="d-plug"></rect>
-          <rect x="39" y="94" width="16" height="4" class="d-plug"></rect>
-          <text x="200" y="0" class="d-lbl" text-anchor="middle">ceiling joist</text>
-          <path d="M112 46 H130" class="d-lead"></path><text x="134" y="50" class="d-lbl-s">gips ceiling</text>
-          <path d="M94 75 H130" class="d-lead"></path><text x="134" y="79" class="d-lbl">top plate 44×94</text>
-          <path d="M50 20 H130" class="d-lead" transform="translate(0,0)"></path><text x="134" y="24" class="d-lbl">6×160 into the joist</text>
-          <path d="M112 200 H130" class="d-lead"></path><text x="134" y="204" class="d-lbl">OSB 18, 3 mm gap at top</text>
-          <path d="M75 140 H130" class="d-lead"></path><text x="134" y="144" class="d-lbl-s">bracket (on the stud's side)</text>
-          <text x="47" y="240" class="d-lbl" text-anchor="middle" transform="rotate(-90 47 240)">stud</text>
-        </svg>
-        <figcaption><b>Top plate</b><span>Hold it right above the floor plate (check with the waterpas). The ceiling slopes, so the gap above the plate grows from about 3 mm at the exterior wall to 26 mm at the kitchen wall. Fill it with stacked packers at every joist, then screw through plate and packers into the joist. The plate stays level and straight.</span></figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section>
-    <span class="eyebrow">Build journey</span>
-    <h2>Step by step</h2>
-    <p class="lede">The blue parts are the ones added in each step. Lay out the pieces for a step, check them against the parts list, then build.</p>
-    <div class="steps-grid" id="steps"><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 1: Mark out"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><line x1="0" x2="0" y1="0" y2="2465" class="st-mark"></line><line x1="393" x2="393" y1="0" y2="2465" class="st-mark"></line><line x1="786" x2="786" y1="0" y2="2465" class="st-mark"></line><line x1="1050" x2="1050" y1="0" y2="2465" class="st-mark"></line><line x1="1455" x2="1455" y1="0" y2="2465" class="st-mark"></line><line x1="1861" x2="1861" y1="0" y2="2465" class="st-mark"></line><line x1="2211" x2="2211" y1="0" y2="2465" class="st-mark"></line><line x1="2561" x2="2561" y1="0" y2="2465" class="st-mark"></line></svg><div class="step-body"><div class="step-head"><span class="step-no">1</span><h3>Mark out</h3></div><p>Scan the ceiling, the exterior wall and the back wall with the detector, and mark joists, battens and cables. Mark the stud left edges on the floor and the ceiling.</p><div class="parts"><span class="part">detector</span><span class="part">waterpas</span><span class="part">pencil</span><span class="part">0 · 393 · 786 · 1050 · 1455 · 1861 · 2211 · 2561</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 2: Floor plate"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="st-new"></rect><rect x="1050" y="2421" width="855" height="44" class="st-new"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">2</span><h3>Floor plate</h3></div><p>Check the floor with the waterpas and shim under the plates if it slopes, so the frame starts level. Lay BP1 (exterior wall → pillar) and BP2 (pillar → 1905, where the open bay starts) 35 mm out from the back wall, so the water pipe runs free behind them. Drill through the plates into the floor and plug them every ~50 cm, between the stud marks.</p><div class="parts"><span class="part"><b>1×</b> BP1 826</span><span class="part"><b>1×</b> BP2 853</span><span class="part"><b>5×</b> plug 10×100</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 3: Top plate"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="st-new"></rect><rect x="1072" y="18" width="811" height="44" class="st-new"></rect><rect x="1883" y="18" width="722" height="44" class="st-new"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">3</span><h3>Top plate</h3></div><p>Keep the top plate level, not following the ceiling. Its top sits at 2447, straight above the floor plate. The gap to the ceiling grows from ~3 mm at the exterior wall to ~26 mm at the kitchen wall. Stack packers in it at every joist and screw through them into the joist.</p><div class="parts"><span class="part"><b>1×</b> TP1 1069</span><span class="part"><b>1×</b> TP2 811</span><span class="part"><b>1×</b> TP3 719</span><span class="part"><b>~8×</b> 6×160</span><span class="part">packers up to 26 mm</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 4: Studs V1–V6"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="st-new"></rect><rect x="393" y="62" width="44" height="2359" class="st-new"></rect><rect x="786" y="62" width="44" height="2359" class="st-new"></rect><rect x="1050" y="62" width="44" height="2359" class="st-new"></rect><rect x="1455" y="62" width="44" height="2359" class="st-new"></rect><rect x="1861" y="62" width="44" height="2359" class="st-new"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">4</span><h3>Studs V1–V6</h3></div><p>Stand each stud on its mark, check it's plumb, and fix it with a bracket on each side at the top and bottom. V3 and V4 go tight against the pillar: brackets on the free side only, plus 3 small brackets each from the stud side to the pillar front face (at 300, 750 and 1500). Screw V1 into the battens behind the gips.</p><div class="parts"><span class="part"><b>6×</b> S 2359</span><span class="part"><b>19×</b> bracket</span><span class="part"><b>6×</b> small bracket</span><span class="part"><b>6×</b> plug 6 mm + 5×50</span><span class="part"><b>~4×</b> 6×120</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 5: Open bay"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="st-new"></rect><rect x="2211" y="62" width="44" height="1179" class="st-new"></rect><rect x="2561" y="62" width="44" height="1179" class="st-new"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">5</span><h3>Open bay</h3></div><p>Screw a bracket to V6 with its top at 1180, and one to the kitchen-wall brick. Drop the header H onto them and screw up into it. Stand V7 and V8 on the header, with brackets at the top and bottom. Plug V8 into the kitchen wall.</p><div class="parts"><span class="part"><b>1×</b> H 697</span><span class="part"><b>2×</b> SH 1178</span><span class="part"><b>8×</b> bracket</span><span class="part"><b>2×</b> plug 10×100</span><span class="part"><b>4×</b> plug 6 mm + 5×50</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 6: Noggins"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="st-new"></rect><rect x="437" y="1241" width="349" height="44" class="st-new"></rect><rect x="1094" y="1241" width="361" height="44" class="st-new"></rect><rect x="1499" y="1241" width="362" height="44" class="st-new"></rect><rect x="44" y="610" width="349" height="44" class="st-new"></rect><rect x="437" y="610" width="349" height="44" class="st-new"></rect><rect x="830" y="610" width="220" height="44" class="st-new"></rect><rect x="1094" y="610" width="361" height="44" class="st-new"></rect><rect x="1499" y="610" width="362" height="44" class="st-new"></rect><rect x="1905" y="610" width="306" height="44" class="st-new"></rect><rect x="2255" y="610" width="306" height="44" class="st-new"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">6</span><h3>Noggins</h3></div><p>In every bay, screw a bracket to both studs with its top at 1180 (row 1) and 1811 (row 2). Drop the noggin on and screw up into it. Row 1 skips the pillar bay and the open bay. N3 goes above the pillar in row 2.</p><div class="parts"><span class="part"><b>4×</b> N1 348</span><span class="part"><b>4×</b> N2 360</span><span class="part"><b>1×</b> N3 218</span><span class="part"><b>2×</b> N4 305</span><span class="part"><b>22×</b> bracket</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 7: Insulate"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="0" y="62" width="2605" height="2359" class="st-wool"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="s-timber"></rect><rect x="437" y="1241" width="349" height="44" class="s-timber"></rect><rect x="1094" y="1241" width="361" height="44" class="s-timber"></rect><rect x="1499" y="1241" width="362" height="44" class="s-timber"></rect><rect x="44" y="610" width="349" height="44" class="s-timber"></rect><rect x="437" y="610" width="349" height="44" class="s-timber"></rect><rect x="830" y="610" width="220" height="44" class="s-timber"></rect><rect x="1094" y="610" width="361" height="44" class="s-timber"></rect><rect x="1499" y="610" width="362" height="44" class="s-timber"></rect><rect x="1905" y="610" width="306" height="44" class="s-timber"></rect><rect x="2255" y="610" width="306" height="44" class="s-timber"></rect><rect x="830" y="1188" width="220" height="150" class="st-new-osb"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">7</span><h3>Insulate</h3></div><p>Finish any new pipe or socket work first. Press glass wool into every closed bay, snug but not crushed. Screw a 218 × 150 packing block to the pillar face (a 44×94 offcut laid flat plus ~11 mm of packers, to fill the 55 mm gap), centred at 1202, so the OSB joint has something behind it.</p><div class="parts"><span class="part"><b>~5 m²</b> glaswol</span><span class="part"><b>1×</b> packing 218×150</span><span class="part">mask + gloves</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 8: OSB row 1"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="0" y="62" width="2605" height="2359" class="st-wool"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="s-timber"></rect><rect x="437" y="1241" width="349" height="44" class="s-timber"></rect><rect x="1094" y="1241" width="361" height="44" class="s-timber"></rect><rect x="1499" y="1241" width="362" height="44" class="s-timber"></rect><rect x="44" y="610" width="349" height="44" class="s-timber"></rect><rect x="437" y="610" width="349" height="44" class="s-timber"></rect><rect x="830" y="610" width="220" height="44" class="s-timber"></rect><rect x="1094" y="610" width="361" height="44" class="s-timber"></rect><rect x="1499" y="610" width="362" height="44" class="s-timber"></rect><rect x="1905" y="610" width="306" height="44" class="s-timber"></rect><rect x="2255" y="610" width="306" height="44" class="s-timber"></rect><rect x="830" y="1188" width="220" height="150" class="s-osb"></rect><rect x="3" y="1265" width="803" height="1192" class="st-new-osb"></rect><rect x="809.5" y="1265" width="666" height="1192" class="st-new-osb"></rect><rect x="1478.5" y="1265" width="426.5" height="1192" class="st-new-osb"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">8</span><h3>OSB row 1</h3></div><p>Stand A1, B1 and C1 on 8 mm spacers, with 3 mm gaps between them. C1 ends flush with V6 at the open bay. Screw every 150 mm along the edges and every 300 mm in the middle.</p><div class="parts"><span class="part"><b>1×</b> A1 803×1192</span><span class="part"><b>1×</b> B1 666×1192</span><span class="part"><b>1×</b> C1 426×1192</span><span class="part"><b>~90×</b> 4×45</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 9: OSB rows 2 and 3"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="0" y="62" width="2605" height="2359" class="st-wool"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="s-timber"></rect><rect x="437" y="1241" width="349" height="44" class="s-timber"></rect><rect x="1094" y="1241" width="361" height="44" class="s-timber"></rect><rect x="1499" y="1241" width="362" height="44" class="s-timber"></rect><rect x="44" y="610" width="349" height="44" class="s-timber"></rect><rect x="437" y="610" width="349" height="44" class="s-timber"></rect><rect x="830" y="610" width="220" height="44" class="s-timber"></rect><rect x="1094" y="610" width="361" height="44" class="s-timber"></rect><rect x="1499" y="610" width="362" height="44" class="s-timber"></rect><rect x="1905" y="610" width="306" height="44" class="s-timber"></rect><rect x="2255" y="610" width="306" height="44" class="s-timber"></rect><rect x="830" y="1188" width="220" height="150" class="s-osb"></rect><rect x="3" y="1265" width="803" height="1192" class="s-osb"></rect><rect x="809.5" y="1265" width="666" height="1192" class="s-osb"></rect><rect x="1478.5" y="1265" width="426.5" height="1192" class="s-osb"></rect><rect x="3" y="633.5" width="803" height="628" class="st-new-osb"></rect><rect x="809.5" y="633.5" width="666" height="628" class="st-new-osb"></rect><rect x="1478.5" y="633.5" width="403" height="628" class="st-new-osb"></rect><rect x="1884.5" y="633.5" width="717" height="628" class="st-new-osb"></rect><rect x="3" y="18.5" width="803" height="612" class="st-new-osb"></rect><rect x="809.5" y="18.5" width="666" height="612" class="st-new-osb"></rect><rect x="1478.5" y="18.5" width="403" height="612" class="st-new-osb"></rect><rect x="1884.5" y="18.5" width="717" height="612" class="st-new-osb"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">9</span><h3>OSB rows 2 and 3</h3></div><p>Row 2 first (A2, B2, C2, D2; D2 sits on the header), then row 3, ending flush with the top of the frame. The frame and OSB are done.</p><div class="parts"><span class="part"><b>4×</b> row 2 panels</span><span class="part"><b>4×</b> row 3 panels</span><span class="part"><b>~200×</b> 4×45</span></div></div></article><article class="step"><svg viewBox="-30 -30 2665 2525" role="img" aria-label="Step 10: Paint &amp; finish"><rect x="0" y="0" width="2605" height="2465" class="s-wall"></rect><rect x="0" y="62" width="2605" height="2359" class="st-wool"></rect><rect x="1905" y="1285" width="700" height="1180" class="s-open"></rect><rect x="830" y="730" width="220" height="1735" class="s-brick"></rect><rect x="0" y="2421" width="830" height="44" class="s-timber"></rect><rect x="1050" y="2421" width="855" height="44" class="s-timber"></rect><rect x="0" y="18" width="1072" height="44" class="s-timber"></rect><rect x="1072" y="18" width="811" height="44" class="s-timber"></rect><rect x="1883" y="18" width="722" height="44" class="s-timber"></rect><rect x="0" y="62" width="44" height="2359" class="s-timber"></rect><rect x="393" y="62" width="44" height="2359" class="s-timber"></rect><rect x="786" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1050" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1455" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1861" y="62" width="44" height="2359" class="s-timber"></rect><rect x="1905" y="1241" width="700" height="44" class="s-timber"></rect><rect x="2211" y="62" width="44" height="1179" class="s-timber"></rect><rect x="2561" y="62" width="44" height="1179" class="s-timber"></rect><rect x="44" y="1241" width="349" height="44" class="s-timber"></rect><rect x="437" y="1241" width="349" height="44" class="s-timber"></rect><rect x="1094" y="1241" width="361" height="44" class="s-timber"></rect><rect x="1499" y="1241" width="362" height="44" class="s-timber"></rect><rect x="44" y="610" width="349" height="44" class="s-timber"></rect><rect x="437" y="610" width="349" height="44" class="s-timber"></rect><rect x="830" y="610" width="220" height="44" class="s-timber"></rect><rect x="1094" y="610" width="361" height="44" class="s-timber"></rect><rect x="1499" y="610" width="362" height="44" class="s-timber"></rect><rect x="1905" y="610" width="306" height="44" class="s-timber"></rect><rect x="2255" y="610" width="306" height="44" class="s-timber"></rect><rect x="830" y="1188" width="220" height="150" class="s-osb"></rect><rect x="3" y="1265" width="803" height="1192" class="s-osb"></rect><rect x="809.5" y="1265" width="666" height="1192" class="s-osb"></rect><rect x="1478.5" y="1265" width="426.5" height="1192" class="s-osb"></rect><rect x="3" y="633.5" width="803" height="628" class="s-osb"></rect><rect x="809.5" y="633.5" width="666" height="628" class="s-osb"></rect><rect x="1478.5" y="633.5" width="403" height="628" class="s-osb"></rect><rect x="1884.5" y="633.5" width="717" height="628" class="s-osb"></rect><rect x="3" y="18.5" width="803" height="612" class="s-osb"></rect><rect x="809.5" y="18.5" width="666" height="612" class="s-osb"></rect><rect x="1478.5" y="18.5" width="403" height="612" class="s-osb"></rect><rect x="1884.5" y="18.5" width="717" height="612" class="s-osb"></rect></svg><div class="step-body"><div class="step-head"><span class="step-no">10</span><h3>Paint &amp; finish</h3></div><p>Caulk the joints with the side walls, and fix the ceiling trim over the gap at the top. Sand off any splinters, then prime the OSB with the insulating primer so the marker codes and resin stains don't bleed through. Finish with two coats of washable satin paint, including the bottom of the header and the edges around the open bay.</p><div class="parts"><span class="part">caulk</span><span class="part">ceiling trim</span><span class="part">insulating primer</span><span class="part">satin paint</span></div></div></article></div>
-  </section>
-
-
-  <button class="reset" id="reset" type="button">Clear all ticks</button>
 </main>
 
+<dialog class="viewer" aria-label="Photo viewer">
+  <div class="v-wrap">
+    <div class="v-top"><span class="v-count" aria-live="polite"></span><button class="v-close" type="button">Close ✕</button></div>
+    <div class="v-stage">
+      <div class="v-strip"></div>
+      <button class="v-nav v-prev" type="button" aria-label="Previous photo">‹</button>
+      <button class="v-nav v-next" type="button" aria-label="Next photo">›</button>
+    </div>
+    <div class="v-cap"><div class="g-row"><span class="g-stage v-st"></span><span class="g-date mono v-dt"></span></div><h3 class="v-title"></h3><p class="v-text"></p></div>
+    <div class="v-thumbs"></div>
+  </div>
+</dialog>
+
 <script>
-(function () {
-  const NS = "http://www.w3.org/2000/svg";
-  const H = 2465, W = 2605;
-  const fullStuds = [0, 393, 786, 1050, 1455, 1861];
-  const shortStuds = [2211, 2561];
-  const app = document.getElementById("app");
-  const store = {
-    get(k) { try { return JSON.parse(localStorage.getItem("vzw:" + k) || "null"); } catch (e) { return null; } },
-    set(k, v) { try { localStorage.setItem("vzw:" + k, JSON.stringify(v)); } catch (e) {} }
-  };
-  const el = (tag, attrs, parent, text) => {
-    const n = document.createElementNS(NS, tag);
-    for (const k in attrs) if (attrs[k] != null) n.setAttribute(k, attrs[k]);
-    if (text != null) n.textContent = text;
-    if (parent) parent.appendChild(n);
-    return n;
-  };
-  const Y = y => H - y; // floor-based y to svg y
-
-  // ---------- Frame elevation ----------
-  function drawFrame() {
-    const f = document.getElementById("frame");
-    f.replaceChildren();
-    const rect = (x0, x1, y0, y1, cls = "s-timber") =>
-      el("rect", { x: x0, y: Y(y1), width: x1 - x0, height: y1 - y0, class: cls }, f);
-    el("polygon", { points: `0,${Y(0)} ${W},${Y(0)} ${W},${Y(2473)} 0,${Y(2450)}`, class: "s-wall" }, f);
-    el("polygon", { points: `0,${Y(2447)} ${W},${Y(2447)} ${W},${Y(2473)} 0,${Y(2450)}`, class: "s-hatch" }, f);
-    rect(1905, W, 0, 1180, "s-open");
-    el("rect", { x: 830, y: Y(1735), width: 220, height: 1735, class: "s-brick" }, f);
-    for (let y = 65, i = 0; y < 1735; y += 65, i++) {
-      el("line", { x1: 830, x2: 1050, y1: Y(y), y2: Y(y), class: "s-brickline" }, f);
-      const x = i % 2 ? 900 : 980;
-      el("line", { x1: x, x2: x, y1: Y(y), y2: Y(Math.min(y + 65, 1735)), class: "s-brickline" }, f);
-    }
-    // plates
-    [[0, 830], [1050, 1905]].forEach(([x0, x1]) => rect(x0, x1, 0, 44));
-    [[0, 1072], [1072, 1883], [1883, W]].forEach(([x0, x1]) => rect(x0, x1, 2403, 2447));
-    // studs
-    fullStuds.forEach(x => rect(x, x + 44, 44, 2403));
-    shortStuds.forEach(x => rect(x, x + 44, 1224, 2403));
-    // header + noggins
-    rect(1905, W, 1180, 1224);
-    [[44, 393], [437, 786], [1094, 1455], [1499, 1861]].forEach(([a, b]) => rect(a, b, 1180, 1224));
-    [[44, 393], [437, 786], [830, 1050], [1094, 1455], [1499, 1861], [1905, 2211], [2255, 2561]].forEach(([a, b]) => rect(a, b, 1811, 1855));
-    // stud joints
-    // OSB joints
-    [[808, 0], [1477, 0], [1883, 1180]].forEach(([x, y0]) => el("line", { x1: x, x2: x, y1: Y(y0), y2: 0, class: "s-joint" }, f));
-    el("line", { x1: 0, x2: W, y1: Y(1202), y2: Y(1202), class: "s-joint" }, f);
-    el("line", { x1: 0, x2: W, y1: Y(1833), y2: Y(1833), class: "s-joint" }, f);
-    // fixing points
-    const dot = (x, y, open) => el("circle", { cx: x, cy: Y(y), r: 22, class: open ? "s-fix-open" : "s-fix" }, f);
-    [350, 850, 1500].forEach(y => { dot(808, y); dot(1072, y); });
-    [1550, 2150].forEach(y => dot(2583, y));
-    dot(2575, 1202);
-    [400, 1000, 1600, 2200].forEach(y => dot(22, y, true));
-    [300, 900, 1500, 2100].forEach(x => dot(x, 2425, true));
-    [200, 620, 1250, 1750].forEach(x => dot(x, 22));
-    // stud names along top
-    [...fullStuds, ...shortStuds].forEach((x, i) => el("text", { x: x + 22, y: -40, class: "s-code", "text-anchor": "middle" }, f, "V" + (i + 1)));
-    // overall width
-    el("line", { x1: 0, x2: W, y1: -150, y2: -150, class: "s-dim" }, f);
-    [0, W].forEach(x => el("line", { x1: x, x2: x, y1: -180, y2: -120, class: "s-dim" }, f));
-    el("text", { x: W / 2, y: -170, class: "s-txt", "text-anchor": "middle" }, f, "2605");
-    // stud left edges
-    [...fullStuds, ...shortStuds].forEach((x, i, all) => {
-      const last = i === all.length - 1;
-      el("line", { x1: x, x2: x, y1: H + 20, y2: H + 70, class: "s-dim" }, f);
-      el("text", { x: x + (last ? 44 : 8), y: H + 130, class: "s-txt-s", "text-anchor": last ? "end" : "start" }, f, String(x));
-    });
-    el("text", { x: 0, y: H + 200, class: "s-txt-s" }, f, "stud left edge, mm from exterior wall");
-    // heights
-    const ticks = [[1180, "noggin 1180", 50], [1811, "noggin 1811", -10], [1735, "pillar 1735", 50]];
-    ticks.forEach(([y, t, dy]) => {
-      el("line", { x1: W + 20, x2: W + 70, y1: Y(y), y2: Y(y), class: "s-dim" }, f);
-      el("text", { x: W + 85, y: Y(y) + dy, class: "s-txt-s" }, f, t);
-    });
-    el("text", { x: W + 85, y: Y(2473) - 12, class: "s-txt-s" }, f, "ceiling 2473");
-    el("text", { x: W + 85, y: Y(2447) + 44, class: "s-txt-s" }, f, "frame 2447");
-    el("text", { x: -20, y: Y(2450) + 14, class: "s-txt-s", "text-anchor": "end" }, f, "2450");
-    el("text", { x: 2255, y: Y(640), class: "s-txt", "text-anchor": "middle" }, f, "open bay");
-    el("text", { x: 2255, y: Y(560), class: "s-txt-s", "text-anchor": "middle" }, f, "700 × 1180");
-    el("text", { x: 2255, y: Y(1202) + 15, class: "s-code", "text-anchor": "middle" }, f, "H");
-    el("text", { x: -60, y: H / 2, class: "s-txt-s", "text-anchor": "middle", transform: `rotate(-90 -60 ${H / 2})` }, f, "exterior wall (gips)");
-    el("text", { x: W + 450, y: H / 2, class: "s-txt-s", "text-anchor": "middle", transform: `rotate(90 ${W + 450} ${H / 2})` }, f, "kitchen wall (brick)");
-  }
-
-  // ---------- OSB wall layout ----------
-  function drawOsb() {
-    const o = document.getElementById("osb");
-    o.replaceChildren();
-    el("rect", { x: 0, y: 0, width: W, height: H, class: "s-wall" }, o);
-    // [code, x, y(bottom), w, h]
-    const panels = [
-      ["A1", 3, 8, 803, 1192], ["B1", 809.5, 8, 666, 1192], ["C1", 1478.5, 8, 426.5, 1192],
-      ["A2", 3, 1203.5, 803, 628], ["B2", 809.5, 1203.5, 666, 628], ["C2", 1478.5, 1203.5, 403, 628], ["D2", 1884.5, 1203.5, 717, 628],
-      ["A3", 3, 1834.5, 803, 612], ["B3", 809.5, 1834.5, 666, 612], ["C3", 1478.5, 1834.5, 403, 612], ["D3", 1884.5, 1834.5, 717, 612]
-    ];
-    panels.forEach(([c, x, y, w, h]) => {
-      el("rect", { x, y: Y(y + h), width: w, height: h, class: "s-osb" }, o);
-      el("text", { x: x + w / 2, y: Y(y + h / 2) - 10, class: "s-ptxt", "text-anchor": "middle" }, o, c);
-      el("text", { x: x + w / 2, y: Y(y + h / 2) + 80, class: "s-ptxt-s", "text-anchor": "middle" }, o, `${Math.floor(w)} × ${h}`);
-    });
-    el("rect", { x: 1905, y: Y(1180), width: W - 1905, height: 1180, class: "s-open-osb" }, o);
-    el("text", { x: 2255, y: Y(590), class: "s-ptxt-s", "text-anchor": "middle" }, o, "open");
-  }
-
-  // ---------- Bars ----------
-  const doneBars = new Set(store.get("bars") || []);
-  function drawBars() {
-    const S = [[2359, "S"]];
-    const bars = [
-      [...S, [360, "N2"]],
-      [...S, [360, "N2"]],
-      [...S, [360, "N2"]],
-      [...S, [360, "N2"]],
-      [...S, [348, "N1"]],
-      [...S, [348, "N1"]],
-      [[1178, "SH"], [1069, "TP1"], [305, "N4"]],
-      [[1178, "SH"], [853, "BP2"], [811, "TP2"]],
-      [[826, "BP1"], [719, "TP3"], [348, "N1"], [348, "N1"], [218, "N3"], [305, "N4"]],
-      [[697, "H"]]
-    ];
-    const barsEl = document.getElementById("bars");
-    barsEl.replaceChildren();
-    bars.forEach((b, i) => {
-      const row = document.createElement("div");
-      row.className = "bar" + (doneBars.has(i) ? " done" : "");
-      row.tabIndex = 0;
-      row.setAttribute("role", "button");
-      row.setAttribute("aria-pressed", doneBars.has(i));
-      const used = b.reduce((s, [l]) => s + l, 0);
-      row.innerHTML = `<span class="bar-no">${i + 1}</span><div class="track" aria-label="Bar ${i + 1}: ${b.map(p => p[0]).join(" + ")}">` +
-        b.map(([l, c]) => `<div class="seg" style="flex:${l} 0 0"><span class="len">${l}</span><span class="c">${c}</span></div>`).join("") +
-        `<div class="seg spare" style="flex:${3000 - used} 0 0"></div></div>`;
-      const toggle = () => {
-        doneBars.has(i) ? doneBars.delete(i) : doneBars.add(i);
-        row.classList.toggle("done", doneBars.has(i));
-        row.setAttribute("aria-pressed", doneBars.has(i));
-        store.set("bars", [...doneBars]);
-      };
-      row.addEventListener("click", toggle);
-      row.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
-      barsEl.appendChild(row);
-    });
-  }
-
-  // ---------- Sheets (drawn landscape 2500 × 1250; strips run across the long side) ----------
-  function drawSheets() {
-    // strip: [stripWidth, [[pieceLength, code, label, pieceWidth?]]]
-    const sheets = [
-      { name: "Sheet 1", note: "A1 · B1 · C1 + packing", strips: [
-        [803, [[1192, "A1", "803 × 1192"]]], [666, [[1192, "B1", "666 × 1192"]]], [426, [[1192, "C1", "426 × 1192"]]],
-        [560, [[150, "pack", "218 × 150", 218]]] ] },
-      { name: "Sheet 2", note: "D2 · A2 · C2 · B2", strips: [
-        [628, [[717, "D2", "717 × 628"]]], [628, [[803, "A2", "803 × 628"], [403, "C2", "403 × 628"]]], [628, [[666, "B2", "666 × 628"]]] ] },
-      { name: "Sheet 3", note: "A3 · C3 · B3 · D3", strips: [
-        [612, [[803, "A3", "803 × 612"], [403, "C3", "403 × 612"]]], [612, [[666, "B3", "666 × 612"]]], [612, [[717, "D3", "717 × 612"]]] ] }
-    ];
-    const sheetsEl = document.getElementById("sheets");
-    sheetsEl.replaceChildren();
-    const doneSheets = new Set(store.get("sheets") || []);
-    sheets.forEach((s, i) => {
-      const card = document.createElement("div");
-      card.className = "sheet-card" + (doneSheets.has(i) ? " done" : "");
-      card.tabIndex = 0;
-      card.setAttribute("role", "button");
-      card.innerHTML = `<div class="t"><h3>${s.name}</h3><small>${doneSheets.has(i) ? "cut ✓" : s.note}</small></div>`;
-      const svg = el("svg", { viewBox: "-20 -20 2540 1290", role: "img", "aria-label": `${s.name}: ${s.note}` }, card);
-      el("rect", { x: 0, y: 0, width: 2500, height: 1250, class: "s-sheet" }, svg);
-      let x = 0;
-      s.strips.forEach(([sw, pieces]) => {
-        let y = 0;
-        pieces.forEach(([len, code, label, pw]) => {
-          const w = pw || sw;
-          el("rect", { x, y, width: w, height: len, class: "s-osb" }, svg);
-          const small = len < 300 || w < 300;
-          el("text", { x: x + w / 2, y: y + len / 2 + (small ? 25 : -10), class: "s-ptxt", "text-anchor": "middle", style: small ? "font-size:60px" : null }, svg, code);
-          if (!small) el("text", { x: x + w / 2, y: y + len / 2 + 85, class: "s-ptxt-s", "text-anchor": "middle", style: w < 500 ? "font-size:56px" : null }, svg, label);
-          y += len + 4;
-        });
-        x += sw + 4;
-      });
-      const toggle = () => {
-        doneSheets.has(i) ? doneSheets.delete(i) : doneSheets.add(i);
-        card.classList.toggle("done", doneSheets.has(i));
-        card.querySelector("small").textContent = doneSheets.has(i) ? "cut ✓" : s.note;
-        store.set("sheets", [...doneSheets]);
-      };
-      card.addEventListener("click", toggle);
-      card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
-      sheetsEl.appendChild(card);
-    });
-  }
-
-
-  // ---------- Checklists ----------
-  const checks = store.get("checks") || {};
-  document.querySelectorAll(".checks input").forEach(inp => {
-    inp.checked = !!checks[inp.id];
-    inp.addEventListener("change", () => { checks[inp.id] = inp.checked; store.set("checks", checks); });
-  });
-  document.getElementById("reset").addEventListener("click", () => {
-    store.set("checks", {}); store.set("bars", []); store.set("sheets", []);
-    location.reload();
-  });
-
-
-
-
-  // ---------- Build journey ----------
-  function drawSteps() {
-    const bays = [[44, 393], [437, 786], [830, 1050], [1094, 1455], [1499, 1861], [1905, 2211], [2255, 2561]];
-    const T = (s, x0, x1, y0, y1) => ({ s, k: "t", x0, x1, y0, y1 });
-    const O = (s, x, y, w, h) => ({ s, k: "o", x0: x, x1: x + w, y0: y, y1: y + h });
-    const parts = [
-      T(2, 0, 830, 0, 44), T(2, 1050, 1905, 0, 44),
-      T(3, 0, 1072, 2403, 2447), T(3, 1072, 1883, 2403, 2447), T(3, 1883, W, 2403, 2447),
-      ...fullStuds.map(x => T(4, x, x + 44, 44, 2403)),
-      T(5, 1905, W, 1180, 1224), ...shortStuds.map(x => T(5, x, x + 44, 1224, 2403)),
-      ...bays.filter((b, i) => i !== 2 && i < 5).map(([a, b]) => T(6, a, b, 1180, 1224)),
-      ...bays.map(([a, b]) => T(6, a, b, 1811, 1855)),
-      O(7, 830, 1127, 220, 150),
-      O(8, 3, 8, 803, 1192), O(8, 809.5, 8, 666, 1192), O(8, 1478.5, 8, 426.5, 1192),
-      O(9, 3, 1203.5, 803, 628), O(9, 809.5, 1203.5, 666, 628), O(9, 1478.5, 1203.5, 403, 628), O(9, 1884.5, 1203.5, 717, 628),
-      O(9, 3, 1834.5, 803, 612), O(9, 809.5, 1834.5, 666, 612), O(9, 1478.5, 1834.5, 403, 612), O(9, 1884.5, 1834.5, 717, 612)
-    ];
-    const steps = [
-      ["Mark out", "Scan the ceiling, the exterior wall and the back wall with the detector, and mark joists, battens and cables. Mark the stud left edges on the floor and the ceiling.",
-        ["detector", "waterpas", "pencil", "0 · 393 · 786 · 1050 · 1455 · 1861 · 2211 · 2561"]],
-      ["Floor plate", "Check the floor with the waterpas and shim under the plates if it slopes, so the frame starts level. Lay BP1 (exterior wall → pillar) and BP2 (pillar → 1905, where the open bay starts) 35 mm out from the back wall, so the water pipe runs free behind them. Drill through the plates into the floor and plug them every ~50 cm, between the stud marks.",
-        ["<b>1×</b> BP1 826", "<b>1×</b> BP2 853", "<b>5×</b> plug 10×100"]],
-      ["Top plate", "Keep the top plate level, not following the ceiling. Its top sits at 2447, straight above the floor plate. The gap to the ceiling grows from ~3 mm at the exterior wall to ~26 mm at the kitchen wall. Stack packers in it at every joist and screw through them into the joist.",
-        ["<b>1×</b> TP1 1069", "<b>1×</b> TP2 811", "<b>1×</b> TP3 719", "<b>~8×</b> 6×160", "packers up to 26 mm"]],
-      ["Studs V1–V6", "Stand each stud on its mark, check it's plumb, and fix it with a bracket on each side at the top and bottom. V3 and V4 go tight against the pillar: brackets on the free side only, plus 3 small brackets each from the stud side to the pillar front face (at 300, 750 and 1500). Screw V1 into the battens behind the gips.",
-        ["<b>6×</b> S 2359", "<b>19×</b> bracket", "<b>6×</b> small bracket", "<b>6×</b> plug 6 mm + 5×50", "<b>~4×</b> 6×120"]],
-      ["Open bay", "Screw a bracket to V6 with its top at 1180, and one to the kitchen-wall brick. Drop the header H onto them and screw up into it. Stand V7 and V8 on the header, with brackets at the top and bottom. Plug V8 into the kitchen wall.",
-        ["<b>1×</b> H 697", "<b>2×</b> SH 1178", "<b>8×</b> bracket", "<b>2×</b> plug 10×100", "<b>4×</b> plug 6 mm + 5×50"]],
-      ["Noggins", "In every bay, screw a bracket to both studs with its top at 1180 (row 1) and 1811 (row 2). Drop the noggin on and screw up into it. Row 1 skips the pillar bay and the open bay. N3 goes above the pillar in row 2.",
-        ["<b>4×</b> N1 348", "<b>4×</b> N2 360", "<b>1×</b> N3 218", "<b>2×</b> N4 305", "<b>22×</b> bracket"]],
-      ["Insulate", "Finish any new pipe or socket work first. Press glass wool into every closed bay, snug but not crushed. Screw a 218 × 150 packing block to the pillar face (a 44×94 offcut laid flat plus ~11 mm of packers, to fill the 55 mm gap), centred at 1202, so the OSB joint has something behind it.",
-        ["<b>~5 m²</b> glaswol", "<b>1×</b> packing 218×150", "mask + gloves"]],
-      ["OSB row 1", "Stand A1, B1 and C1 on 8 mm spacers, with 3 mm gaps between them. C1 ends flush with V6 at the open bay. Screw every 150 mm along the edges and every 300 mm in the middle.",
-        ["<b>1×</b> A1 803×1192", "<b>1×</b> B1 666×1192", "<b>1×</b> C1 426×1192", "<b>~90×</b> 4×45"]],
-      ["OSB rows 2 and 3", "Row 2 first (A2, B2, C2, D2; D2 sits on the header), then row 3, ending flush with the top of the frame. The frame and OSB are done.",
-        ["<b>4×</b> row 2 panels", "<b>4×</b> row 3 panels", "<b>~200×</b> 4×45"]],
-      ["Paint & finish", "Caulk the joints with the side walls, and fix the ceiling trim over the gap at the top. Sand off any splinters, then prime the OSB with the insulating primer so the marker codes and resin stains don't bleed through. Finish with two coats of washable satin paint, including the bottom of the header and the edges around the open bay.",
-        ["caulk", "ceiling trim", "insulating primer", "satin paint"]]
-    ];
-    const box = document.getElementById("steps");
-    box.replaceChildren();
-    steps.forEach(([title, text, chips], i) => {
-      const n = i + 1;
-      const card = document.createElement("article");
-      card.className = "step";
-      const svg = el("svg", { viewBox: "-30 -30 2665 2525", role: "img", "aria-label": `Step ${n}: ${title}` }, card);
-      el("rect", { x: 0, y: 0, width: W, height: H, class: "s-wall" }, svg);
-      if (n >= 7) el("rect", { x: 0, y: Y(2403), width: W, height: 2359, class: "st-wool" }, svg);
-      el("rect", { x: 1905, y: Y(1180), width: W - 1905, height: 1180, class: "s-open" }, svg);
-      el("rect", { x: 830, y: Y(1735), width: 220, height: 1735, class: "s-brick" }, svg);
-      if (n === 1) [...fullStuds, ...shortStuds].forEach(x => el("line", { x1: x, x2: x, y1: 0, y2: H, class: "st-mark" }, svg));
-      parts.filter(p => p.s <= n).forEach(p => {
-        const isNew = p.s === n;
-        const cls = p.k === "o" ? (isNew ? "st-new-osb" : "s-osb") : (isNew ? "st-new" : "s-timber");
-        el("rect", { x: p.x0, y: Y(p.y1), width: p.x1 - p.x0, height: p.y1 - p.y0, class: cls }, svg);
-      });
-      const body = document.createElement("div");
-      body.className = "step-body";
-      body.innerHTML = `<div class="step-head"><span class="step-no">${n}</span><h3>${title}</h3></div><p>${text}</p>` +
-        `<div class="parts">${chips.map(c => `<span class="part">${c}</span>`).join("")}</div>`;
-      card.appendChild(body);
-      box.appendChild(card);
-    });
-  }
-
-  drawOsb();
-  drawSteps();
-  drawSheets();
-  drawFrame();
-  drawBars();
-})();
+const SLIDES = [{"src": "wall.jpg", "title": "Before", "stage": "Start", "date": "End of Oct", "cap": "The bare back wall: the brick pillar, the black water pipe on the floor and the washer corner."}, {"src": "photos/02-frame.jpg", "title": "Frame up", "stage": "Stage 1", "date": "3 Nov", "cap": "44×94 frame standing 35 mm off the back wall, so the water pipe runs free behind the floor plates. Angle brackets on every joint, small brackets holding V3 and V4 to the pillar front, and the open bay left free for the washer."}, {"src": "photos/03-insulation.jpg", "title": "Insulation", "stage": "Stage 2", "date": "4 Nov", "cap": "Glass wool clamped into every bay, flush with the stud faces. Thinner wool in front of the pillar, and the open bay stays empty."}, {"src": "photos/04-osb.jpg", "title": "OSB", "stage": "Stage 3", "date": "4 Nov", "cap": "18 mm OSB in three rows, every panel labelled A1–D3, with joints on the studs and noggins. The washer bay stays open for the tap, drain and socket."}, {"src": "photos/05-laundry-start.jpg", "title": "Machines back in", "stage": "Start", "date": "5 Nov", "cap": "Fridge, dryer and washer back against the new OSB wall. The fridge gets its cupboard on the left; the worktop goes over the dryer and washer."}];
+const THUMBS = ["photos/01-before-thumb.jpg", "photos/02-frame-thumb.jpg", "photos/03-insulation-thumb.jpg", "photos/04-osb-thumb.jpg", "photos/05-laundry-start-thumb.jpg"];
+const dlg = document.querySelector(".viewer"), strip = dlg.querySelector(".v-strip"), stage = dlg.querySelector(".v-stage");
+const prev = dlg.querySelector(".v-prev"), next = dlg.querySelector(".v-next"), thumbs = dlg.querySelector(".v-thumbs");
+let cur = 0;
+SLIDES.forEach((s, i) => {
+  const d = document.createElement("div"); d.className = "v-slide";
+  const img = document.createElement("img"); img.alt = s.title + ": " + s.cap; img.dataset.src = s.src; img.draggable = false;
+  d.append(img); strip.append(d);
+  const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Show " + s.title);
+  const t = document.createElement("img"); t.src = THUMBS[i]; t.alt = ""; b.append(t);
+  b.addEventListener("click", () => go(i)); thumbs.append(b);
+});
+function load(i) { const img = strip.children[i]?.querySelector("img"); if (img && !img.src) img.src = img.dataset.src; }
+function go(i) {
+  cur = Math.max(0, Math.min(SLIDES.length - 1, i));
+  strip.style.transform = `translateX(${-cur * 100}%)`;
+  [cur - 1, cur, cur + 1].forEach(load);
+  const s = SLIDES[cur];
+  dlg.querySelector(".v-count").textContent = `${cur + 1} / ${SLIDES.length}`;
+  dlg.querySelector(".v-st").textContent = s.stage;
+  dlg.querySelector(".v-dt").textContent = s.date;
+  dlg.querySelector(".v-title").textContent = s.title;
+  dlg.querySelector(".v-text").textContent = s.cap;
+  prev.disabled = cur === 0; next.disabled = cur === SLIDES.length - 1;
+  [...thumbs.children].forEach((b, j) => b.setAttribute("aria-current", j === cur));
+}
+document.querySelectorAll(".g-thumb[data-i]").forEach(b => b.addEventListener("click", () => {
+  strip.classList.add("drag"); go(+b.dataset.i); dlg.showModal(); requestAnimationFrame(() => strip.classList.remove("drag"));
+}));
+prev.addEventListener("click", () => go(cur - 1));
+next.addEventListener("click", () => go(cur + 1));
+dlg.querySelector(".v-close").addEventListener("click", () => dlg.close());
+dlg.addEventListener("keydown", e => { if (e.key === "ArrowLeft") go(cur - 1); if (e.key === "ArrowRight") go(cur + 1); });
+// swipe
+let x0 = null, dx = 0;
+stage.addEventListener("pointerdown", e => { if (e.target.closest(".v-nav")) return; x0 = e.clientX; dx = 0; strip.classList.add("drag"); stage.setPointerCapture(e.pointerId); });
+stage.addEventListener("pointermove", e => { if (x0 === null) return; dx = e.clientX - x0; strip.style.transform = `translateX(calc(${-cur * 100}% + ${dx}px))`; });
+const end = () => { if (x0 === null) return; x0 = null; strip.classList.remove("drag"); if (dx < -50) go(cur + 1); else if (dx > 50) go(cur - 1); else go(cur); };
+stage.addEventListener("pointerup", end); stage.addEventListener("pointercancel", end);
 </script>
-
-
-
-</body></html>
+</body>
+</html>

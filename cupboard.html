@@ -179,13 +179,39 @@ main { max-width: 1040px; }
 .duo { grid-template-columns: 1fr; } }
 ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
 .tag { display: inline-block; font: 600 .7rem/1 var(--f-mono); padding: 4px 6px; border-radius: 4px; background: var(--fix); color: var(--sheet); letter-spacing: .06em; vertical-align: 2px; }
+
+/*nav*/
+.site-nav { position: sticky; top: 0; z-index: 50; background: var(--paper); border-bottom: 1px solid var(--line);
+  margin: -28px calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 28px calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); }
+.sn-in { max-width: 1040px; margin: 0 auto; }
+.sn-top { display: flex; align-items: center; gap: 8px 20px; flex-wrap: wrap; padding: 12px 0 10px; }
+.sn-brand { font: 700 1.35rem/1 var(--f-display); color: var(--ink); text-decoration: none; letter-spacing: .01em; display: inline-flex; align-items: baseline; gap: 8px; }
+.sn-brand small { font: 600 .68rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.sn-parts { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
+.sn-parts::-webkit-scrollbar { display: none; }
+.sn-parts a { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 999px; text-decoration: none;
+  font: 600 .9rem/1 var(--f-body); color: var(--ink-soft); border: 1px solid transparent; }
+.sn-parts a:hover { color: var(--ink); background: var(--sheet); }
+.sn-parts a[aria-current] { color: var(--ink); background: var(--sheet); border-color: var(--line); }
+.sn-parts b { display: inline-grid; place-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--line); color: var(--ink); font: 700 .7rem/1 var(--f-mono); }
+.sn-parts a[aria-current] b { background: var(--marker); color: var(--sheet); }
+.sn-sub { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; border-top: 1px solid var(--line); }
+.sn-sub::-webkit-scrollbar { display: none; }
+.sn-sub a { flex: 0 0 auto; padding: 10px 0 9px; text-decoration: none; font: 600 .78rem/1 var(--f-mono); color: var(--ink-soft); border-bottom: 2px solid transparent; }
+.sn-sub a:hover { color: var(--ink); }
+.sn-sub a[aria-current] { color: var(--marker); border-bottom-color: var(--marker); }
+.sn-sub .sn-lbl { color: var(--ink-soft); opacity: .7; font: 600 .7rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; padding: 11px 0 10px; flex: 0 0 auto; }
+@media (max-width: 560px) { .sn-parts { margin-left: 0; width: 100%; } .sn-brand small { display: none; } }
+@media print { .site-nav { display: none; } }
+/*/nav*/
 </style>
 </head>
 <body>
+<!--nav--><nav class="site-nav" aria-label="Site"><div class="sn-in"><div class="sn-top"><a class="sn-brand" href="./">Bijkeuken<small>build journal</small></a><div class="sn-parts"><a href="./">Journey</a><a href="wall.html"><b>1</b>Stud wall</a><a href="cupboard.html" aria-current="page"><b>2</b>Laundry corner</a></div></div><div class="sn-sub"><span class="sn-lbl">Part 2</span><a href="cupboard.html" aria-current="page">Cupboard & worktop</a></div></div></nav><!--/nav-->
 <main>
   <header>
-    <a class="back" href="./">← Cut sheet &amp; build journey</a>
-    <span class="eyebrow">Next project · idea</span>
+    <span class="eyebrow">Part 2 · Laundry corner · first sketch</span>
     <h1>Fridge cupboard &amp; laundry corner</h1>
     <p class="lede">A floor-to-ceiling cupboard from the exterior wall to the dryer. The old built-in fridge goes in the right column, next to the dryer. The left column holds brooms, the vacuum and the mop, with top cupboards over both. A worktop runs over the dryer and washer, with wall strips above it for shelves, a hanging rail and baskets.</p>
     <p class="note"><span><span class="tag">SKETCH</span> The fridge height (1450) and the gap to the dryer (1310) are guesses from the photo. Measure them first, then the drawings get exact sizes and a cut list.</span></p>
