@@ -135,7 +135,7 @@ th { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: 
 
 /* Progress page */
 main { max-width: 1040px; }
-.track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .track li { display: grid; gap: 6px; font: 600 .72rem/1.2 var(--f-mono); color: var(--ink-soft); }
 .track i { display: block; height: 8px; border-radius: 4px; background: var(--line); }
 .track li.done { color: var(--done); }
@@ -191,8 +191,8 @@ dialog.viewer::backdrop { background: rgb(0 0 0 / .85); }
     <span class="eyebrow">Progress</span>
     <h1>Build progress</h1>
     <p class="lede">From bare wall to finished voorzetwand, one photo per stage. Tap a photo to open the viewer, then swipe or use the arrow keys.</p>
-    <div class="track-row"><span>3 of 6 stages done</span><span>Next: Gips plates</span></div>
-    <ol class="track" aria-label="Stages"><li class="done"><i></i><span>Frame up</span></li><li class="done"><i></i><span>Insulation</span></li><li class="done"><i></i><span>OSB</span></li><li class=""><i></i><span>Gips plates</span></li><li class=""><i></i><span>Taping &amp; filling</span></li><li class=""><i></i><span>Finishing</span></li></ol>
+    <div class="track-row"><span>3 of 5 stages done</span><span>Next: Paint</span></div>
+    <ol class="track" aria-label="Stages"><li class="done"><i></i><span>Frame up</span></li><li class="done"><i></i><span>Insulation</span></li><li class="done"><i></i><span>OSB</span></li><li class=""><i></i><span>Paint</span></li><li class=""><i></i><span>Finishing</span></li></ol>
   </header>
 
   <section>
@@ -219,13 +219,10 @@ dialog.viewer::backdrop { background: rgb(0 0 0 / .85); }
   <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 3</span><span class="g-date mono">4 Nov</span></div><h3>OSB</h3><p>18 mm OSB in three rows, every panel labelled A1–D3, with joints on the studs and noggins. The washer bay stays open for the tap, drain and socket.</p></div>
 </li><li class="g-card todo">
   <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
-  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 4</span><span class="g-date mono">next</span></div><h3>Gips plates</h3><p>12.5 mm plasterboard screwed over the OSB, with its joints offset from the OSB joints.</p></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 4</span><span class="g-date mono">next</span></div><h3>Paint</h3><p>Insulating primer on the visible OSB so the marker codes don&#x27;t bleed through, then two coats of washable white satin paint.</p></div>
 </li><li class="g-card todo">
   <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
-  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 5</span><span class="g-date mono">next</span></div><h3>Taping &amp; filling</h3><p>Joint tape and filler on every seam, screw heads filled, then sanded smooth.</p></div>
-</li><li class="g-card todo">
-  <div class="g-thumb g-empty" aria-hidden="true"><span>Photo coming</span></div>
-  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 6</span><span class="g-date mono">next</span></div><h3>Finishing</h3><p>Clean edges: corner beads, the edges around the open bay, sealant along ceiling and walls, skirting and paint.</p></div>
+  <div class="g-txt"><div class="g-row"><span class="g-stage">Stage 5</span><span class="g-date mono">next</span></div><h3>Finishing</h3><p>Caulk along the side walls, the ceiling trim over the gap at the top, and clean painted edges around the open bay.</p></div>
 </li>
     </ul>
   </section>
